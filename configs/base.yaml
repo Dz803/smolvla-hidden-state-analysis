@@ -1,0 +1,66 @@
+project:
+  name: smolvla_libero_failure_analysis
+  output_root: runs
+  run_name: null
+  seed: 0
+  overwrite: false
+model:
+  repo_id: lerobot/smolvla_libero
+  revision: 31d453f7edd78c839a8bbc39744a292686daf0de
+  local_path: checkpoints/smolvla_libero
+  device: cuda
+  dtype: bfloat16
+  compile: false
+  control_mode: relative
+  n_action_steps: 50
+benchmark:
+  name: libero
+  suites: [libero_spatial]
+  task_ids: [0]
+  episodes_per_task: 5
+  episode_seeds: [0, 1, 2, 3, 4]
+  max_steps: null
+  max_parallel_tasks: 1
+  mujoco_gl: egl
+recording:
+  save_video: true
+  save_observations: true
+  save_environment_state: true
+  save_action_chunks: true
+  save_executed_actions: true
+  save_latency: true
+  save_gpu_stats: true
+  step_log_format: parquet
+activations:
+  enabled: true
+  capture_every_n_env_steps: 5
+  pathways: [vlm, action_expert]
+  relative_layer_positions: [0.25, 0.50, 0.75, 1.00]
+  save_pooled_features: true
+  save_activation_norms: true
+  save_token_statistics: true
+  save_full_tokens_for_selected_episodes: false
+  full_token_episode_fraction: 0.10
+  storage_dtype: float16
+  storage_format: zarr
+uncertainty:
+  enabled: false
+  mode: offline
+  samples_per_observation: 5
+  sample_every_n_env_steps: 5
+  preserve_original_rollout: true
+perturbations:
+  condition: clean
+  parameters: {}
+analysis:
+  bootstrap_samples: 2000
+  confidence_level: 0.95
+  group_split_key: task_id
+  random_seed: 0
+phase_thresholds:
+  approach_distance_m: 0.10
+  alignment_distance_m: 0.05
+  grasp_distance_m: 0.025
+  lift_height_m: 0.03
+  goal_distance_m: 0.05
+

@@ -1,0 +1,257 @@
+{
+  "checkpoint": "/home/zhongzhengyang/lingbot-vla-v2/experiments/smolvla_libero_failure_analysis/checkpoints/smolvla_libero",
+  "frozen": true,
+  "state_contract": {
+    "config_declared_dim": 6,
+    "normalizer_and_runtime_dim": 8,
+    "resolution": "use serialized 8-D normalization statistics and official LIBERO 8-D state"
+  },
+  "parameter_counts": {
+    "total": 450046176,
+    "trainable_before_freeze": 0
+  },
+  "candidate_layer_groups": {
+    "model.vlm_with_expert.vlm.model.text_model.layers": [
+      [
+        0,
+        "model.vlm_with_expert.vlm.model.text_model.layers.0"
+      ],
+      [
+        1,
+        "model.vlm_with_expert.vlm.model.text_model.layers.1"
+      ],
+      [
+        2,
+        "model.vlm_with_expert.vlm.model.text_model.layers.2"
+      ],
+      [
+        3,
+        "model.vlm_with_expert.vlm.model.text_model.layers.3"
+      ],
+      [
+        4,
+        "model.vlm_with_expert.vlm.model.text_model.layers.4"
+      ],
+      [
+        5,
+        "model.vlm_with_expert.vlm.model.text_model.layers.5"
+      ],
+      [
+        6,
+        "model.vlm_with_expert.vlm.model.text_model.layers.6"
+      ],
+      [
+        7,
+        "model.vlm_with_expert.vlm.model.text_model.layers.7"
+      ],
+      [
+        8,
+        "model.vlm_with_expert.vlm.model.text_model.layers.8"
+      ],
+      [
+        9,
+        "model.vlm_with_expert.vlm.model.text_model.layers.9"
+      ],
+      [
+        10,
+        "model.vlm_with_expert.vlm.model.text_model.layers.10"
+      ],
+      [
+        11,
+        "model.vlm_with_expert.vlm.model.text_model.layers.11"
+      ],
+      [
+        12,
+        "model.vlm_with_expert.vlm.model.text_model.layers.12"
+      ],
+      [
+        13,
+        "model.vlm_with_expert.vlm.model.text_model.layers.13"
+      ],
+      [
+        14,
+        "model.vlm_with_expert.vlm.model.text_model.layers.14"
+      ],
+      [
+        15,
+        "model.vlm_with_expert.vlm.model.text_model.layers.15"
+      ]
+    ],
+    "model.vlm_with_expert.lm_expert.layers": [
+      [
+        0,
+        "model.vlm_with_expert.lm_expert.layers.0"
+      ],
+      [
+        1,
+        "model.vlm_with_expert.lm_expert.layers.1"
+      ],
+      [
+        2,
+        "model.vlm_with_expert.lm_expert.layers.2"
+      ],
+      [
+        3,
+        "model.vlm_with_expert.lm_expert.layers.3"
+      ],
+      [
+        4,
+        "model.vlm_with_expert.lm_expert.layers.4"
+      ],
+      [
+        5,
+        "model.vlm_with_expert.lm_expert.layers.5"
+      ],
+      [
+        6,
+        "model.vlm_with_expert.lm_expert.layers.6"
+      ],
+      [
+        7,
+        "model.vlm_with_expert.lm_expert.layers.7"
+      ],
+      [
+        8,
+        "model.vlm_with_expert.lm_expert.layers.8"
+      ],
+      [
+        9,
+        "model.vlm_with_expert.lm_expert.layers.9"
+      ],
+      [
+        10,
+        "model.vlm_with_expert.lm_expert.layers.10"
+      ],
+      [
+        11,
+        "model.vlm_with_expert.lm_expert.layers.11"
+      ],
+      [
+        12,
+        "model.vlm_with_expert.lm_expert.layers.12"
+      ],
+      [
+        13,
+        "model.vlm_with_expert.lm_expert.layers.13"
+      ],
+      [
+        14,
+        "model.vlm_with_expert.lm_expert.layers.14"
+      ],
+      [
+        15,
+        "model.vlm_with_expert.lm_expert.layers.15"
+      ]
+    ]
+  },
+  "resolved_targets": [
+    {
+      "pathway": "vlm",
+      "relative_position": 0.25,
+      "layer_index": 3,
+      "block_name": "model.vlm_with_expert.vlm.model.text_model.layers.3",
+      "module_name": "model.vlm_with_expert.vlm.model.text_model.layers.3.post_attention_layernorm",
+      "capture_point": "post_attention_layernorm_output"
+    },
+    {
+      "pathway": "vlm",
+      "relative_position": 0.5,
+      "layer_index": 7,
+      "block_name": "model.vlm_with_expert.vlm.model.text_model.layers.7",
+      "module_name": "model.vlm_with_expert.vlm.model.text_model.layers.7.post_attention_layernorm",
+      "capture_point": "post_attention_layernorm_output"
+    },
+    {
+      "pathway": "vlm",
+      "relative_position": 0.75,
+      "layer_index": 11,
+      "block_name": "model.vlm_with_expert.vlm.model.text_model.layers.11",
+      "module_name": "model.vlm_with_expert.vlm.model.text_model.layers.11.post_attention_layernorm",
+      "capture_point": "post_attention_layernorm_output"
+    },
+    {
+      "pathway": "vlm",
+      "relative_position": 1.0,
+      "layer_index": 15,
+      "block_name": "model.vlm_with_expert.vlm.model.text_model.layers.15",
+      "module_name": "model.vlm_with_expert.vlm.model.text_model.layers.15.post_attention_layernorm",
+      "capture_point": "post_attention_layernorm_output"
+    },
+    {
+      "pathway": "action_expert",
+      "relative_position": 0.25,
+      "layer_index": 3,
+      "block_name": "model.vlm_with_expert.lm_expert.layers.3",
+      "module_name": "model.vlm_with_expert.lm_expert.layers.3.post_attention_layernorm",
+      "capture_point": "post_attention_layernorm_output"
+    },
+    {
+      "pathway": "action_expert",
+      "relative_position": 0.5,
+      "layer_index": 7,
+      "block_name": "model.vlm_with_expert.lm_expert.layers.7",
+      "module_name": "model.vlm_with_expert.lm_expert.layers.7.post_attention_layernorm",
+      "capture_point": "post_attention_layernorm_output"
+    },
+    {
+      "pathway": "action_expert",
+      "relative_position": 0.75,
+      "layer_index": 11,
+      "block_name": "model.vlm_with_expert.lm_expert.layers.11",
+      "module_name": "model.vlm_with_expert.lm_expert.layers.11.post_attention_layernorm",
+      "capture_point": "post_attention_layernorm_output"
+    },
+    {
+      "pathway": "action_expert",
+      "relative_position": 1.0,
+      "layer_index": 15,
+      "block_name": "model.vlm_with_expert.lm_expert.layers.15",
+      "module_name": "model.vlm_with_expert.lm_expert.layers.15.post_attention_layernorm",
+      "capture_point": "post_attention_layernorm_output"
+    }
+  ],
+  "input_shapes": {
+    "action": "<class 'NoneType'>",
+    "next.reward": "<class 'float'>",
+    "next.done": "<class 'bool'>",
+    "next.truncated": "<class 'bool'>",
+    "info": "<class 'dict'>",
+    "task": "<class 'list'>",
+    "observation.state": [
+      1,
+      8
+    ],
+    "observation.images.camera1": [
+      1,
+      3,
+      256,
+      256
+    ],
+    "observation.images.camera2": [
+      1,
+      3,
+      256,
+      256
+    ],
+    "observation.language.tokens": [
+      1,
+      48
+    ],
+    "observation.language.attention_mask": [
+      1,
+      48
+    ]
+  },
+  "action_chunk_shape": [
+    1,
+    50,
+    7
+  ],
+  "action_dtype": "torch.float32",
+  "actions_finite": true,
+  "hook_equivalence": {
+    "max_abs_diff": 0.0,
+    "records": 44,
+    "persistent_gpu_memory_growth_bytes": 0
+  }
+}

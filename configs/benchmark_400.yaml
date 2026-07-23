@@ -1,0 +1,6 @@
+extends: pilot_spatial.yaml
+project:
+  run_name: benchmark_400
+benchmark:
+  suites: [libero_spatial, libero_object, libero_goal, libero_10]
+
