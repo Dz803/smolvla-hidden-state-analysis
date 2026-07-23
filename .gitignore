@@ -7,4 +7,12 @@ __pycache__/
 *.svg
 *.parquet
 *.zarr/
+
+# Local-only complete evidence and runtime material. These directories are
+# present in the standalone workstation copy but must never enter Git history.
+archive/
+local/
+vendor/
+logs/
+planning/
 ```

@@ -4,9 +4,13 @@ This repository contains the hidden-state experiment for the frozen `lerobot/smo
 
 The analysis is observational frozen-feature probing. It does not train or modify policy weights, and it does not include raw rollout data, videos, checkpoints, or the broader failure-study project.
 
+The workstation copy is now fully separated from LingBot at `/home/zhongzhengyang/smolvla-hidden-state-analysis`. Its complete 51 GB local evidence/runtime directories are ignored by Git; the public repository remains a small, reviewable code-and-report package.
+
 ## Included result
 
 See [`reports/hidden_state_report.md`](reports/hidden_state_report.md) for the pilot data contract, held-out-task results, divergence findings, warning trade-offs, limitations, and artifact provenance.
+
+The broader interpretation, newly completed task-confound audit, causal questions, intervention matrix, and staged validation programme are in [`docs/causal_research_program.md`](docs/causal_research_program.md). The key revision is that step-0 hidden-state prediction is largely task/difficulty encoding, while episode-specific separation develops between steps 50 and 100.
 
 ## Environment
 
@@ -44,3 +48,10 @@ python scripts/analyze_condition_hidden_states.py \
 pytest -q
 ```
 
+To audit task confounding in an existing benchmark run:
+
+```bash
+python scripts/audit_warning_confounds.py \
+  --run /path/to/benchmark_run \
+  --output reports/warning_confound_audit
+```

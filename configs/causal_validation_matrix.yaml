@@ -1,0 +1,74 @@
+study: smolvla_modality_causal_validation
+status: design_only
+checkpoint:
+  repo_id: lerobot/smolvla_libero
+  revision: 31d453f7edd78c839a8bbc39744a292686daf0de
+
+principles:
+  paired_initial_states: true
+  immutable_runs: true
+  primary_temporal_window: [50, 100]
+  hook_layers: [3, 7, 11, 15]
+  episode_grouped_splits: true
+  task_grouped_generalization: true
+
+gates:
+  offline:
+    new_rollouts: 0
+    analyses:
+      - within_task_confound_audit_with_bootstrap
+      - leave_one_suite_out_transfer
+      - clean_to_perturbation_transfer
+      - perturbation_to_clean_transfer
+      - richer_state_and_action_history_baseline
+  causal_smoke:
+    tasks: 2
+    seeds_per_task: 5
+    conditions:
+      - clean
+      - wrist_mean_image
+      - wrist_matched_natural_image
+      - wrist_dropout_pre_grasp
+      - wrist_dropout_grasp_window
+      - main_object_mask
+      - main_background_mask
+      - wrong_object_instruction
+    continuation_rule: >-
+      Continue only when observations are valid, paired initial states match,
+      hook equivalence passes, and effects reproduce across both tasks.
+  focused_factorial:
+    launch_requires: causal_smoke_pass
+    design: selected_interactions
+    factors:
+      language: [original, paraphrase, wrong_object, wrong_relation]
+      main_vision: [clean, object_mask, receptacle_mask, graded_blur]
+      wrist_vision: [clean, mean_image, matched_image, grasp_window_dropout]
+  activation_patching:
+    launch_requires: focused_factorial_signal
+    directions: [clean_to_perturbed_rescue, perturbed_to_clean_induction]
+    controls: [random_vector, unrelated_task, time_shifted, background_only]
+    patch_targets: [language_tokens, main_image_tokens, wrist_image_tokens, action_expert_tokens]
+
+primary_metrics:
+  behavior:
+    - paired_success_delta
+    - immediate_action_distance
+    - trajectory_recovery_rate
+  representation:
+    - within_task_auroc
+    - fixed_horizon_auprc
+    - cross_condition_transfer
+    - first_divergence_relative_to_annotated_onset
+  mechanism:
+    - action_rescue_effect
+    - success_rescue_effect
+    - action_induction_effect
+    - dose_response_slope
+
+falsification:
+  - step_0_signal_vanishes_within_task
+  - signal_fails_leave_one_suite_out
+  - richer_history_baseline_matches_hidden_states
+  - hidden_divergence_occurs_after_failure_onset
+  - activation_patch_changes_probe_score_but_not_action
+  - representation_direction_does_not_transfer_across_conditions
