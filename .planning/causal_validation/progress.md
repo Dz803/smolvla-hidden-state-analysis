@@ -109,4 +109,6 @@
 - Updated obsolete LingBot-relative resource paths and documented the correct offline Python and canonical benchmark paths.
 - Verified `scripts/resume_check.sh --full` in a code-only checkout: all tracked resume files were present and local-only assets were correctly reported as informational rather than failures.
 - Verified shell syntax and Git whitespace checks.
+- Fast-forwarded the workstation project to resume-infrastructure commit `ef81cb6` and confirmed `HEAD == origin/main`.
+- Ran the full resume check from `/home/zhongzhengyang/smolvla-hidden-state-analysis`: active-plan discovery, core imports, canonical benchmark presence, and all 3 tests passed (`resume_check=PASS`).
 - Resume point: Phase 1 of `.planning/causal_validation/task_plan.md`; do not rerun completed canonical rollouts.

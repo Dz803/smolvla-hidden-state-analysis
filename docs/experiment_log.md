@@ -49,6 +49,8 @@ This is the compact, tracked ledger for completed experiments and canonical deci
 ### 2026-07-27 — Resumability audit
 
 - Added tracked active-plan state, complete progress/findings records, project instructions, resume guide, experiment ledger, and automated resume check.
+- Resume infrastructure was introduced in commit `ef81cb6` and verified from the standalone workstation folder.
+- Full verification passed: repository synchronization, active-plan discovery, working Python, core imports, canonical benchmark presence, and 3/3 tests.
 - Canonical next phase: offline robustness gate—bootstrap intervals, leave-one-suite-out transfer, cross-condition transfer, and richer state/action-history baselines.
 - No completed rollout should be repeated when resuming.
 
