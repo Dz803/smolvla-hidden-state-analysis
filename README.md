@@ -6,6 +6,25 @@ The analysis is observational frozen-feature probing. It does not train or modif
 
 The workstation copy is now fully separated from LingBot at `/home/zhongzhengyang/smolvla-hidden-state-analysis`. Its complete 51 GB local evidence/runtime directories are ignored by Git; the public repository remains a small, reviewable code-and-report package.
 
+## Resume work
+
+The repository is resumable from a fresh shell, Codex session, or context reset. On the workstation:
+
+```bash
+cd /home/zhongzhengyang/smolvla-hidden-state-analysis
+bash scripts/resume_check.sh --full
+```
+
+Then read the active plan and recent log:
+
+```bash
+PLAN_ID=$(tr -d '[:space:]' < .planning/.active_plan)
+sed -n '1,240p' ".planning/$PLAN_ID/task_plan.md"
+tail -80 ".planning/$PLAN_ID/progress.md"
+```
+
+The canonical continuation instructions are in [`docs/resume.md`](docs/resume.md), and the append-only experiment ledger is in [`docs/experiment_log.md`](docs/experiment_log.md). Project-specific agent instructions in [`AGENTS.md`](AGENTS.md) require every future session to load and update these records.
+
 ## Included result
 
 See [`reports/hidden_state_report.md`](reports/hidden_state_report.md) for the pilot data contract, held-out-task results, divergence findings, warning trade-offs, limitations, and artifact provenance.
