@@ -1,0 +1,102 @@
+{
+  "action_sequence": [
+    [
+      0.07999999821186066,
+      -0.05000000074505806,
+      0.03999999910593033,
+      0.029999999329447746,
+      -0.019999999552965164,
+      0.009999999776482582,
+      1.0
+    ],
+    [
+      0.07199999690055847,
+      -0.044999998062849045,
+      0.035999998450279236,
+      0.026999998837709427,
+      -0.017999999225139618,
+      0.008999999612569809,
+      0.8999999761581421
+    ],
+    [
+      0.06400000303983688,
+      -0.04000000283122063,
+      0.03200000151991844,
+      0.024000000208616257,
+      -0.01600000075995922,
+      0.00800000037997961,
+      0.800000011920929
+    ]
+  ],
+  "branch_steps": 3,
+  "captured_goal_predicate_count": 1,
+  "captured_mujoco_state_length": 79,
+  "captured_object_count": 21,
+  "captured_runtime_robot_count": 1,
+  "full_runtime_replay": {
+    "gripper_current_action_left": [
+      0.24999999999999933,
+      -0.24999999999999933
+    ],
+    "gripper_current_action_right": [
+      0.24999999999999933,
+      -0.24999999999999933
+    ],
+    "max_abs_mujoco_state_diff": 7.124681391189424e-15,
+    "max_abs_observation_diff": 0.0,
+    "observation_field_max_abs_diff": {
+      "pixels/image": 0.0,
+      "pixels/image2": 0.0,
+      "robot_state/eef/mat": 0.0,
+      "robot_state/eef/pos": 0.0,
+      "robot_state/eef/quat": 0.0,
+      "robot_state/gripper/qpos": 0.0,
+      "robot_state/gripper/qvel": 0.0,
+      "robot_state/joints/pos": 0.0,
+      "robot_state/joints/vel": 0.0
+    },
+    "reward_match": true,
+    "termination_match": true
+  },
+  "full_runtime_replay_pass": true,
+  "immediate_round_trip": {
+    "contact_count": 37,
+    "goal_predicates_match": true,
+    "grasped_objects_match": true,
+    "max_abs_state_diff": 0.0,
+    "numpy_random_state_match": true,
+    "object_count": 21,
+    "runtime_state_match": true
+  },
+  "physics_only_exposes_hidden_state": true,
+  "physics_only_replay": {
+    "gripper_current_action_left": [
+      0.24999999999999933,
+      -0.24999999999999933
+    ],
+    "gripper_current_action_right": [
+      -0.500000000000001,
+      0.500000000000001
+    ],
+    "max_abs_mujoco_state_diff": 0.03720711748759892,
+    "max_abs_observation_diff": 172.0,
+    "observation_field_max_abs_diff": {
+      "pixels/image": 95.0,
+      "pixels/image2": 172.0,
+      "robot_state/eef/mat": 5.166097270942194e-07,
+      "robot_state/eef/pos": 3.1052526906549804e-05,
+      "robot_state/eef/quat": 5.845036025387256e-05,
+      "robot_state/gripper/qpos": 0.011515528203573048,
+      "robot_state/gripper/qvel": 0.038322212235724976,
+      "robot_state/joints/pos": 0.00019174833297019855,
+      "robot_state/joints/vel": 0.00039996375992841504
+    },
+    "reward_match": true,
+    "termination_match": true
+  },
+  "schema_version": 1,
+  "seed": 0,
+  "suite": "libero_goal",
+  "task_id": 3,
+  "timestamp": "2026-07-27T11:39:37.326955+00:00"
+}

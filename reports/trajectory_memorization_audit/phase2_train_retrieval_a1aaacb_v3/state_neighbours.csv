@@ -1,0 +1,13 @@
+state_id,env_step,scope,standardized_state_rmse,raw_state_rmse,max_abs_state_difference,training_episode_index,training_frame_index,training_task_index,training_instruction
+libero_goal_task03_ep000_seed0_step0050,50,same_task,0.04341363534331322,0.016795774112800983,0.029923103749752045,701,52,12,open the top drawer and put the bowl inside
+libero_goal_task03_ep000_seed0_step0050,50,alternate_goal_task,0.3137955963611603,0.04378061195712905,0.08601595461368561,665,23,18,put the bowl on top of the cabinet
+libero_goal_task03_ep000_seed0_step0050,50,other_tasks,0.045662906020879745,0.019032910634055204,0.03953654319047928,1606,24,30,pick up the black bowl next to the cookie box and place it on the plate
+libero_goal_task03_ep000_seed0_step0100,100,same_task,0.037280309945344925,0.015483391189473821,0.04043073207139969,387,192,12,open the top drawer and put the bowl inside
+libero_goal_task03_ep000_seed0_step0100,100,alternate_goal_task,0.19214098155498505,0.066735118219254,0.1195688471198082,474,15,18,put the bowl on top of the cabinet
+libero_goal_task03_ep000_seed0_step0100,100,other_tasks,0.14244671165943146,0.046552048592921454,0.07659977674484253,431,42,10,put the bowl on the plate
+libero_goal_task03_ep001_seed1_step0050,50,same_task,0.033738791942596436,0.01859107497536599,0.04761384800076485,627,52,12,open the top drawer and put the bowl inside
+libero_goal_task03_ep001_seed1_step0050,50,alternate_goal_task,0.3161817491054535,0.0710918540314766,0.17703033983707428,706,25,18,put the bowl on top of the cabinet
+libero_goal_task03_ep001_seed1_step0050,50,other_tasks,0.03726541996002197,0.0120014912129762,0.022485937923192978,1277,25,30,pick up the black bowl next to the cookie box and place it on the plate
+libero_goal_task03_ep001_seed1_step0100,100,same_task,0.04095093533396721,0.010497619187679143,0.024592548608779907,382,85,12,open the top drawer and put the bowl inside
+libero_goal_task03_ep001_seed1_step0100,100,alternate_goal_task,0.18226724863052368,0.09062063452086215,0.22812333703041077,665,32,18,put the bowl on top of the cabinet
+libero_goal_task03_ep001_seed1_step0100,100,other_tasks,0.12026959657669067,0.01833618121978003,0.030157998204231262,1622,58,38,pick up the black bowl from table center and place it on the plate

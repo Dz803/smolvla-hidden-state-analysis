@@ -1,0 +1,81 @@
+state_id,env_step,query_kind,scope,standardized_rmse,raw_rmse,max_abs_difference,training_episode_index,training_start_frame,training_task_index,training_instruction,candidate_state_standardized_rmse
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_101,same_task,0.5526574850082397,0.17781918068087973,0.8253874182701111,414,27,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_101,alternate_goal_task,0.7467821836471558,0.473790094154924,2.01564359664917,601,13,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_101,other_tasks,0.4006570875644684,0.13235208078977698,0.49668872356414795,179,250,6,put both moka pots on the stove,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_101,same_task_state_top128,0.8179852962493896,0.29015877425562253,0.966600775718689,498,49,12,open the top drawer and put the bowl inside,0.12674009799957275
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_202,same_task,0.5494222640991211,0.17759117556707568,0.8309361338615417,414,27,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_202,alternate_goal_task,0.7443485260009766,0.4733781690874065,2.009045124053955,601,13,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_202,other_tasks,0.3926645517349243,0.12874933819258594,0.495381623506546,179,250,6,put both moka pots on the stove,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_202,same_task_state_top128,0.8115569949150085,0.2861064099897315,0.9625504612922668,498,49,12,open the top drawer and put the bowl inside,0.12674009799957275
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_303,same_task,0.5524705648422241,0.1788843588206402,0.8369851112365723,414,27,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_303,alternate_goal_task,0.7493164539337158,0.4618814254002756,2.007567882537842,601,12,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_303,other_tasks,0.4027630090713501,0.13330356492235174,0.48968032002449036,179,250,6,put both moka pots on the stove,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_303,same_task_state_top128,0.8235966563224792,0.2902582024472744,0.9744018912315369,498,49,12,open the top drawer and put the bowl inside,0.12674009799957275
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_404,same_task,0.5648443102836609,0.1839062784056823,0.8200633525848389,414,28,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_404,alternate_goal_task,0.7294543385505676,0.47096794780461426,2.0118207931518555,601,13,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_404,other_tasks,0.38859331607818604,0.13028849125879227,0.5146471261978149,179,250,6,put both moka pots on the stove,
+libero_goal_task03_ep000_seed0_step0050,50,proposal_seed_404,same_task_state_top128,0.7932885885238647,0.2775907569189838,0.9604522585868835,498,49,12,open the top drawer and put the bowl inside,0.12674009799957275
+libero_goal_task03_ep000_seed0_step0050,50,rollout_future,same_task,0.3055448532104492,0.07554499714233018,0.433796763420105,534,51,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0050,50,rollout_future,alternate_goal_task,0.9652094841003418,0.5711588451604566,2.01889967918396,601,18,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0050,50,rollout_future,other_tasks,0.6805219650268555,0.22755296024170132,0.7916812896728516,4,128,1,put the white mug on the plate and put the chocolate pudding to the right of the plate,
+libero_goal_task03_ep000_seed0_step0050,50,rollout_future,same_task_state_top128,0.3128874897956848,0.09092264030637184,0.399214506149292,684,49,12,open the top drawer and put the bowl inside,0.0951627865433693
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_101,same_task,0.6267764568328857,0.43428199555245406,1.9420279264450073,534,19,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_101,alternate_goal_task,0.7481817007064819,0.38135022515302425,2.0382080078125,505,6,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_101,other_tasks,0.5417361855506897,0.26142123399487616,2.0340144634246826,51,270,6,put both moka pots on the stove,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_101,same_task_state_top128,0.7817327976226807,0.40969624855832854,2.039857864379883,762,105,12,open the top drawer and put the bowl inside,0.12444920837879181
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_202,same_task,0.5897201299667358,0.40425966768717414,1.9428367614746094,414,23,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_202,alternate_goal_task,0.7762258648872375,0.4300312103840711,2.0523815155029297,505,7,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_202,other_tasks,0.5389274954795837,0.26270293545610024,2.0296790599823,51,268,6,put both moka pots on the stove,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_202,same_task_state_top128,0.8144869804382324,0.44156040110021544,2.0523815155029297,762,105,12,open the top drawer and put the bowl inside,0.12444920837879181
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_303,same_task,0.5885130763053894,0.4043509649474946,1.9435372352600098,414,22,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_303,alternate_goal_task,0.7844192385673523,0.43551016027365586,2.043820858001709,505,7,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_303,other_tasks,0.5570446252822876,0.23679893062594864,2.026536464691162,243,17,3,turn on the stove and put the moka pot on it,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_303,same_task_state_top128,0.8293576836585999,0.4483773544305644,2.043820858001709,762,105,12,open the top drawer and put the bowl inside,0.12444920837879181
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_404,same_task,0.5567874908447266,0.36483804558455524,1.9370222091674805,414,21,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_404,alternate_goal_task,0.8103451132774353,0.3685983560164203,2.073413372039795,601,0,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_404,other_tasks,0.5703232884407043,0.3712859895296748,1.9370222091674805,179,247,6,put both moka pots on the stove,
+libero_goal_task03_ep000_seed0_step0100,100,proposal_seed_404,same_task_state_top128,0.8805869221687317,0.4980098191190203,2.073413372039795,762,105,12,open the top drawer and put the bowl inside,0.12444920837879181
+libero_goal_task03_ep000_seed0_step0100,100,rollout_future,same_task,0.3877115845680237,0.08764646294647414,0.4808865785598755,560,91,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep000_seed0_step0100,100,rollout_future,alternate_goal_task,0.6178537607192993,0.28797803271466116,2.0312929153442383,590,11,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep000_seed0_step0100,100,rollout_future,other_tasks,0.6143787503242493,0.18437063971899065,1.0974340438842773,254,64,8,put the black bowl in the bottom drawer of the cabinet and close it,
+libero_goal_task03_ep000_seed0_step0100,100,rollout_future,same_task_state_top128,0.3877115845680237,0.08764646294647414,0.4808865785598755,560,91,12,open the top drawer and put the bowl inside,0.09606324881315231
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_101,same_task,0.55056232213974,0.17223381319559308,0.8157736659049988,414,28,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_101,alternate_goal_task,0.7842751145362854,0.47733589595749903,2.0184988975524902,601,13,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_101,other_tasks,0.4244653284549713,0.12997829918205386,0.5125287175178528,179,250,6,put both moka pots on the stove,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_101,same_task_state_top128,0.8402848839759827,0.2908083398204212,0.9414271712303162,684,45,12,open the top drawer and put the bowl inside,0.11845483630895615
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_202,same_task,0.5453669428825378,0.17146136513017013,0.8195655345916748,414,28,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_202,alternate_goal_task,0.7846285104751587,0.4774971285008261,2.0119192600250244,601,13,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_202,other_tasks,0.41732096672058105,0.12644280853814158,0.4965973198413849,179,250,6,put both moka pots on the stove,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_202,same_task_state_top128,0.8335046768188477,0.2878486013577982,0.9354893565177917,684,45,12,open the top drawer and put the bowl inside,0.11845483630895615
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_303,same_task,0.5544129014015198,0.17655916461757323,0.8256943225860596,414,27,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_303,alternate_goal_task,0.7893953919410706,0.4657225036614131,2.0093276500701904,601,12,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_303,other_tasks,0.4307771623134613,0.13173832276378566,0.5131800770759583,179,250,6,put both moka pots on the stove,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_303,same_task_state_top128,0.8375322818756104,0.2896923865256878,0.9334701895713806,684,45,12,open the top drawer and put the bowl inside,0.11845483630895615
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_404,same_task,0.5541682243347168,0.17754464579544077,0.8064893484115601,414,28,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_404,alternate_goal_task,0.7684072256088257,0.4749269020869895,2.014833450317383,601,13,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_404,other_tasks,0.4099518060684204,0.12611189680087334,0.5201627612113953,179,250,6,put both moka pots on the stove,
+libero_goal_task03_ep001_seed1_step0050,50,proposal_seed_404,same_task_state_top128,0.8102825880050659,0.27932215628804974,0.9376724362373352,684,45,12,open the top drawer and put the bowl inside,0.11845483630895615
+libero_goal_task03_ep001_seed1_step0050,50,rollout_future,same_task,0.2655366063117981,0.07050057787670527,0.40135160088539124,624,47,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0050,50,rollout_future,alternate_goal_task,0.9402987360954285,0.5672419957120236,2.052675247192383,601,18,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0050,50,rollout_future,other_tasks,0.5912731885910034,0.21008375617126446,0.8496822118759155,307,173,0,put the white mug on the left plate and put the yellow and white mug on the right plate,
+libero_goal_task03_ep001_seed1_step0050,50,rollout_future,same_task_state_top128,0.2655366063117981,0.07050057787670527,0.40135160088539124,624,47,12,open the top drawer and put the bowl inside,0.11922942847013474
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_101,same_task,0.4901546239852905,0.2451419945829615,1.920354962348938,534,19,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_101,alternate_goal_task,0.7494333982467651,0.35990849983214046,2.047055721282959,601,6,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_101,other_tasks,0.4636051654815674,0.2406445016488639,1.920354962348938,179,249,6,put both moka pots on the stove,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_101,same_task_state_top128,0.7683781981468201,0.464757664326457,2.076216220855713,711,105,12,open the top drawer and put the bowl inside,0.12808085978031158
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_202,same_task,0.5227630734443665,0.3111249617372462,1.9254738092422485,414,23,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_202,alternate_goal_task,0.7926319241523743,0.3471668493716718,2.0567076206207275,601,3,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_202,other_tasks,0.5295991897583008,0.32014849123135425,1.9254738092422485,179,249,6,put both moka pots on the stove,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_202,same_task_state_top128,0.7416496872901917,0.41231839179324403,2.0663042068481445,711,109,12,open the top drawer and put the bowl inside,0.09103766083717346
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_303,same_task,0.4790817201137543,0.2365563352076054,1.9220926761627197,414,22,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_303,alternate_goal_task,0.7798581719398499,0.3836224561616379,2.07209849357605,601,5,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_303,other_tasks,0.4780851900577545,0.2501080194519688,1.9220926761627197,179,249,6,put both moka pots on the stove,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_303,same_task_state_top128,0.7730657458305359,0.45461721409879224,2.0535836219787598,711,106,12,open the top drawer and put the bowl inside,0.11414261162281036
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_404,same_task,0.49494627118110657,0.26089693695004607,1.926462173461914,414,23,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_404,alternate_goal_task,0.7626876831054688,0.44755714349336595,2.0613174438476562,601,9,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_404,other_tasks,0.46075427532196045,0.2625737237760575,1.926462173461914,316,228,6,put both moka pots on the stove,
+libero_goal_task03_ep001_seed1_step0100,100,proposal_seed_404,same_task_state_top128,0.7904072403907776,0.46765014041307074,2.0569610595703125,711,108,12,open the top drawer and put the bowl inside,0.09526532888412476
+libero_goal_task03_ep001_seed1_step0100,100,rollout_future,same_task,0.2823564410209656,0.06777167261223317,0.3020962178707123,614,98,12,open the top drawer and put the bowl inside,
+libero_goal_task03_ep001_seed1_step0100,100,rollout_future,alternate_goal_task,0.5658522844314575,0.22498919602911527,2.0026352405548096,638,13,18,put the bowl on top of the cabinet,
+libero_goal_task03_ep001_seed1_step0100,100,rollout_future,other_tasks,0.5280651450157166,0.1662401659932588,0.6347510814666748,47,52,9,pick up the book and place it in the back compartment of the caddy,
+libero_goal_task03_ep001_seed1_step0100,100,rollout_future,same_task_state_top128,0.33739563822746277,0.12969673207205426,1.97248113155365,624,100,12,open the top drawer and put the bowl inside,0.12649163603782654

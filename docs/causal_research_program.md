@@ -1,5 +1,11 @@
 # SmolVLA Failure Representations: Evidence, Weaknesses, and Causal Research Programme
 
+> **Research-design update (2026-07-27):** The evidence review in [`blind_spot_research_audit.md`](blind_spot_research_audit.md) supersedes the phase ordering below. It discovered that archived activations were stochastic post-hoc re-queries rather than the exact forwards that generated rollout actions, added full ordered-plan and scene-pixel controls, and identified substantial overlap with recent frozen-VLA success probing. The active programme now begins with exact online alignment and targets Counterfactual Recoverability Decomposition: physical-state recoverability versus sampled-plan quality under branched counterfactuals. The background evidence and intervention taxonomy below remain useful, but `task_plan.md` is authoritative for execution order.
+
+> **Phase 2 correction (2026-07-28):** Exact action-producing capture passes after restoring the required camera orientation. The corrected gate rejects the earlier apparent semantic-routing reversal while preserving the executable/padding/output-null result. Phase 3 further showed that serialized runtime state is not a portable branch root; current-process archive reconstruction is required.
+
+> **Phase 3 update (2026-07-28):** The 160-branch CRD smoke is complete. It finds state/goal-dominated outcome variance, a language veto–composition gap, and no conditional value from the tested low-dimensional hidden summaries. Source-task states are strongly imbalanced in physical subgoal progress, so the next gate is a policy-independent, occupancy-balanced affordance lattice—not immediate activation patching or cross-model scaling. See [`phase3_engineering_review.md`](phase3_engineering_review.md).
+
 ## Decision summary
 
 The next goal is not to make a larger failure classifier. It is to determine what the hidden-state warning signal represents and whether that representation participates causally in failure.

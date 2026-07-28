@@ -1,0 +1,179 @@
+{
+  "run_id": "phase2_forward_gate_20260727T114152Z",
+  "source_run": "/home/zhongzhengyang/smolvla-hidden-state-analysis/archive/full_experiment/runs/benchmark_400_20260723T021424Z_e0638bea",
+  "raw_capture_path": "/home/zhongzhengyang/smolvla-hidden-state-analysis/local/phase2_forward_gate/phase2_forward_gate_20260727T114152Z/queries.zarr",
+  "model_load_time_s": 11.95715962885879,
+  "states": [
+    "libero_goal_task03_ep000_seed0_step0050",
+    "libero_goal_task03_ep000_seed0_step0100",
+    "libero_goal_task03_ep001_seed1_step0050",
+    "libero_goal_task03_ep001_seed1_step0100"
+  ],
+  "queries": 40,
+  "layers": [
+    3,
+    7,
+    11,
+    15
+  ],
+  "hook_fidelity": {
+    "max_abs_chunk_difference": 0.0,
+    "reference_shape": [
+      1,
+      50,
+      7
+    ]
+  },
+  "determinism_max": {
+    "action_max_abs": 0.0,
+    "vlm_max_abs": 0.0,
+    "action_expert_max_abs": 0.0
+  },
+  "noise_plan_coupling": {
+    "pooled_action_to_action_expert_correlation": 0.9738303270138651,
+    "within_state_action_to_action_expert_correlation": 0.8718643311095081,
+    "within_state_action_to_active_head_correlation": 0.7160481759785102,
+    "maximum_vlm_rmse": 0.0,
+    "maximum_kv_key_norm_rmse": 0.0
+  },
+  "executable_subspace": {
+    "hidden_dimension": 720,
+    "internal_action_dimension": 32,
+    "executed_action_dimension": 7,
+    "active_row_rank": 7,
+    "padding_row_rank": 25,
+    "full_output_row_rank": 32,
+    "isotropic_active_row_fraction": 0.009722222222222222,
+    "isotropic_full_output_row_fraction": 0.044444444444444446,
+    "median_noise_active_row_energy_fraction": 0.09076969550528258,
+    "median_noise_padding_row_energy_fraction": 0.6035831449807658,
+    "median_noise_full_output_row_energy_fraction": 0.6869128693193598,
+    "median_noise_output_null_energy_fraction": 0.31308713068064015
+  },
+  "factor_medians": [
+    {
+      "condition": "alternate_goal",
+      "env_step": 75.0,
+      "action_rmse": 1.1478888203903186,
+      "action_first10_rmse": 0.8814077218148697,
+      "prefix_embedding_rmse": 1.068056344985962,
+      "vlm_last_layer_rmse": 0.0328205581754446,
+      "action_expert_last_layer_rmse": 0.9676277553884765,
+      "action_to_vlm_gain": 34.999183726398144,
+      "action_expert_to_vlm_gain": 29.33364967024818,
+      "velocity_mean_rmse": 0.5709040749169396,
+      "kv_key_norm_rmse": 1.7443221324861413,
+      "action_head_input_rmse": 0.9658798676793701,
+      "active_head_output_rmse": 1.571364528802728,
+      "padding_head_output_rmse": 0.08694697927023372,
+      "active_row_energy_fraction": 0.03874064439892182,
+      "padding_row_energy_fraction": 0.0006346928439103292,
+      "full_output_row_energy_fraction": 0.039432257498392013,
+      "output_null_energy_fraction": 0.9605677425016079
+    },
+    {
+      "condition": "contradictory_alternate_goal",
+      "env_step": 75.0,
+      "action_rmse": 0.808658276686085,
+      "action_first10_rmse": 0.7152381318870398,
+      "prefix_embedding_rmse": 1.2762995958328247,
+      "vlm_last_layer_rmse": 0.04309995844960213,
+      "action_expert_last_layer_rmse": 0.7590149158749377,
+      "action_to_vlm_gain": 18.87774455969198,
+      "action_expert_to_vlm_gain": 17.64492633744761,
+      "velocity_mean_rmse": 0.4184785253190966,
+      "kv_key_norm_rmse": 4.919432899002437,
+      "action_head_input_rmse": 0.7556720702043069,
+      "active_head_output_rmse": 1.3205643359116062,
+      "padding_head_output_rmse": 0.08122422722572178,
+      "active_row_energy_fraction": 0.04277366553372039,
+      "padding_row_energy_fraction": 0.0010296383459259186,
+      "full_output_row_energy_fraction": 0.04384528473549568,
+      "output_null_energy_fraction": 0.9561547152645044
+    },
+    {
+      "condition": "main_mean",
+      "env_step": 75.0,
+      "action_rmse": 0.3255034036526455,
+      "action_first10_rmse": 0.35925370919810434,
+      "prefix_embedding_rmse": 163.51654815673828,
+      "vlm_last_layer_rmse": 0.13503894954919815,
+      "action_expert_last_layer_rmse": 0.4219601670206514,
+      "action_to_vlm_gain": 2.398219375474197,
+      "action_expert_to_vlm_gain": 3.107922684296884,
+      "velocity_mean_rmse": 0.1922807809440767,
+      "kv_key_norm_rmse": 1.7752832690599023,
+      "action_head_input_rmse": 0.4229966640873757,
+      "active_head_output_rmse": 0.7487951051180586,
+      "padding_head_output_rmse": 0.06274818012501779,
+      "active_row_energy_fraction": 0.046202010486468825,
+      "padding_row_energy_fraction": 0.0016287826228853605,
+      "full_output_row_energy_fraction": 0.047919437142470725,
+      "output_null_energy_fraction": 0.9520805628575293
+    },
+    {
+      "condition": "paraphrase",
+      "env_step": 75.0,
+      "action_rmse": 0.45397967832515995,
+      "action_first10_rmse": 0.3593097135659144,
+      "prefix_embedding_rmse": 1.023744821548462,
+      "vlm_last_layer_rmse": 0.03592682629823685,
+      "action_expert_last_layer_rmse": 0.49650048846855555,
+      "action_to_vlm_gain": 12.609947918602646,
+      "action_expert_to_vlm_gain": 13.797226021057476,
+      "velocity_mean_rmse": 0.2559490016807295,
+      "kv_key_norm_rmse": 3.0222005092823636,
+      "action_head_input_rmse": 0.49887973020074194,
+      "active_head_output_rmse": 0.8646239336411209,
+      "padding_head_output_rmse": 0.07680420447742767,
+      "active_row_energy_fraction": 0.042331763583170375,
+      "padding_row_energy_fraction": 0.001910969015821441,
+      "full_output_row_energy_fraction": 0.04437199657980806,
+      "output_null_energy_fraction": 0.9556280034201919
+    },
+    {
+      "condition": "wrist_mean",
+      "env_step": 75.0,
+      "action_rmse": 0.3338085622454422,
+      "action_first10_rmse": 0.39054090349239073,
+      "prefix_embedding_rmse": 148.05626678466797,
+      "vlm_last_layer_rmse": 0.12609438225626945,
+      "action_expert_last_layer_rmse": 0.3910229644024336,
+      "action_to_vlm_gain": 2.651812321673659,
+      "action_expert_to_vlm_gain": 3.103612507009154,
+      "velocity_mean_rmse": 0.1971334426100822,
+      "kv_key_norm_rmse": 1.672211267238744,
+      "action_head_input_rmse": 0.39136039113196835,
+      "active_head_output_rmse": 0.7580134195978039,
+      "padding_head_output_rmse": 0.060659711108485295,
+      "active_row_energy_fraction": 0.0601551362028971,
+      "padding_row_energy_fraction": 0.00172506754136292,
+      "full_output_row_energy_fraction": 0.06220991769584723,
+      "output_null_energy_fraction": 0.9377900823041527
+    }
+  ],
+  "contradiction_alignment_medians": [
+    {
+      "representation": "action_chunk",
+      "env_step": 75.0,
+      "distance_to_original": 0.808658276686085,
+      "distance_to_alternate": 0.7006332059808826,
+      "alternate_alignment": 0.007738761882758904
+    },
+    {
+      "representation": "action_expert_last_layer",
+      "env_step": 75.0,
+      "distance_to_original": 0.7590149158749377,
+      "distance_to_alternate": 0.6742811719592271,
+      "alternate_alignment": 0.036287168225835095
+    },
+    {
+      "representation": "vlm_last_layer",
+      "env_step": 75.0,
+      "distance_to_original": 0.04309995844960213,
+      "distance_to_alternate": 0.037438685074448586,
+      "alternate_alignment": 0.07017111004699911
+    }
+  ],
+  "scientific_boundary": "Fixed-observation evidence only: estimates proposal and input-factor sensitivity, not branched recoverability, causal mediation, or training-trajectory memorisation."
+}

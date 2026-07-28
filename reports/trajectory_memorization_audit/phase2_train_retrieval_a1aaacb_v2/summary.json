@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "training_repo": "lerobot/libero",
+  "training_revision": "a1aaacb7f6cd6ee5fb43120f673cebb0cfea7dd4",
+  "training_episodes": 1693,
+  "training_frames": 273465,
+  "training_windows_horizon_50": 190508,
+  "source_task_index": 12,
+  "source_instruction": "open the top drawer and put the bowl inside",
+  "alternate_task_index": 18,
+  "alternate_instruction": "put the bowl on top of the cabinet",
+  "evaluation_states": 4,
+  "evaluated_plans": 20,
+  "training_self_nearest_standardized_rmse": {
+    "p01": 0.21529185086488722,
+    "median": 0.4494713842868805,
+    "p99": 1.012513269186023
+  },
+  "proposal_same_task_nearest_standardized_rmse": {
+    "min": 0.4790817201137543,
+    "median": 0.5525640249252319,
+    "max": 0.6267764568328857
+  },
+  "proposal_to_training_copying_ratio_median": 1.2293641914532902,
+  "proposal_training_redundancy_percentile_median": 0.8,
+  "proposal_scope_medians": [
+    {
+      "scope": "alternate_goal_task",
+      "standardized_rmse": 0.7723165452480316,
+      "candidate_state_standardized_rmse": 0.5466953336097536
+    },
+    {
+      "scope": "other_tasks",
+      "standardized_rmse": 0.4457657188177109,
+      "candidate_state_standardized_rmse": 1.7072161919875755
+    },
+    {
+      "scope": "same_task",
+      "standardized_rmse": 0.5525640249252319,
+      "candidate_state_standardized_rmse": 0.3653056283645083
+    },
+    {
+      "scope": "same_task_state_top128",
+      "standardized_rmse": 0.8130219876766205,
+      "candidate_state_standardized_rmse": 0.12444920837879181
+    }
+  ],
+  "proposal_state_conditioning_penalty": 1.471362504619499,
+  "rollout_future_same_task_nearest_standardized_rmse_median": 0.2939506471157074,
+  "proposal_pairwise_standardized_rmse_median": 0.17561308809789597,
+  "exact_action_window_matches_at_1e-6": 0,
+  "exact_same_task_state_matches_at_1e-6": 0,
+  "scientific_boundary": "Action/state retrieval proxy only. State omits object geometry and videos were deliberately excluded; nearest demonstration motion cannot by itself establish training-example memorisation or causal influence."
+}

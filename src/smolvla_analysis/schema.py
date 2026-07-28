@@ -14,14 +14,15 @@ EPISODE_COLUMNS = (
     "seed", "initial_state_id", "condition", "success", "total_steps", "termination_reason",
     "failure_class", "failure_onset_step", "model_load_time_s", "wall_time_s", "peak_gpu_memory_mb",
     "latency_mean_ms", "latency_p50_ms", "latency_p95_ms", "video_path", "observation_path",
-    "activation_path", "infrastructure_failure",
+    "activation_path", "environment_state_path", "infrastructure_failure",
 )
 STEP_COLUMNS = (
     "run_id", "episode_id", "env_step", "normalized_progress", "timestamp", "task_phase",
     "robot_state", "eef_state", "gripper_state", "object_state", "goal_state",
+    "action_query_id", "flow_noise_seed", "queue_age", "chunk_action_index",
     "predicted_action_chunk", "executed_action", "action_norm", "action_smoothness", "action_jerk",
     "gripper_action", "policy_latency_ms", "gpu_memory_mb", "uncertainty_features",
-    "activation_reference",
+    "activation_reference", "environment_state_reference",
 )
 FAILURE_CLASSES = {
     "wrong object", "wrong target", "localization error", "premature gripper closure", "empty grasp",
@@ -71,4 +72,3 @@ def validate_tables(episodes: pd.DataFrame, steps: pd.DataFrame) -> list[str]:
     if invalid_failures:
         errors.append(f"unknown failure classes: {sorted(invalid_failures)}")
     return errors
-

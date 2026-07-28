@@ -1,0 +1,1424 @@
+{
+  "10.0": {
+    "L_effect_controlled": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.24164659937487298,
+          "rmse": 0.33883555405339416,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.3587903319085052,
+          "rmse": 0.3967791237812047,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.36921777616807583,
+          "rmse": 0.41674083816431,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.12527756455693853,
+          "rmse": 0.13735549491571508,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.0294995607898084,
+          "rmse": 0.032959257328994365,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.06946618966945836,
+          "rmse": 0.09321127235068732,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.09964635458539234,
+          "rmse": 0.10856443324022323,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.0946350648850069,
+          "rmse": 0.11513753156240633,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.2358253800457847,
+          "rmse": 0.3330003637574542,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.3890283788979405,
+          "rmse": 0.42975148773982486,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.33269367292565305,
+          "rmse": 0.3823125016831201,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.0968479217668351,
+          "rmse": 0.11788426560749907,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.03138713622748706,
+          "rmse": 0.03737247080203044,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.061958786264928775,
+          "rmse": 0.0743373600923043,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.0878258972369697,
+          "rmse": 0.09244596783463839,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.08541921747558173,
+          "rmse": 0.10494809574090275,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "Q_effect_controlled": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.4548466743772883,
+          "rmse": 0.5150688139901062,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.580776946596036,
+          "rmse": 0.7040013335365713,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.4190076216415394,
+          "rmse": 0.4499460564335042,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.11286217708650573,
+          "rmse": 0.1298344061204884,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.17813346394588983,
+          "rmse": 0.19181193625045165,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.1996290683859851,
+          "rmse": 0.21360864868493662,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.17337017519886333,
+          "rmse": 0.22826146598513977,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.11648394982636916,
+          "rmse": 0.1340360688595354,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.4485043430315437,
+          "rmse": 0.5031723643792905,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5329421710387949,
+          "rmse": 0.6850852469522978,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.2909258925645987,
+          "rmse": 0.36210046054950945,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.10179390298169357,
+          "rmse": 0.11155725359739506,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.18355335231914877,
+          "rmse": 0.20143341180180352,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.17804924357512025,
+          "rmse": 0.18632187187129265,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.16241918778644468,
+          "rmse": 0.2105657365266088,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.11484268612218422,
+          "rmse": 0.13729997160002336,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "Q_preexecution": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5453030313334204,
+          "rmse": 0.5817636499449949,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.6954787858873379,
+          "rmse": 0.7673119589448828,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.5114595455032909,
+          "rmse": 0.6195152804552854,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.08210575427720442,
+          "rmse": 0.09892453847611792,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.2998874697181559,
+          "rmse": 0.3122919059954255,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.4150698469218714,
+          "rmse": 0.4264663524914078,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.26093159873660476,
+          "rmse": 0.2857793266037967,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.08959985144901816,
+          "rmse": 0.11295965578679974,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5472289862426398,
+          "rmse": 0.5824760418475844,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.65126876169939,
+          "rmse": 0.7323642159358521,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.3931937415991811,
+          "rmse": 0.5599681921308367,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.06611756216461995,
+          "rmse": 0.07608728301995021,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.31809246489614385,
+          "rmse": 0.33290136511983875,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.4034439493894008,
+          "rmse": 0.40938090344818817,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.25178030075836333,
+          "rmse": 0.2716446674159384,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.06844396921583486,
+          "rmse": 0.07451980044484559,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "V": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.4798413835483146,
+          "rmse": 0.4847654561073911,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5517919990413325,
+          "rmse": 0.5572725599658989,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.3840179464973007,
+          "rmse": 0.39156776385195097,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.09911455718947637,
+          "rmse": 0.09982063615310484,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.16927369611643633,
+          "rmse": 0.19204706459027693,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.16680947775646215,
+          "rmse": 0.1907502049852822,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.16139012780674095,
+          "rmse": 0.1707642863881248,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.03066782127104445,
+          "rmse": 0.03253436188820064,
+          "test_rows": 2,
+          "train_rows": 18
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.4765251330505819,
+          "rmse": 0.481298179406145,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5442911399208736,
+          "rmse": 0.5496700819336641,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.3732602156374469,
+          "rmse": 0.3815609524481774,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.09910580441339054,
+          "rmse": 0.09980721944058861,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.16818664218417806,
+          "rmse": 0.1905691369546219,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.1667552629212926,
+          "rmse": 0.19051320013459166,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.16039862668151517,
+          "rmse": 0.16992386168503978,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.03095215255558484,
+          "rmse": 0.03105997384627598,
+          "test_rows": 2,
+          "train_rows": 18
+        }
+      ]
+    }
+  },
+  "100.0": {
+    "L_effect_controlled": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.16875975188075587,
+          "rmse": 0.2576214763164138,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.23398943686940057,
+          "rmse": 0.2869769375925474,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.2109265779147518,
+          "rmse": 0.30358852819925025,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.02685987798024121,
+          "rmse": 0.030803976050224377,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.03466728141881823,
+          "rmse": 0.035709918463302154,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.03609085172094609,
+          "rmse": 0.04648743856125283,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.027678774531961534,
+          "rmse": 0.03671124707751001,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.03920099177890228,
+          "rmse": 0.0452102289691528,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.1697170072154853,
+          "rmse": 0.2575436540574236,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.23826305520033686,
+          "rmse": 0.28986845345989537,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.19914394836973653,
+          "rmse": 0.300348163297288,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.025765656899343337,
+          "rmse": 0.031107344831918265,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.03809362238440302,
+          "rmse": 0.038621123620000176,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.033312197196048075,
+          "rmse": 0.03973665543629153,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.03117194921717612,
+          "rmse": 0.039747643932962935,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.037455390024954335,
+          "rmse": 0.04576780270103607,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "Q_effect_controlled": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5185895051401246,
+          "rmse": 0.5534829548927581,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5760233621322435,
+          "rmse": 0.6478461866709327,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.3519181457126678,
+          "rmse": 0.44463435421011516,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.0986687912160299,
+          "rmse": 0.10684190608898944,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.21728253471322284,
+          "rmse": 0.2410299389481564,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.14371459326588126,
+          "rmse": 0.15947455776925437,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.15349206641601654,
+          "rmse": 0.18509255043958284,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.04095977276169535,
+          "rmse": 0.05227642601347258,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5078061084141892,
+          "rmse": 0.5443877074931329,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5463369054931748,
+          "rmse": 0.6214271711320338,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.40429816786437955,
+          "rmse": 0.45317306496981374,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.09821111263063209,
+          "rmse": 0.10741139852547352,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.21598273698819043,
+          "rmse": 0.2422489971785079,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.15449297827328268,
+          "rmse": 0.1673441464576119,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.15745340535477886,
+          "rmse": 0.1872566996729725,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.03869411600886135,
+          "rmse": 0.050046820146866684,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "Q_preexecution": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5343620726413252,
+          "rmse": 0.5788457712360714,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.627645666076251,
+          "rmse": 0.6906974522550662,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.3868076299836501,
+          "rmse": 0.5017771320444327,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.11311275282419209,
+          "rmse": 0.1200653689795363,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.2410516806638151,
+          "rmse": 0.2693450071168899,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.19368903376553748,
+          "rmse": 0.2092035760210058,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.16880513717010515,
+          "rmse": 0.19493615109068954,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.0347168994531005,
+          "rmse": 0.03656315275880276,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5246870352303282,
+          "rmse": 0.5724529082020081,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.6028597248577933,
+          "rmse": 0.6640404989998002,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.44038405724062424,
+          "rmse": 0.5081326892012542,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.11286377148131425,
+          "rmse": 0.11951982119014858,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.24180902369127755,
+          "rmse": 0.27261940807678114,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.2044220739988424,
+          "rmse": 0.21725451787780392,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.17221420218031597,
+          "rmse": 0.19704491120036677,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.034445127252859205,
+          "rmse": 0.03570521891411003,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "V": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5241250144906844,
+          "rmse": 0.5258157138279834,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5738066787626777,
+          "rmse": 0.5849288311796238,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.35658459223264016,
+          "rmse": 0.3619097948217406,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.15288927396016921,
+          "rmse": 0.15392210272151896,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.1975083784927487,
+          "rmse": 0.2560842587144412,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.11998443874856501,
+          "rmse": 0.12126853622042807,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.13931271405059217,
+          "rmse": 0.19388924043881256,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.07685720769053841,
+          "rmse": 0.07769085093207652,
+          "test_rows": 2,
+          "train_rows": 18
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5199054317928165,
+          "rmse": 0.5215062977578074,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5673905835352421,
+          "rmse": 0.5783816818456827,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.3498158849704551,
+          "rmse": 0.3552944962573999,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.15340893216483065,
+          "rmse": 0.15453808955534168,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.1976438918913041,
+          "rmse": 0.2559735225431667,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.12087494790388548,
+          "rmse": 0.12227622974657411,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.14058031868034254,
+          "rmse": 0.19275459167578393,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.07713885580189225,
+          "rmse": 0.07932435553188837,
+          "test_rows": 2,
+          "train_rows": 18
+        }
+      ]
+    }
+  },
+  "1000.0": {
+    "L_effect_controlled": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.18576939104426737,
+          "rmse": 0.2615430623463741,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.19026147448496258,
+          "rmse": 0.27603195640693895,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.20820734253943302,
+          "rmse": 0.3143766123527365,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.02958555674722546,
+          "rmse": 0.03320517290223094,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.0317411436001141,
+          "rmse": 0.034483422034886885,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.02939666673728379,
+          "rmse": 0.03602548164229734,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.030066090597124194,
+          "rmse": 0.03403903105533042,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.0292756973810606,
+          "rmse": 0.03497625614342898,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.1860157118526449,
+          "rmse": 0.2616623332022603,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.19030265295717969,
+          "rmse": 0.27619293408414064,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.20793493130679505,
+          "rmse": 0.3141689661266851,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.029598338656530138,
+          "rmse": 0.03322398300168514,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.03205866988678074,
+          "rmse": 0.03490715173715235,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.028708929733320232,
+          "rmse": 0.034973929370420764,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.03049627272153708,
+          "rmse": 0.03479584235196554,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.029757612991101617,
+          "rmse": 0.03505856288397812,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "Q_effect_controlled": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5664915571195053,
+          "rmse": 0.6059175222563259,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.6167616564725298,
+          "rmse": 0.6706039485381918,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.41749952488240916,
+          "rmse": 0.4498791846387208,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.22176966858824865,
+          "rmse": 0.22424419055446923,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.23270153879853428,
+          "rmse": 0.30480107732827133,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.1333415603516266,
+          "rmse": 0.15979159767089324,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.2218241707093714,
+          "rmse": 0.2460622617608079,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.1711670546823466,
+          "rmse": 0.18080666987932748,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.558312269834277,
+          "rmse": 0.5987525277739258,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.6059241338749155,
+          "rmse": 0.6554368812334901,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.42885200434253923,
+          "rmse": 0.45350893341785986,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.22490622704820218,
+          "rmse": 0.22728393309973174,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.23652288352338455,
+          "rmse": 0.30601061235455157,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.1354961318860824,
+          "rmse": 0.16363107680434688,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.22330488706819474,
+          "rmse": 0.2473298728718041,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.1728239843048412,
+          "rmse": 0.1816515010976051,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "Q_preexecution": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5693082310581974,
+          "rmse": 0.6128384789115365,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.627021299645201,
+          "rmse": 0.6788124555108512,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.4302333928034725,
+          "rmse": 0.4671722234705783,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.23359938079211812,
+          "rmse": 0.23654540296214957,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.2503523373434282,
+          "rmse": 0.3201064427978768,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.14006255365676576,
+          "rmse": 0.16949128985688733,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.23222725554580292,
+          "rmse": 0.2551275214399636,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.18754674247609365,
+          "rmse": 0.19594706329756326,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5610701810061596,
+          "rmse": 0.605840153715166,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.6160573030085196,
+          "rmse": 0.663281264084934,
+          "test_rows": 16,
+          "train_rows": 64
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.44224059747315003,
+          "rmse": 0.47075552075888105,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.23714044006603946,
+          "rmse": 0.2399157229832672,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.2546438513964599,
+          "rmse": 0.3219256597434859,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.14252168942783652,
+          "rmse": 0.17385385329746453,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.23405413670924577,
+          "rmse": 0.2566685787498095,
+          "test_rows": 8,
+          "train_rows": 72
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.18963490201129357,
+          "rmse": 0.19732600807582068,
+          "test_rows": 8,
+          "train_rows": 72
+        }
+      ]
+    },
+    "V": {
+      "augmented": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5441898584801952,
+          "rmse": 0.5478880474899132,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5926627737641962,
+          "rmse": 0.6114303567132745,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.31798231081507544,
+          "rmse": 0.3206840458051934,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.35844177314713166,
+          "rmse": 0.35945689340328973,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.3673863017576116,
+          "rmse": 0.38946000082818005,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.3121483768284027,
+          "rmse": 0.3164498236137412,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.36081920947460805,
+          "rmse": 0.3635811103394233,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.3363017264809377,
+          "rmse": 0.338798286486665,
+          "test_rows": 2,
+          "train_rows": 18
+        }
+      ],
+      "baseline": [
+        {
+          "held_out_group": "libero_goal_task03_ep000_seed0",
+          "mae": 0.5425978095446101,
+          "rmse": 0.5461919918472647,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep001_seed1",
+          "mae": 0.5898333762104662,
+          "rmse": 0.6084059360291361,
+          "test_rows": 4,
+          "train_rows": 16
+        },
+        {
+          "held_out_group": "libero_goal_task03_ep003_seed3",
+          "mae": 0.3156209508811788,
+          "rmse": 0.3184325258511493,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep000_seed0",
+          "mae": 0.3591590551448533,
+          "rmse": 0.36020450843204815,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep001_seed1",
+          "mae": 0.3678416313412565,
+          "rmse": 0.38999651403731206,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep002_seed2",
+          "mae": 0.3130700818246015,
+          "rmse": 0.3175015216553344,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep003_seed3",
+          "mae": 0.36181073927394747,
+          "rmse": 0.3643137014443045,
+          "test_rows": 2,
+          "train_rows": 18
+        },
+        {
+          "held_out_group": "libero_goal_task04_ep004_seed4",
+          "mae": 0.3369786306515866,
+          "rmse": 0.3399485187885214,
+          "test_rows": 2,
+          "train_rows": 18
+        }
+      ]
+    }
+  }
+}

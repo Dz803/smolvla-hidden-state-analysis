@@ -13,6 +13,14 @@ This is the compact, tracked ledger for completed experiments and canonical deci
 | Official-style benchmark | Complete | `benchmark_400_20260723T021424Z_e0638bea`, 400 episodes, 255 successes |
 | Infrastructure failures | None | 0 across canonical evaluation runs |
 | Warning confound audit | Complete | `reports/warning_confound_audit/` |
+| Offline robustness gate | Complete | `reports/offline_robustness_gate/` |
+| Trajectory/scene confound audit | Complete | `reports/trajectory_confound_audit/` |
+| Phase 2 exact-forward gate | Complete, corrected | `reports/phase2_forward_gate/phase2_forward_gate_20260727T123138Z/` |
+| LIBERO computational-state gate | Passed | `reports/phase2_state_gate/state_contract_20260727T113937Z/` |
+| Training state/action retrieval audit | Complete | `reports/trajectory_memorization_audit/phase2_train_retrieval_a1aaacb_v3/` |
+| Phase 3 certified CRD smoke | Complete | `reports/phase3_crd/phase3_crd_20260728T021125Z/` |
+| Phase 3 engineering/scientific review | Complete | `docs/phase3_engineering_review.md` |
+| Historical paired-state provenance | Failed audit | Nominal seed/episode IDs do not guarantee identical initial state after outcome-dependent autoresets |
 | Causal hidden-state mechanism | Not established | Active research target |
 
 ## Evidence summary
@@ -54,10 +62,73 @@ This is the compact, tracked ledger for completed experiments and canonical deci
 - Canonical next phase: offline robustness gate—bootstrap intervals, leave-one-suite-out transfer, cross-condition transfer, and richer state/action-history baselines.
 - No completed rollout should be repeated when resuming.
 
+### 2026-07-27 — Offline robustness gate
+
+- Completed Phase 1 using only existing immutable runs; no new rollout was launched.
+- Added 2,000-draw episode and task-cluster intervals. At step 100, action-expert AUPRC is 0.844 (episode 95% CI 0.785–0.895; task-cluster CI 0.736–0.927), and VLM AUPRC is 0.770 (0.699–0.835; 0.678–0.867).
+- The richer five-sample state/action-history baseline reaches 0.517 AUPRC versus 0.844/0.770 for action expert/VLM.
+- Leave-one-suite-out macro AUPRC is 0.835 for action expert, 0.785 for VLM, and 0.534 for state/action history.
+- Task-held-out action-expert probes transfer in both directions for clean↔blur and clean↔paraphrase. VLM paraphrase transfer is weaker.
+- Clean probes assign high failure probability to wrist-mask episodes, but all 90 episodes fail; ranking is undefined and wrist-mask→clean fitting is non-estimable.
+- Canonical derived artifacts: `reports/offline_robustness_gate/`. Claim remains robust predictive evidence at step 100, not a causal hidden-state mechanism.
+- Next phase: failure-subtype/onset annotation and modality-token instrumentation.
+
+### 2026-07-27 — Execution-path, trajectory-confound, and research-novelty audit
+
+- Inspected the rollout and capture path without modifying canonical evidence. The policy replans every 50 environment steps, while archived activations were collected after each episode by resetting the policy and issuing a fresh stochastic `predict_action_chunk` query on saved observations. They are therefore not the hidden states that generated the executed actions.
+- The archived VLM vector averages all 177 prefix tokens; the action-expert vector averages all 50 action positions and ten denoising hook calls. The saved predicted-action field is the shrinking original rollout queue, so it is not aligned with the fresh post-hoc activation's sampled chunk.
+- Recomputed task-grouped, nested-regularized probes on exact active risk sets. At step 100 (`n=319`, failure prevalence 0.455), AUPRC was 0.744 for the full ordered 50x7 chunk, 0.803 for robot state plus executed-action prefix plus full chunk, 0.878 for action expert, and 0.843 for VLM. Adding action expert or VLM to behavioural context reached 0.882/0.883. These are predictive comparisons, not a conditional-information hypothesis test.
+- Low-resolution current-scene pixels reached 0.532 AUPRC and 0.632 AUROC at step 0, stronger than the hidden-state probes under the same exact-landmark protocol. This elevates visible initial layout/seed difficulty to a primary confound. High-dimensional feature concatenations were unstable under held-out-task evaluation and are not treated as decisive.
+- Audited the environment-state contract: all 89,064 stored `object_state` values are null, `goal_state` contains only a normalized-progress fallback, and phase labels are time bins despite `save_environment_state: true`. True geometry, predicates, contacts, and restorable simulator state must be captured before a recoverability experiment.
+- Verified from the official model/dataset records that the evaluated checkpoint was trained on the same 40 LIBERO task identities used by the benchmark. Task-held-out probe folds do not make the policy task-OOD. Recent work already covers generic frozen-VLA success/value probing and exposes severe LIBERO shortcut/generalization failures.
+- Defined Counterfactual Recoverability Decomposition (CRD), separating state-level policy recoverability `V` from within-state sampled-plan quality `Q`, with common-random-number branches, complete conditional baselines, cross-goal plan faithfulness, and matched bidirectional causal patches.
+- Canonical derived artifacts: `reports/trajectory_confound_audit/`; research synthesis: `docs/blind_spot_research_audit.md`. No canonical rollout or immutable artifact was changed.
+- The active next phase is exact action-forward measurement alignment. The former annotation-first phase is deferred. Any branched simulation smoke gate requires explicit approval.
+
+### 2026-07-27 — Phase 2 exact-forward, state, and retrieval gates
+
+- Replaced the active runtime's post-episode stochastic re-query with structured capture inside the exact queue-filling action forward. Query IDs, explicit flow seeds, queue age, exact 50x7 chunks, token spans, action positions, ten denoising calls, VLM-to-action KV summaries, and the input to `action_out_proj` are retained.
+- Completed 40 fixed-observation queries over four immutable task-3 states at steps 50 and 100. Hooked versus reference chunks and exact-seed repeats have maximum error `0`; VLM and prefix KV statistics are exactly invariant to flow seed. No canonical rollout was rerun.
+- Feasible alternate-goal action/VLM displacement gain is `35.0`, versus `12.6` for a paraphrase and `2.40/2.65` for main/wrist mean-image controls. This is direction-selective downstream amplification, not a latent-magnitude effect.
+- An explicit contradiction is weakly alternate-goal aligned in the VLM at both landmarks but is routed toward the original goal at step 50 and the alternate goal at step 100. This motivates a scene/trajectory-conditioned semantic-routing hypothesis; the fixed states cannot determine whether that routing is rational or harmful.
+- The final expert state is 720-D and the internal action output is 32-D, of which only seven channels execute in LIBERO. Proposal-noise displacement has median `9.08%` executed-row, `60.36%` padding-row, and `31.31%` output-null energy. Controlled factor displacement is `93.8–96.1%` output-null while its small executed projection produces large action effects.
+- A real LIBERO replay test rejects MuJoCo-only matching: identical three-action replay differs by `0.037207` in final simulator state and up to `172/255` in camera pixels because controller/gripper/runtime state is omitted. Full runtime restoration yields identical pixels and `7.12e-15` simulator error. The computational-state certificate is mandatory for future branches.
+- Retrieved only revision-pinned official `lerobot/libero` state/action Parquet (`a1aaacb7f6cd6ee5fb43120f673cebb0cfea7dd4`), with no video or external model weights. Across 190,508 horizon-50 train windows, the audited proposals have zero exact matches and median same-task nearest RMSE `0.553` versus train self-nearest median `0.449`. Action-only other-task matches are false positives with severe state mismatch.
+- Same-step plans across different success/failure episodes are relatively similar (`0.222` standardized RMSE) compared with different-landmark plans (about `0.624`), motivating a phase-locked policy-attractor test rather than a literal trajectory-copying claim.
+- Defined Executable–Reflective Subspace Decomposition (ERSD) inside Cross-Policy Recoverability Decomposition (CPRD). The combined method tests common difficulty, policy-specific competence, proposal luck, causal factor interactions, and internal self-specificity in shared environment-effect space.
+- Canonical interpretation: `docs/phase2_discoveries_and_ersd.md`. Phase 2 is complete; Phase 3's approximately 160 branched continuations remain pending explicit approval. π0.5 and GR00T weights have not been downloaded.
+
+### 2026-07-27 — Historical paired-state provenance failure
+
+- Phase 3 preflight found that LeRobot's scalar LIBERO wrapper resets itself on success while Gymnasium's same-step vector wrapper resets it again; the experiment loop then explicitly resets before the next episode. Initial-state indices therefore advance according to prior outcomes rather than nominal episode index alone.
+- Direct archive comparison confirms the impact. Step-0 policy state is exactly equal for only 60/90 clean–paraphrase, 33/90 clean–blur, and 14/90 clean–wrist nominal pairs.
+- The previously reported perturbation success differences remain descriptive condition-level contrasts, but they are not matched-initial-state causal estimates across all 90 episodes. Only an explicitly verified identical-state subset may support paired interpretation.
+- Phase 3 will not repair or overwrite historical runs. It uses one captured full-runtime snapshot as the source of every factor/proposal/continuation branch and requires explicit replay/state certificates.
+
+### 2026-07-27 — Phase 2 image-orientation contract failure
+
+- Phase 3 preflight found that canonical observation NPZ cameras were saved before LeRobot's LIBERO environment processor rotates both image axes by 180 degrees.
+- `run_phase2_forward_gate.py` rebuilt batches directly from those saved arrays and omitted that environment transform. Its zero hook/repeat error proves deterministic capture for the queried input, but not equivalence to the rollout policy's correctly oriented input.
+- Phase 2 semantic-routing and latent-subspace numbers are provisional pending a corrected fixed-forward rerun. No canonical rollout needs to be repeated; the repair is limited to saved-observation preprocessing and derived evidence.
+- Corrected report `phase2_forward_gate_20260727T123138Z` passes zero hook/repeat error over 40 queries. The earlier semantic-routing reversal disappears and must not be cited. Wrist-mean replacement now has the largest action effect (`0.958` RMSE), while alternate-goal action/VLM gain remains directionally larger than paraphrase.
+- The executable/null finding survives: controlled-factor displacement is `97.85–98.64%` output-null, and proposal-noise displacement remains strongly padding/output-row aligned. This corrected report supersedes `phase2_forward_gate_20260727T114152Z` for scientific interpretation.
+
+### 2026-07-28 — Phase 3 certified recoverability decomposition
+
+- Completed the approved two-task smoke with ten certified states, 80 exact first-proposal queries reused across two common-random-number continuation schedules, 160 active branches, and 80 additional fixed-noise factor queries. No completed canonical rollout was rerun and nothing under `archive/full_experiment/runs` was modified.
+- Simulator audit found that flattened MuJoCo state omits `qacc_warmstart`; dropping that field alone reproduces a contact-state divergence. A serialized full snapshot is also unsafe on first restore into a cold simulator (`0.1262` state error; up to `191/255` pixel error).
+- Reconstructed every active branch root by current-process replay of immutable archived actions. Two provenance-preserving repair transactions retained 114 old payloads and old/new hashes; 96 semantic payloads and 12 success labels changed. All 160 active branches now carry valid source reconstruction and all 80 paired first-plan effects match exactly.
+- Outcome variance decomposes into state-goal `80.8%`, first-proposal `15.4%`, and continuation `3.8%`; only 3/80 continuation pairs disagree. Cabinet-source states reach cabinet/drawer at `1.0/0.0`; drawer-source states reach drawer/cabinet at `0.45/0.375`.
+- The apparent language result is a **veto–composition gap**, not proof of trajectory memory. The policy is reset and has no observation-history queue. Cabinet states are all step 50 with a raised/often-grasped bowl and closed drawer; drawer states mix steps 50/100 with a table-height bowl and usually displaced drawer. Physical preparation and source-policy occupancy remain major confounds.
+- Adding the predeclared low-dimensional hidden summaries does not improve held-source-episode prediction beyond full controls. Effect-controlled `Q` RMSE changes `0.413→0.422` with MSE improvement `-0.0076` (episode-cluster interval `[-0.0182,+0.0025]`); `L` improvement is indistinguishable from zero. `Q` remains non-positive at ridge alphas 10, 100, and 1000.
+- Senior review added a write-time paired-prefix invariant, fail-closed nested certificate comparisons, explicit probe-action length checks, episode-cluster bootstrap for repeated landmarks, state-bank geometry auditing, regularisation sensitivity, and documentation correction of the Phase 2 orientation artifact.
+- Canonical compact evidence: `reports/phase3_crd/phase3_crd_20260728T021125Z/`; raw workstation evidence: `local/phase3_crd/phase3_crd_20260728T021125Z/`; review: `docs/phase3_engineering_review.md`.
+- Decision: Phase 3 validates the CRD machinery but does not green-light unchanged causal patching or π0.5/GR00T scaling. The next proposed gate is a policy-independent, occupancy-balanced affordance lattice.
+
 ## Known limitations
 
 - Failure subtype and true onset are not yet manually annotated.
-- Existing activations are pooled; language, main-image, wrist-image, and action token spans are not separated.
+- Archived canonical-rollout activations are pooled; the completed Phase 2 fixed-forward captures separate language, main-image, wrist-image, state, action-position, and denoising-time axes.
 - The black wrist mask is a strong out-of-distribution intervention and does not by itself prove normal wrist-view necessity.
 - Only one checkpoint and simulator family have been evaluated.
 - Probe prediction is not evidence that the decoded representation causally controls action.

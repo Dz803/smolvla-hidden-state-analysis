@@ -1,0 +1,125 @@
+{
+  "run_id": "phase2_forward_gate_20260727T112104Z",
+  "source_run": "/home/zhongzhengyang/smolvla-hidden-state-analysis/archive/full_experiment/runs/benchmark_400_20260723T021424Z_e0638bea",
+  "raw_capture_path": "/home/zhongzhengyang/smolvla-hidden-state-analysis/local/phase2_forward_gate/phase2_forward_gate_20260727T112104Z/queries.zarr",
+  "model_load_time_s": 12.120676042046398,
+  "states": [
+    "libero_goal_task03_ep000_seed0_step0050"
+  ],
+  "queries": 9,
+  "layers": [
+    3,
+    7,
+    11,
+    15
+  ],
+  "hook_fidelity": {
+    "max_abs_chunk_difference": 0.0,
+    "reference_shape": [
+      1,
+      50,
+      7
+    ]
+  },
+  "determinism_max": {
+    "action_max_abs": 0.0,
+    "vlm_max_abs": 0.0,
+    "action_expert_max_abs": 0.0
+  },
+  "noise_plan_coupling": {
+    "pooled_action_to_action_expert_correlation": -0.18731800702226284,
+    "within_state_action_to_action_expert_correlation": -0.18731800702226295,
+    "within_state_action_to_active_head_correlation": -0.7674850807428931,
+    "maximum_vlm_rmse": 0.0,
+    "maximum_kv_key_norm_rmse": 0.0
+  },
+  "executable_subspace": {
+    "hidden_dimension": 720,
+    "internal_action_dimension": 32,
+    "executed_action_dimension": 7,
+    "active_row_rank": 7,
+    "padding_row_rank": 25,
+    "full_output_row_rank": 32,
+    "median_noise_active_row_energy_fraction": 0.08980340739034874,
+    "median_noise_full_output_row_energy_fraction": 0.7442204147501255
+  },
+  "factor_medians": [
+    {
+      "condition": "alternate_goal",
+      "env_step": 50.0,
+      "action_rmse": 0.8593243163751417,
+      "action_first10_rmse": 0.5573651464344527,
+      "prefix_embedding_rmse": 1.068056344985962,
+      "vlm_last_layer_rmse": 0.033244840800762177,
+      "action_expert_last_layer_rmse": 0.8695209018180085,
+      "action_to_vlm_gain": 25.848351072730683,
+      "action_expert_to_vlm_gain": 26.15506288717357,
+      "velocity_mean_rmse": 0.4324410721637929,
+      "kv_key_norm_rmse": 1.7280450575042436,
+      "action_head_input_rmse": 0.8677119226183219,
+      "active_head_output_rmse": 1.2678625698153403,
+      "padding_head_output_rmse": 0.07336356360948307,
+      "active_row_energy_fraction": 0.03186040942166679,
+      "padding_row_energy_fraction": 0.0005588567211373108,
+      "full_output_row_energy_fraction": 0.03247744638466671
+    },
+    {
+      "condition": "main_mean",
+      "env_step": 50.0,
+      "action_rmse": 0.2868577143916009,
+      "action_first10_rmse": 0.3069639627342844,
+      "prefix_embedding_rmse": 166.822021484375,
+      "vlm_last_layer_rmse": 0.13358083367347717,
+      "action_expert_last_layer_rmse": 0.3830575689632239,
+      "action_to_vlm_gain": 2.1474466546060884,
+      "action_expert_to_vlm_gain": 2.8676087611458065,
+      "velocity_mean_rmse": 0.15977606992326004,
+      "kv_key_norm_rmse": 1.770682491139368,
+      "action_head_input_rmse": 0.38221617609072245,
+      "active_head_output_rmse": 0.6378498259001636,
+      "padding_head_output_rmse": 0.060698555402421694,
+      "active_row_energy_fraction": 0.03472112777654958,
+      "padding_row_energy_fraction": 0.0019907613434136475,
+      "full_output_row_energy_fraction": 0.036783655631418805
+    },
+    {
+      "condition": "paraphrase",
+      "env_step": 50.0,
+      "action_rmse": 0.3330953733640096,
+      "action_first10_rmse": 0.3448667076637634,
+      "prefix_embedding_rmse": 1.023744821548462,
+      "vlm_last_layer_rmse": 0.03585154563188553,
+      "action_expert_last_layer_rmse": 0.4247830006069502,
+      "action_to_vlm_gain": 9.29096270448553,
+      "action_expert_to_vlm_gain": 11.848387374104119,
+      "velocity_mean_rmse": 0.18774021150258347,
+      "kv_key_norm_rmse": 3.0087459568345247,
+      "action_head_input_rmse": 0.42514865923562645,
+      "active_head_output_rmse": 0.6198455150161994,
+      "padding_head_output_rmse": 0.07731666122197954,
+      "active_row_energy_fraction": 0.027211549159964245,
+      "padding_row_energy_fraction": 0.002596017552354452,
+      "full_output_row_energy_fraction": 0.02983901235727143
+    },
+    {
+      "condition": "wrist_mean",
+      "env_step": 50.0,
+      "action_rmse": 0.2953993618189261,
+      "action_first10_rmse": 0.26491912018823893,
+      "prefix_embedding_rmse": 154.82763671875,
+      "vlm_last_layer_rmse": 0.12777166068553925,
+      "action_expert_last_layer_rmse": 0.37178541563005696,
+      "action_to_vlm_gain": 2.311931771364684,
+      "action_expert_to_vlm_gain": 2.909764290730036,
+      "velocity_mean_rmse": 0.16793478249667104,
+      "kv_key_norm_rmse": 1.6901998216686014,
+      "action_head_input_rmse": 0.37217760121452587,
+      "active_head_output_rmse": 0.6334533048894441,
+      "padding_head_output_rmse": 0.05131161815941097,
+      "active_row_energy_fraction": 0.037469729862487804,
+      "padding_row_energy_fraction": 0.0014846955832704689,
+      "full_output_row_energy_fraction": 0.038995021111708654
+    }
+  ],
+  "scientific_boundary": "Fixed-observation evidence only: estimates proposal and input-factor sensitivity, not branched recoverability, causal mediation, or training-trajectory memorisation."
+}

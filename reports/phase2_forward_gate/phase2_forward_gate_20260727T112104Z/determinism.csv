@@ -1,0 +1,2 @@
+state_id,action_max_abs,vlm_max_abs,action_expert_max_abs
+libero_goal_task03_ep000_seed0_step0050,0.0,0.0,0.0

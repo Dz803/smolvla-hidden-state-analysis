@@ -1,0 +1,5 @@
+source_goal,target_goal,success_rate,successes,branches,source_goal_reached_rate,target_in_first_plan_rate
+cabinet,cabinet,1.0,40,40,1.0,1.0
+cabinet,drawer,0.0,0,40,0.0,0.0
+drawer,cabinet,0.375,15,40,0.0,0.0
+drawer,drawer,0.45,18,40,0.45,0.0

@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "raw_capture": "/home/zhongzhengyang/smolvla-hidden-state-analysis/local/phase2_forward_gate/phase2_forward_gate_20260727T123138Z/queries.zarr",
+  "states": [
+    "libero_goal_task03_ep000_seed0_step0050",
+    "libero_goal_task03_ep000_seed0_step0100",
+    "libero_goal_task03_ep001_seed1_step0050",
+    "libero_goal_task03_ep001_seed1_step0100"
+  ],
+  "layer": 15,
+  "executed_dimension": 7,
+  "alignment_definition": "(distance_to_original - distance_to_alternate) / (distance_to_original + distance_to_alternate); positive is alternate-goal aligned",
+  "selected_denoising_medians": [
+    {
+      "env_step": 50,
+      "representation": "expert_hidden",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.3111284354427019,
+      "distance_to_alternate": 0.24683270031516594,
+      "alternate_alignment": 0.11503858497716972
+    },
+    {
+      "env_step": 50,
+      "representation": "expert_hidden",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.36041234334945915,
+      "distance_to_alternate": 0.2927160084663314,
+      "alternate_alignment": 0.10338971520405787
+    },
+    {
+      "env_step": 50,
+      "representation": "expert_hidden",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.4887653903408701,
+      "distance_to_alternate": 0.4161769570567888,
+      "alternate_alignment": 0.0802540309867178
+    },
+    {
+      "env_step": 50,
+      "representation": "flow_state_executed",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.0,
+      "distance_to_alternate": 0.0,
+      "alternate_alignment": 0.0
+    },
+    {
+      "env_step": 50,
+      "representation": "flow_state_executed",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.15342282378974792,
+      "distance_to_alternate": 0.10265980201265543,
+      "alternate_alignment": 0.19997971391772343
+    },
+    {
+      "env_step": 50,
+      "representation": "flow_state_executed",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.334857632155938,
+      "distance_to_alternate": 0.2760966270704148,
+      "alternate_alignment": 0.09863176735528235
+    },
+    {
+      "env_step": 50,
+      "representation": "flow_state_padding",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.0,
+      "distance_to_alternate": 0.0,
+      "alternate_alignment": 0.0
+    },
+    {
+      "env_step": 50,
+      "representation": "flow_state_padding",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.01037425403970222,
+      "distance_to_alternate": 0.011328352408880275,
+      "alternate_alignment": -0.04401945004868736
+    },
+    {
+      "env_step": 50,
+      "representation": "flow_state_padding",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.01209316075286047,
+      "distance_to_alternate": 0.013502485530108854,
+      "alternate_alignment": -0.05551760736038651
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_executed",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.3868287669845025,
+      "distance_to_alternate": 0.2534095201459877,
+      "alternate_alignment": 0.20931622061460303
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_executed",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.3764223467995712,
+      "distance_to_alternate": 0.28474183117200813,
+      "alternate_alignment": 0.14291383974933175
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_executed",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.5688559545815804,
+      "distance_to_alternate": 0.638643894879449,
+      "alternate_alignment": -0.056008757629915674
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_full",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.18286665902390625,
+      "distance_to_alternate": 0.12192149186256246,
+      "alternate_alignment": 0.2008248107939467
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_full",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.17697189487534387,
+      "distance_to_alternate": 0.1346737238335784,
+      "alternate_alignment": 0.13983179693408812
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_full",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.27436531026640554,
+      "distance_to_alternate": 0.30739128518453707,
+      "alternate_alignment": -0.05520890987690566
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_padding",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.030082777976537828,
+      "distance_to_alternate": 0.03230859754293315,
+      "alternate_alignment": -0.03571023116090748
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_padding",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.02034279586988074,
+      "distance_to_alternate": 0.02248765174166726,
+      "alternate_alignment": -0.05008029045748724
+    },
+    {
+      "env_step": 50,
+      "representation": "velocity_padding",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.07575201363079598,
+      "distance_to_alternate": 0.08169622729270401,
+      "alternate_alignment": -0.03774019869686475
+    },
+    {
+      "env_step": 100,
+      "representation": "expert_hidden",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.2825988976351236,
+      "distance_to_alternate": 0.23824104456818107,
+      "alternate_alignment": 0.08475134298587864
+    },
+    {
+      "env_step": 100,
+      "representation": "expert_hidden",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.34228908201415387,
+      "distance_to_alternate": 0.2774749490011006,
+      "alternate_alignment": 0.1036845464452551
+    },
+    {
+      "env_step": 100,
+      "representation": "expert_hidden",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.4907802064886825,
+      "distance_to_alternate": 0.413983219003503,
+      "alternate_alignment": 0.08334563942345835
+    },
+    {
+      "env_step": 100,
+      "representation": "flow_state_executed",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.0,
+      "distance_to_alternate": 0.0,
+      "alternate_alignment": 0.0
+    },
+    {
+      "env_step": 100,
+      "representation": "flow_state_executed",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.17967709783639207,
+      "distance_to_alternate": 0.14356222962532608,
+      "alternate_alignment": 0.10703855237612278
+    },
+    {
+      "env_step": 100,
+      "representation": "flow_state_executed",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.4211639455263112,
+      "distance_to_alternate": 0.31679542030454977,
+      "alternate_alignment": 0.13594508386328277
+    },
+    {
+      "env_step": 100,
+      "representation": "flow_state_padding",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.0,
+      "distance_to_alternate": 0.0,
+      "alternate_alignment": 0.0
+    },
+    {
+      "env_step": 100,
+      "representation": "flow_state_padding",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.008702063137454322,
+      "distance_to_alternate": 0.008920150517391243,
+      "alternate_alignment": -0.01199285539266487
+    },
+    {
+      "env_step": 100,
+      "representation": "flow_state_padding",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.010347766173098377,
+      "distance_to_alternate": 0.010229601894025898,
+      "alternate_alignment": 0.00559131265879374
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_executed",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.4411747353630833,
+      "distance_to_alternate": 0.36241912037258595,
+      "alternate_alignment": 0.09438860826744946
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_executed",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.469474081549653,
+      "distance_to_alternate": 0.3614069513115132,
+      "alternate_alignment": 0.12370798638193692
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_executed",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.5877360416576003,
+      "distance_to_alternate": 0.46695646040573713,
+      "alternate_alignment": 0.10827929528787439
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_full",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.2075989548676177,
+      "distance_to_alternate": 0.171062770184223,
+      "alternate_alignment": 0.0929637235274153
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_full",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.22010573197895122,
+      "distance_to_alternate": 0.1697282429558559,
+      "alternate_alignment": 0.12291289754744378
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_full",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.2804012191210845,
+      "distance_to_alternate": 0.2255754910814356,
+      "alternate_alignment": 0.10248742766651814
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_padding",
+      "denoising_index": 0,
+      "timestep": 1.0,
+      "distance_to_original": 0.02561522730235559,
+      "distance_to_alternate": 0.026039909161334272,
+      "alternate_alignment": -0.007796397527183708
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_padding",
+      "denoising_index": 4,
+      "timestep": 0.6000000238418579,
+      "distance_to_original": 0.017091618581932904,
+      "distance_to_alternate": 0.017335659595517312,
+      "alternate_alignment": -0.007280003635206103
+    },
+    {
+      "env_step": 100,
+      "representation": "velocity_padding",
+      "denoising_index": 9,
+      "timestep": 0.10000000149011612,
+      "distance_to_original": 0.06213630960208841,
+      "distance_to_alternate": 0.06383694183313038,
+      "alternate_alignment": -0.013459467661834004
+    }
+  ]
+}

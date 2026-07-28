@@ -1,0 +1,255 @@
+{
+  "cold_start_full": {
+    "done_match": true,
+    "goals_match": true,
+    "max_abs_mujoco_state_diff": 0.1262197780027186,
+    "max_abs_observation_diff": 191.0,
+    "observation_field_max_abs_diff": {
+      "pixels/image": 183.0,
+      "pixels/image2": 191.0,
+      "robot_state/eef/mat": 0.02595483478587969,
+      "robot_state/eef/pos": 0.013765700556457539,
+      "robot_state/eef/quat": 0.012576887447337572,
+      "robot_state/gripper/qpos": 2.8951728374914353e-06,
+      "robot_state/gripper/qvel": 2.4897106783173086e-05,
+      "robot_state/joints/pos": 0.053878372066212155,
+      "robot_state/joints/vel": 0.12998147249852526
+    },
+    "rewards_match": true
+  },
+  "contract_sha256": "4e4d4d189ba9f5ee00063939537a75708337e8173910ca2a696d41f00856841f",
+  "probe_steps": 3,
+  "results": {
+    "drop_act": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "drop_all_sim_data": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 2.4043933469219958e-08,
+      "max_abs_observation_diff": 1.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 1.0,
+        "robot_state/eef/mat": 1.366282087467141e-12,
+        "robot_state/eef/pos": 7.138040158949366e-14,
+        "robot_state/eef/quat": 6.852296507986466e-13,
+        "robot_state/gripper/qpos": 2.653421781340787e-10,
+        "robot_state/gripper/qvel": 4.2913775918224095e-10,
+        "robot_state/joints/pos": 1.265987314980066e-12,
+        "robot_state/joints/vel": 1.8069157281530579e-12
+      },
+      "rewards_match": true
+    },
+    "drop_ctrl": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "drop_eq_active": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "drop_mocap_pos": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "drop_mocap_quat": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "drop_plugin_state": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "drop_qacc_warmstart": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 2.4043933469219958e-08,
+      "max_abs_observation_diff": 1.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 1.0,
+        "robot_state/eef/mat": 1.366282087467141e-12,
+        "robot_state/eef/pos": 7.138040158949366e-14,
+        "robot_state/eef/quat": 6.852296507986466e-13,
+        "robot_state/gripper/qpos": 2.653421781340787e-10,
+        "robot_state/gripper/qvel": 4.2913775918224095e-10,
+        "robot_state/joints/pos": 1.265987314980066e-12,
+        "robot_state/joints/vel": 1.8069157281530579e-12
+      },
+      "rewards_match": true
+    },
+    "drop_qfrc_applied": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "drop_userdata": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "drop_xfrc_applied": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    },
+    "full": {
+      "done_match": true,
+      "goals_match": true,
+      "max_abs_mujoco_state_diff": 0.0,
+      "max_abs_observation_diff": 0.0,
+      "observation_field_max_abs_diff": {
+        "pixels/image": 0.0,
+        "pixels/image2": 0.0,
+        "robot_state/eef/mat": 0.0,
+        "robot_state/eef/pos": 0.0,
+        "robot_state/eef/quat": 0.0,
+        "robot_state/gripper/qpos": 0.0,
+        "robot_state/gripper/qvel": 0.0,
+        "robot_state/joints/pos": 0.0,
+        "robot_state/joints/vel": 0.0
+      },
+      "rewards_match": true
+    }
+  },
+  "run_id": "phase3_crd_20260728T021125Z",
+  "schema_version": 1,
+  "sim_fields": [
+    "act",
+    "ctrl",
+    "eq_active",
+    "mocap_pos",
+    "mocap_quat",
+    "plugin_state",
+    "qacc_warmstart",
+    "qfrc_applied",
+    "userdata",
+    "xfrc_applied"
+  ],
+  "state_id": "task04_ep002_step0050"
+}

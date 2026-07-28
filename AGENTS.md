@@ -31,6 +31,13 @@ After every material experiment, analysis, decision, or error:
 - Do not launch a large rollout or factorial sweep before the offline gate and causal smoke gate pass. Obtain explicit approval before materially expanding GPU/simulation usage.
 - Never commit checkpoints, raw activations, observations, videos, full runs, credentials, or generated environment directories.
 
+## Publication and portability
+
+- After each verified project checkpoint, commit and push all Git-safe source, tests, plans, documentation, and compact derived reports to the configured cloud Git remote.
+- Before publishing, inspect the remote and staged diff, run the relevant tests and `git diff --check`, and scan the staged paths for secrets and prohibited artifacts.
+- Report the pushed branch and commit hash. Do not describe unpushed local work as cloud-backed.
+- Raw runs, checkpoints, activations, observations, videos, datasets, and environments require a separately approved object-storage destination with an immutable manifest and checksums; they must never be placed in Git merely for portability.
+
 ## Current scientific boundary
 
 The current evidence is predictive, with causal effects established only for the tested input perturbations. It does not yet establish a causal hidden-state mechanism or modality-token attribution. The next work is defined in the active plan and `docs/causal_research_program.md`.

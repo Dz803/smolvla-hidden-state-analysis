@@ -1,0 +1,321 @@
+{
+  "branch_id": "task03_ep000_step0050__goal_drawer__proposal_202__continuation_0",
+  "comparison": {
+    "changed_top_level_fields": [
+      "final_effect",
+      "first10_effect",
+      "first_plan_effect",
+      "goal_first_step",
+      "steps_executed",
+      "success",
+      "terminal_reason",
+      "underlying_done"
+    ],
+    "excluded_fields": [
+      "source_reconstruction",
+      "wall_time_s"
+    ],
+    "semantic_exact_match": false
+  },
+  "contract_sha256": "b5e44ae71dd0a478cc6d7bba1c68923d0a2de7efcea0356c45aeb3cc54f3cc56",
+  "existing": {
+    "branch_id": "task03_ep000_step0050__goal_drawer__proposal_202__continuation_0",
+    "continuation_noise_sha256": [
+      "813a20af2c2090c26964ad0235aa59f0848cf838284f6c23447d2e842053873f",
+      "8b08685a04d1c3b50a5fa9a72cfaca30bf1ab5513d51337a44cb95a0c35e98a5"
+    ],
+    "continuation_replans": 2,
+    "continuation_schedule": 0,
+    "continuation_seeds": [
+      2907996967497040914,
+      1995535412650953089
+    ],
+    "final_effect": {
+      "bowl_displacement": [
+        0.11735057874863546,
+        -0.1090026890026458,
+        0.22165519987824933
+      ],
+      "bowl_displacement_norm": 0.27346621761291445,
+      "bowl_position": [
+        0.03696288683074983,
+        -0.09454683008701727,
+        1.120062274976333
+      ],
+      "contact_count": 25,
+      "eef_displacement": [
+        0.01504145527643605,
+        -0.02079622176827477,
+        0.05483549867698012
+      ],
+      "eef_displacement_norm": 0.06054469532354903,
+      "eef_position": [
+        0.049305874489550074,
+        -0.02540703829181019,
+        1.1612285422261555
+      ],
+      "goals": {
+        "cabinet": false,
+        "drawer": true
+      },
+      "grasped_objects": []
+    },
+    "first10_effect": {
+      "bowl_displacement": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bowl_displacement_norm": 0.0,
+      "bowl_position": [
+        -0.08038769191788563,
+        0.014455858915628539,
+        0.8984070750980836
+      ],
+      "contact_count": 37,
+      "eef_displacement": [
+        -0.054345763212678116,
+        0.08807148418040188,
+        -0.05919338834705368
+      ],
+      "eef_displacement_norm": 0.11922208490423394,
+      "eef_position": [
+        -0.02008134399956409,
+        0.08346066765686647,
+        1.0471996552021217
+      ],
+      "goals": {
+        "cabinet": false,
+        "drawer": false
+      },
+      "grasped_objects": []
+    },
+    "first_plan_effect": {
+      "bowl_displacement": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bowl_displacement_norm": 0.0,
+      "bowl_position": [
+        -0.08038769191788563,
+        0.014455858915628539,
+        0.8984070750980836
+      ],
+      "contact_count": 36,
+      "eef_displacement": [
+        -0.13427794114816,
+        0.08835422799665087,
+        -0.09902716326785721
+      ],
+      "eef_displacement_norm": 0.1887946348516073,
+      "eef_position": [
+        -0.10001352193504597,
+        0.08374341147311545,
+        1.0073658802813181
+      ],
+      "goals": {
+        "cabinet": false,
+        "drawer": false
+      },
+      "grasped_objects": []
+    },
+    "first_plan_steps": 50,
+    "goal_first_step": {
+      "cabinet": null,
+      "drawer": 134
+    },
+    "initial_goal_status": {
+      "cabinet": false,
+      "drawer": false
+    },
+    "landmark_step": 50,
+    "proposal_seed": 202,
+    "query_id": "task03_ep000_step0050__goal_drawer__proposal_202",
+    "schema_version": 1,
+    "source_episode_id": "libero_goal_task03_ep000_seed0",
+    "source_episode_index": 0,
+    "source_goal": "drawer",
+    "source_seed": 0,
+    "source_task_id": 3,
+    "state_id": "task03_ep000_step0050",
+    "steps_executed": 134,
+    "success": true,
+    "target_goal": "drawer",
+    "terminal_reason": "target_success",
+    "underlying_done": true,
+    "wall_time_s": 1.9818706992082298
+  },
+  "replayed": {
+    "branch_id": "task03_ep000_step0050__goal_drawer__proposal_202__continuation_0",
+    "continuation_noise_sha256": [
+      "813a20af2c2090c26964ad0235aa59f0848cf838284f6c23447d2e842053873f",
+      "8b08685a04d1c3b50a5fa9a72cfaca30bf1ab5513d51337a44cb95a0c35e98a5"
+    ],
+    "continuation_replans": 2,
+    "continuation_schedule": 0,
+    "continuation_seeds": [
+      2907996967497040914,
+      1995535412650953089
+    ],
+    "final_effect": {
+      "bowl_displacement": [
+        -0.08645196950095956,
+        -0.05247752972837538,
+        0.024377091734841483
+      ],
+      "bowl_displacement_norm": 0.10402921108244664,
+      "bowl_position": [
+        -0.16683966141884518,
+        -0.03802167081274684,
+        0.9227841668329251
+      ],
+      "contact_count": 24,
+      "eef_displacement": [
+        -0.14990578390506779,
+        -0.006181052886693037,
+        -0.18720655980800582
+      ],
+      "eef_displacement_norm": 0.23990882747020675,
+      "eef_position": [
+        -0.11564136469195377,
+        -0.010791869410228456,
+        0.9191864837411695
+      ],
+      "goals": {
+        "cabinet": false,
+        "drawer": false
+      },
+      "grasped_objects": []
+    },
+    "first10_effect": {
+      "bowl_displacement": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bowl_displacement_norm": 0.0,
+      "bowl_position": [
+        -0.08038769191788563,
+        0.014455858915628539,
+        0.8984070750980836
+      ],
+      "contact_count": 38,
+      "eef_displacement": [
+        1.2582241906360092e-05,
+        0.07572481605353373,
+        -0.00013850147030769477
+      ],
+      "eef_displacement_norm": 0.07572494375905214,
+      "eef_position": [
+        0.034277001455020384,
+        0.07111399952999832,
+        1.1062545420788676
+      ],
+      "goals": {
+        "cabinet": false,
+        "drawer": false
+      },
+      "grasped_objects": []
+    },
+    "first_plan_effect": {
+      "bowl_displacement": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bowl_displacement_norm": 0.0,
+      "bowl_position": [
+        -0.08038769191788563,
+        0.014455858915628539,
+        0.8984070750980836
+      ],
+      "contact_count": 37,
+      "eef_displacement": [
+        -0.15603071123598725,
+        0.06357771850810094,
+        -0.11417218647579075
+      ],
+      "eef_displacement_norm": 0.2035264044397338,
+      "eef_position": [
+        -0.12176629202287323,
+        0.05896690198456553,
+        0.9922208570733846
+      ],
+      "goals": {
+        "cabinet": false,
+        "drawer": false
+      },
+      "grasped_objects": []
+    },
+    "first_plan_steps": 50,
+    "goal_first_step": {
+      "cabinet": null,
+      "drawer": null
+    },
+    "initial_goal_status": {
+      "cabinet": false,
+      "drawer": false
+    },
+    "landmark_step": 50,
+    "proposal_seed": 202,
+    "query_id": "task03_ep000_step0050__goal_drawer__proposal_202",
+    "schema_version": 1,
+    "source_episode_id": "libero_goal_task03_ep000_seed0",
+    "source_episode_index": 0,
+    "source_goal": "drawer",
+    "source_reconstruction": {
+      "branch_certificate": {
+        "done_match": true,
+        "goals_match": true,
+        "max_abs_mujoco_state_diff": 0.0,
+        "max_abs_observation_diff": 0.0,
+        "observation_field_max_abs_diff": {
+          "pixels/image": 0.0,
+          "pixels/image2": 0.0,
+          "robot_state/eef/mat": 0.0,
+          "robot_state/eef/pos": 0.0,
+          "robot_state/eef/quat": 0.0,
+          "robot_state/gripper/qpos": 0.0,
+          "robot_state/gripper/qvel": 0.0,
+          "robot_state/joints/pos": 0.0,
+          "robot_state/joints/vel": 0.0
+        },
+        "pass": true,
+        "rewards_match": true,
+        "tolerances": {
+          "mujoco_state_atol": 1e-10,
+          "numeric_observation_atol": 1e-10,
+          "pixel_observation_atol": 0.0
+        }
+      },
+      "landmark_archive_fidelity": {
+        "exact": true,
+        "joint_max_abs": 0.0,
+        "main_pixel_max_abs": 0,
+        "policy_state_max_abs": 0.0,
+        "wrist_pixel_max_abs": 0
+      },
+      "mode": "archive_action_replay_current_process",
+      "persisted_state_validation": {
+        "mujoco_max_abs_diff": 0.0,
+        "policy_image2_exact": true,
+        "policy_image_exact": true,
+        "policy_state_exact": true,
+        "source_action_prefix_exact": true
+      },
+      "snapshot_mujoco_sha256": "f08c6d99d44aaf29e1b515771e00cf74b03890614f8a76ed51053e9993ec3f0d"
+    },
+    "source_seed": 0,
+    "source_task_id": 3,
+    "state_id": "task03_ep000_step0050",
+    "steps_executed": 150,
+    "success": false,
+    "target_goal": "drawer",
+    "terminal_reason": "horizon",
+    "underlying_done": false,
+    "wall_time_s": 2.858807073906064
+  },
+  "run_id": "phase3_crd_20260728T021125Z",
+  "schema_version": 1
+}

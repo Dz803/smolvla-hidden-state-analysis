@@ -9,6 +9,7 @@ import sys
 import time
 from copy import deepcopy
 from datetime import UTC, datetime
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
@@ -18,8 +19,10 @@ import torch
 import yaml
 import zarr
 
-from .activation_hooks import ActivationCapture
+from .libero_state import capture_libero_state, validate_libero_round_trip
 from .model_inspection import freeze_policy
+from .phase2_capture import capture_action_query
+from .phase2_storage import write_action_query, write_libero_snapshot
 from .phase_labels import label_phase
 from .perturbations import apply_perturbation
 from .rollout_recorder import RolloutRecorder
@@ -70,13 +73,42 @@ def _jsonable(value):
     return value
 
 
+def _asset_path(project: Path, relative: str | Path) -> Path:
+    relative = Path(relative)
+    candidates = (project / relative, project / "archive/full_experiment" / relative)
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError(f"Required local asset is absent: {relative}")
+
+
+def _prepare_libero_runtime_config(project: Path, destination: Path) -> Path:
+    package_roots = [Path(entry) / "libero/libero" for entry in sys.path if entry]
+    package_root = next(
+        (candidate.resolve() for candidate in package_roots if (candidate / "bddl_files").is_dir()),
+        None,
+    )
+    if package_root is None:
+        raise FileNotFoundError("Could not locate the active LIBERO package data on sys.path")
+    destination.mkdir(parents=True, exist_ok=False)
+    payload = {
+        "benchmark_root": str(package_root),
+        "bddl_files": str(package_root / "bddl_files"),
+        "init_states": str(package_root / "init_files"),
+        "datasets": str(_asset_path(project, "checkpoints/libero_datasets")),
+        "assets": str(_asset_path(project, "checkpoints/libero_assets")),
+    }
+    (destination / "config.yaml").write_text(yaml.safe_dump(payload, sort_keys=False))
+    return destination
+
+
 def load_runtime(config: dict, project: Path):
     from lerobot.configs.policies import PreTrainedConfig
     from lerobot.policies.factory import make_pre_post_processors
     from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy
 
-    checkpoint = project / config["model"]["local_path"]
-    assets = project / "checkpoints/smolvlm_processor"
+    checkpoint = _asset_path(project, config["model"]["local_path"])
+    assets = _asset_path(project, "checkpoints/smolvlm_processor")
     policy_cfg = PreTrainedConfig.from_pretrained(checkpoint)
     policy_cfg.device = config["model"]["device"]
     policy_cfg.n_action_steps = config["model"]["n_action_steps"]
@@ -133,49 +165,28 @@ def _success(info: dict) -> bool:
     return False
 
 
-def _save_activations(
-    policy, preprocessor, saved_observations: list[tuple[int, dict]], targets: list[dict], store, episode_id: str
-) -> int:
-    episode_group = store.require_group(episode_id)
-    written = 0
-    for env_step, observation in saved_observations:
-        policy.reset()
-        batch = preprocessor(deepcopy(observation))
-        with ActivationCapture(policy, targets) as capture, torch.inference_mode():
-            policy.predict_action_chunk(batch)
-        grouped: dict[str, list] = {}
-        for record in capture.records:
-            grouped.setdefault(record.module_name, []).append(record)
-        step_group = episode_group.require_group(f"step_{env_step:04d}")
-        for target in targets:
-            records = grouped.get(target["module_name"], [])
-            if not records:
-                raise RuntimeError(f"No activation captured for {target['module_name']} at step {env_step}")
-            pooled = np.stack([record.pooled for record in records]).astype(np.float32).mean(axis=0).astype(np.float16)
-            key = f"{target['pathway']}_layer_{target['layer_index']:02d}"
-            array = step_group.create_dataset(key, data=pooled, overwrite=False)
-            array.attrs.update(
-                {
-                    "module_name": target["module_name"], "block_name": target["block_name"],
-                    "pathway": target["pathway"], "layer_index": target["layer_index"],
-                    "relative_position": target["relative_position"], "pooling_method": records[0].pooling_method,
-                    "source_tensor_shape": records[0].tensor_shape, "source_dtype": records[0].dtype,
-                    "invocation_count": len(records), "token_boundaries_known": False,
-                    "l2_norm_mean": float(np.mean([record.l2_norm for record in records])),
-                    "activation_mean": float(np.mean([record.mean for record in records])),
-                    "activation_std": float(np.mean([record.std for record in records])),
-                }
-            )
-            written += 1
-    return written
+def _query_seed(base_seed: int, episode_id: str, query_index: int) -> int:
+    payload = f"{base_seed}:{episode_id}:{query_index}".encode()
+    return int.from_bytes(sha256(payload).digest()[:8], "big") % (2**63 - 1)
+
+
+def _postprocess_action_chunk(chunk: np.ndarray, device: str, postprocessor, env_postprocessor) -> np.ndarray:
+    processed = []
+    for action_index in range(chunk.shape[1]):
+        action = torch.as_tensor(chunk[:, action_index], dtype=torch.float32, device=device)
+        action = postprocessor(action)
+        transition = env_postprocessor({"action": action})
+        processed.append(transition["action"].detach().cpu().numpy())
+    return np.stack(processed, axis=1)
 
 
 def execute(config: dict, project: Path, command_line: list[str]) -> Path:
     os.environ["MUJOCO_GL"] = config["benchmark"]["mujoco_gl"]
-    os.environ["LIBERO_CONFIG_PATH"] = str(project / "checkpoints/libero_config")
-    os.environ["SMOLVLA_LIBERO_ASSETS"] = str(project / "checkpoints/libero_assets")
+    os.environ["SMOLVLA_LIBERO_ASSETS"] = str(_asset_path(project, "checkpoints/libero_assets"))
     run_id = unique_run_id(config["project"]["run_name"] or "smolvla")
     run_dir = create_run_directory(project / config["project"]["output_root"], run_id)
+    runtime_libero_config = _prepare_libero_runtime_config(project, run_dir / "runtime_libero_config")
+    os.environ["LIBERO_CONFIG_PATH"] = str(runtime_libero_config)
     (run_dir / "config_resolved.yaml").write_text(yaml.safe_dump(config, sort_keys=False))
     shutil.copy2(project / "reports/model_modules.json", run_dir / "model_modules.json")
     targets = json.loads((run_dir / "model_modules.json").read_text())["resolved_targets"]
@@ -183,7 +194,7 @@ def execute(config: dict, project: Path, command_line: list[str]) -> Path:
     expected = sum(len(config["benchmark"]["task_ids"]) * config["benchmark"]["episodes_per_task"] for _ in config["benchmark"]["suites"])
     manifest = {
         "run_id": run_id, "timestamp": started_at.isoformat(), "resolved_config": config,
-        "git": _git_info(project.parents[1]), "model_repo_id": config["model"]["repo_id"],
+        "git": _git_info(project), "model_repo_id": config["model"]["repo_id"],
         "model_revision": config["model"]["revision"], "dependency_versions": _versions(),
         "command_line": command_line, "seeds": config["benchmark"]["episode_seeds"],
         "perturbation_condition": config["perturbations"]["condition"], "start_time": started_at.isoformat(),
@@ -193,7 +204,16 @@ def execute(config: dict, project: Path, command_line: list[str]) -> Path:
     }
     (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2))
     recorder = RolloutRecorder(run_dir)
-    activation_store = zarr.open_group(str(run_dir / "activations.zarr"), mode="w")
+    activation_store = (
+        zarr.open_group(str(run_dir / "activations.zarr"), mode="w")
+        if config["activations"]["enabled"]
+        else None
+    )
+    environment_store = (
+        zarr.open_group(str(run_dir / "environment_states.zarr"), mode="w")
+        if config["recording"]["save_environment_state"]
+        else None
+    )
     environment = _host_environment()
     (run_dir / "environment.json").write_text(json.dumps(environment, indent=2))
     manifest["environment"] = environment
@@ -211,8 +231,20 @@ def execute(config: dict, project: Path, command_line: list[str]) -> Path:
                     torch.cuda.reset_peak_memory_stats()
                     observation, _ = env.reset(seed=[seed])
                     frames, states, policy_states, camera1, camera2 = [], [], [], [], []
-                    saved_for_activations = []
                     latencies, actions = [], []
+                    episode_activation_group = (
+                        activation_store.require_group(episode_id) if activation_store is not None else None
+                    )
+                    episode_environment_group = (
+                        environment_store.require_group(episode_id) if environment_store is not None else None
+                    )
+                    activation_arrays_written = 0
+                    environment_states_written = 0
+                    query_index = 0
+                    active_query_id = None
+                    active_query_seed = None
+                    active_query_step = None
+                    active_activation_reference = None
                     success = False
                     episode_start = time.perf_counter()
                     previous_action = None
@@ -225,6 +257,28 @@ def execute(config: dict, project: Path, command_line: list[str]) -> Path:
                         from lerobot.envs.utils import add_envs_task, preprocess_observation
                         raw_for_state = observation
                         robot_state, eef_state, gripper_state = _raw_state(raw_for_state)
+                        object_state = None
+                        goal_state = None
+                        environment_state_reference = None
+                        if episode_environment_group is not None:
+                            snapshot = capture_libero_state(env)
+                            step_key = f"step_{step:04d}"
+                            environment_states_written += write_libero_snapshot(
+                                episode_environment_group, step_key, snapshot
+                            )
+                            environment_state_reference = f"environment_states.zarr/{episode_id}/{step_key}"
+                            object_state = {
+                                "objects": snapshot.objects,
+                                "contacts": list(snapshot.contacts),
+                                "grasped_objects": list(snapshot.grasped_objects),
+                            }
+                            goal_state = {
+                                "predicates": list(snapshot.goal_predicates),
+                                "success": snapshot.success,
+                            }
+                            if step == 0:
+                                validation = validate_libero_round_trip(env, snapshot, atol=1e-8)
+                                manifest.setdefault("state_round_trip", {})[episode_id] = validation
                         policy_observation = preprocess_observation(observation)
                         policy_observation = add_envs_task(env, policy_observation)
                         policy_observation = apply_perturbation(
@@ -237,12 +291,38 @@ def execute(config: dict, project: Path, command_line: list[str]) -> Path:
                         camera2.append((policy_observation["observation.images.image2"][0].numpy() * 255).astype(np.uint8))
                         policy_observation = env_preprocessor(policy_observation)
                         policy_states.append(policy_observation["observation.state"][0].cpu().numpy())
-                        if step % config["activations"]["capture_every_n_env_steps"] == 0:
-                            saved_for_activations.append((step, deepcopy(policy_observation)))
                         batch = preprocessor(deepcopy(policy_observation))
                         inference_start = time.perf_counter()
-                        with torch.inference_mode():
-                            action = policy.select_action(batch)
+                        if not policy._queues["action"] and episode_activation_group is not None:
+                            active_query_id = f"query_{query_index:04d}_step_{step:04d}"
+                            active_query_seed = _query_seed(config["project"]["seed"], episode_id, query_index)
+                            active_query_step = step
+                            action, query = capture_action_query(
+                                policy,
+                                batch,
+                                targets,
+                                query_id=active_query_id,
+                                flow_noise_seed=active_query_seed,
+                            )
+                            environment_chunk = _postprocess_action_chunk(
+                                query.model_action_chunk,
+                                policy_cfg.device,
+                                postprocessor,
+                                env_postprocessor,
+                            )
+                            activation_arrays_written += write_action_query(
+                                episode_activation_group, query, environment_chunk
+                            )
+                            active_activation_reference = f"activations.zarr/{episode_id}/{active_query_id}"
+                            query_index += 1
+                        else:
+                            if not policy._queues["action"]:
+                                active_query_id = None
+                                active_query_seed = None
+                                active_query_step = step
+                                active_activation_reference = None
+                            with torch.inference_mode():
+                                action = policy.select_action(batch)
                         latency_ms = (time.perf_counter() - inference_start) * 1000
                         action = postprocessor(action)
                         transition = env_postprocessor({"action": action})
@@ -269,18 +349,23 @@ def execute(config: dict, project: Path, command_line: list[str]) -> Path:
                         active_chunk = np.stack([executed, *future_actions])
                         normalized_progress = step / max(max_steps - 1, 1)
                         phase, phase_evidence = label_phase(None, normalized_progress, config["phase_thresholds"])
+                        queue_age = None if active_query_step is None else step - active_query_step
                         recorder.add_step(
                             dict.fromkeys(STEP_COLUMNS) | {
                                 "run_id": run_id, "episode_id": episode_id, "env_step": step,
                                 "normalized_progress": normalized_progress, "timestamp": datetime.now(UTC).isoformat(),
                                 "task_phase": phase, "robot_state": robot_state, "eef_state": eef_state,
-                                "gripper_state": gripper_state, "object_state": None,
-                                "goal_state": {"phase_evidence": phase_evidence}, "predicted_action_chunk": active_chunk.tolist(),
+                                "gripper_state": gripper_state, "object_state": object_state,
+                                "goal_state": goal_state or {"phase_evidence": phase_evidence},
+                                "action_query_id": active_query_id, "flow_noise_seed": active_query_seed,
+                                "queue_age": queue_age, "chunk_action_index": queue_age,
+                                "predicted_action_chunk": active_chunk.tolist(),
                                 "executed_action": executed.tolist(), "action_norm": float(np.linalg.norm(executed)),
                                 "action_smoothness": float(np.linalg.norm(delta)), "action_jerk": float(np.linalg.norm(jerk)),
                                 "gripper_action": float(executed[6]), "policy_latency_ms": latency_ms,
                                 "gpu_memory_mb": torch.cuda.memory_allocated() / 2**20, "uncertainty_features": None,
-                                "activation_reference": f"activations.zarr/{episode_id}/step_{step:04d}" if step % config["activations"]["capture_every_n_env_steps"] == 0 else None,
+                                "activation_reference": active_activation_reference,
+                                "environment_state_reference": environment_state_reference,
                             }
                         )
                         latencies.append(latency_ms)
@@ -299,9 +384,6 @@ def execute(config: dict, project: Path, command_line: list[str]) -> Path:
                         robot_state=np.asarray(states, dtype=np.float32), policy_state=np.asarray(policy_states, dtype=np.float32),
                         executed_actions=np.asarray(actions, dtype=np.float32),
                     )
-                    activation_count = _save_activations(
-                        policy, preprocessor, saved_for_activations, targets, activation_store, episode_id
-                    )
                     latencies_array = np.asarray(latencies)
                     recorder.add_episode(
                         dict.fromkeys(EPISODE_COLUMNS) | {
@@ -314,12 +396,21 @@ def execute(config: dict, project: Path, command_line: list[str]) -> Path:
                             "peak_gpu_memory_mb": torch.cuda.max_memory_allocated() / 2**20,
                             "latency_mean_ms": float(latencies_array.mean()), "latency_p50_ms": float(np.quantile(latencies_array, .5)),
                             "latency_p95_ms": float(np.quantile(latencies_array, .95)), "video_path": video_rel,
-                            "observation_path": obs_rel, "activation_path": f"activations.zarr/{episode_id}",
+                            "observation_path": obs_rel,
+                            "activation_path": (
+                                f"activations.zarr/{episode_id}" if episode_activation_group is not None else None
+                            ),
+                            "environment_state_path": (
+                                f"environment_states.zarr/{episode_id}"
+                                if episode_environment_group is not None
+                                else None
+                            ),
                             "infrastructure_failure": False,
                         }
                     )
                     manifest["completed_episode_count"] += 1
-                    manifest.setdefault("activation_arrays", {})[episode_id] = activation_count
+                    manifest.setdefault("activation_arrays", {})[episode_id] = activation_arrays_written
+                    manifest.setdefault("environment_state_arrays", {})[episode_id] = environment_states_written
                     (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2))
                 env.close()
         recorder.finalize()

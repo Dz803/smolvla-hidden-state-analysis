@@ -1,0 +1,11 @@
+landmark_step,source_episode_id,source_episode_index,source_seed,source_task_id,state_id,resolved_init_state_id,initial_archive_exact,landmark_archive_exact,round_trip_max_abs,certificate_pass,certificate_mujoco_max_abs,certificate_observation_max_abs,initial_drawer,initial_cabinet,full_sim_data_persisted
+50,libero_goal_task03_ep000_seed0,0,0,3,task03_ep000_step0050,0,True,True,0.0,True,1.908584642112971e-14,1.6479873021779667e-16,False,False,False
+100,libero_goal_task03_ep000_seed0,0,0,3,task03_ep000_step0100,0,True,True,0.0,True,1.6240336589589081e-16,6.776263578034403e-21,False,False,False
+50,libero_goal_task03_ep001_seed1,1,1,3,task03_ep001_step0050,1,True,True,0.0,True,1.4529328532108387e-14,7.216449660063518e-16,False,False,False
+100,libero_goal_task03_ep001_seed1,1,1,3,task03_ep001_step0100,1,True,True,0.0,True,3.0346368518775258e-16,3.4304834363799164e-20,False,False,False
+100,libero_goal_task03_ep003_seed3,3,3,3,task03_ep003_step0100,5,True,True,0.0,True,0.0,0.0,False,False,False
+50,libero_goal_task04_ep000_seed0,0,0,4,task04_ep000_step0050,0,True,True,0.0,True,1.6813772596435683e-12,1.5630205463246227e-13,False,False,False
+50,libero_goal_task04_ep001_seed1,1,1,4,task04_ep001_step0050,2,True,True,0.0,True,6.3570468333828956e-12,2.3485527758659863e-12,False,False,False
+50,libero_goal_task04_ep002_seed2,2,2,4,task04_ep002_step0050,4,True,True,0.0,True,0.0,0.0,False,False,True
+50,libero_goal_task04_ep003_seed3,3,3,4,task04_ep003_step0050,6,True,True,0.0,True,0.0,0.0,False,False,True
+50,libero_goal_task04_ep004_seed4,4,4,4,task04_ep004_step0050,8,True,True,0.0,True,0.0,0.0,False,False,True
