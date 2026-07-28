@@ -370,7 +370,7 @@
 
 ## Session: 2026-07-28 — Next-step and portable publication audit
 
-- **Status:** in progress
+- **Status:** complete
 - User requested the next recommended research step and cloud-accessible publication of all safe project work for use from another device.
 - Reloaded the active plan with the planning-with-files workflow and ran `bash scripts/resume_check.sh`; the project records, working Python, imports, and immutable canonical benchmark checks pass.
 - The first incomplete scientific phase remains occupancy-balanced Phase 3b. Before recommending execution, this session will audit the exact minimal design, Git scope, remote configuration, ignored/large-file boundaries, and available cloud-access path.
@@ -384,3 +384,4 @@
 - The first `git add -A` attempt failed because the managed sandbox mounts `.git/index` read-only. Retried the same scoped staging action with elevated Git permission authorised by the user's explicit upload request; no project content changed during the failed attempt.
 - The first staged whitespace audit exposed three trailing-space lines in previously untracked Markdown artifacts. Removed the whitespace (using a list for the Phase 3 review metadata) before commit; no scientific content changed.
 - Final staged-publication audit covers 141 Git-safe paths. `git diff --cached --check` passes, the staged secret-pattern scan returns no matches, and no staged path uses a prohibited local/raw prefix or checkpoint, video, Zarr, or Parquet suffix.
+- Created commit `7d267ac6e538f2ab27262612e028e2a94bb5c37e` (`Complete causal validation through Phase 3`), pushed `main` to the configured GitHub origin, and verified that `refs/heads/main` resolves to the same hash. Compact results are now available cross-device; raw evidence remains deliberately workstation-only.
