@@ -386,15 +386,15 @@ def main() -> None:
         "coverage_summary_stratified_by_execution_mode": coverage_summary,
         "scientific_boundary": config["scientific_boundary"],
         "interpretation": (
-            "The physical candidate lattice and within-source support-pair balance "
+            "The physical candidate lattice and all 16 support-pair geometry gates "
             "are complete as exact observed state records under matching shared root "
             "context. Historical contracts did not embed their construction YAML "
-            "block; source config, revision, and implementation hashes differ and "
-            "remain explicit batch provenance. Proposal coverage uses legacy full "
-            "replay for previously completed candidates and the v34 action-phase "
-            "adapter for missing open candidates. Cross-mode effects and "
-            "drawer-aperture effects confounded with source revision are "
-            "intentionally not estimated."
+            "block; source config, revision, and implementation hashes remain batch "
+            "provenance. Oracle balance is evaluated separately by goal only where "
+            "proposal and execution contracts match. Legacy full replay, v34 "
+            "world-anchor phases, and v35 bowl-registered phases are not pooled. "
+            "Cross-mode effects and drawer-aperture effects aliased with source "
+            "revision are intentionally not estimated."
         ),
     }
     atomic_write_json(staging / "summary.json", summary)
@@ -415,14 +415,14 @@ def main() -> None:
         "Raw records are never edited, and their file hashes remain in the compact "
         "inventory.\n\n"
         "The exact observed lattice is a root bank for within-state Stage B language "
-        "contrasts and for the predeclared within-source support pairs. Proposal-basin "
-        "statistics are stratified by execution mode: full-replay and action-phase "
-        "coverage must not be compared as an aperture effect. Closed versus open "
-        "roots are also aliased with source revision, so cross-aperture causal claims "
-        "remain non-estimable without new balanced evidence. A Stage B runner must "
-        "also revalidate every exact root under one common hydration/certificate "
-        "path. No VLA was loaded, and this report is not evidence of a hidden-state "
-        "mechanism.\n"
+        "contrasts. Every physical support-pair geometry gate is checked, but oracle "
+        "cost/overlap balance is reported per goal only where proposal and execution "
+        "contracts match. Proposal-basin statistics are stratified across full "
+        "replay, world-anchor phase, and bowl-registered phase modes. Closed versus "
+        "open roots are aliased with source revision, so cross-aperture causal claims "
+        "remain non-estimable. A Stage B runner must revalidate every root under one "
+        "common hydration/certificate path. No VLA was loaded, and this report is not "
+        "evidence of a hidden-state mechanism.\n"
     )
     artifact_sha256 = {
         path.name: _file_sha256(path)

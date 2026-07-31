@@ -5,13 +5,16 @@ from typing import Any, Iterable
 
 import numpy as np
 
+from .phase3b_completion import oracle_pair_comparability
 from .phase3b_stage_a import (
     FACTOR_LEVELS,
     GOALS,
     candidate_spec,
     canonical_sha256,
     iter_candidate_specs,
+    symmetric_relative_difference,
     validate_oracle_proposal_ledger,
+    validate_support_pair_geometry_records,
     validate_support_pair_records,
 )
 
@@ -287,6 +290,127 @@ def _validate_candidate_record(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _goal_pair_metrics(
+    near: dict[str, Any],
+    low: dict[str, Any],
+    *,
+    goal: str,
+    comparable: dict[str, Any],
+    limits: dict[str, Any],
+) -> dict[str, Any]:
+    prefix = f"{goal}_"
+    base = {
+        f"{prefix}oracle_balance_estimable": bool(comparable["estimable"]),
+        f"{prefix}same_proposal_bank": bool(comparable["same_proposal_bank"]),
+        f"{prefix}same_execution_contract": bool(
+            comparable["same_execution_contract"]
+        ),
+        f"{prefix}near_execution_mode": comparable["near_execution_mode"],
+        f"{prefix}low_execution_mode": comparable["low_execution_mode"],
+    }
+    if not comparable["estimable"]:
+        return {
+            **base,
+            f"{prefix}selected_proposal_match": None,
+            f"{prefix}shared_success_count": None,
+            f"{prefix}success_set_jaccard": None,
+            f"{prefix}matched_cost_proposal_index": None,
+            f"{prefix}budgeted_cost_mismatch": None,
+            f"{prefix}executed_step_mismatch": None,
+            f"{prefix}active_step_mismatch": None,
+            f"{prefix}eef_path_mismatch": None,
+            f"{prefix}motion_effort_mismatch": None,
+        }
+    near_ledger = validate_oracle_proposal_ledger(
+        near["oracles"][goal], candidate_id=near["candidate_id"], goal=goal
+    )
+    low_ledger = validate_oracle_proposal_ledger(
+        low["oracles"][goal], candidate_id=low["candidate_id"], goal=goal
+    )
+    near_success = set(near_ledger["successful_indices"])
+    low_success = set(low_ledger["successful_indices"])
+    shared = sorted(near_success & low_success)
+    union = near_success | low_success
+    common_index = (
+        min(
+            shared,
+            key=lambda index: (
+                max(
+                    int(
+                        near_ledger["attempts"][index]["cost"][
+                            "executed_action_steps"
+                        ]
+                    ),
+                    int(
+                        low_ledger["attempts"][index]["cost"][
+                            "executed_action_steps"
+                        ]
+                    ),
+                ),
+                sum(
+                    float(
+                        ledger["attempts"][index]["cost"]["eef_path_length_m"]
+                    )
+                    for ledger in (near_ledger, low_ledger)
+                ),
+                index,
+            ),
+        )
+        if shared
+        else None
+    )
+    near_cost = near["oracles"][goal]["cost"]
+    low_cost = low["oracles"][goal]["cost"]
+    mismatch_specs = (
+        (
+            "budgeted_cost",
+            "budgeted_action_steps",
+            float(limits["oracle_cost_mismatch_limit"]),
+        ),
+        (
+            "executed_step",
+            "executed_action_steps",
+            float(limits["executed_step_mismatch_limit"]),
+        ),
+        (
+            "active_step",
+            "active_servo_steps",
+            float(limits["active_step_mismatch_limit"]),
+        ),
+        (
+            "eef_path",
+            "eef_path_length_m",
+            float(limits["eef_path_mismatch_limit"]),
+        ),
+        (
+            "motion_effort",
+            "motion_control_effort",
+            float(limits["motion_control_effort_mismatch_limit"]),
+        ),
+    )
+    mismatches = {}
+    for label, field, limit in mismatch_specs:
+        mismatch = symmetric_relative_difference(
+            near_cost[field], low_cost[field]
+        )
+        if mismatch > limit:
+            raise ValueError(
+                f"Support pair {near['factors']['support_pair_id']} exceeds the "
+                f"{goal} {field} limit"
+            )
+        mismatches[f"{prefix}{label}_mismatch"] = mismatch
+    return {
+        **base,
+        f"{prefix}selected_proposal_match": bool(
+            near_ledger["selected_index"] == low_ledger["selected_index"]
+        ),
+        f"{prefix}shared_success_count": len(shared),
+        f"{prefix}success_set_jaccard": len(shared) / len(union),
+        f"{prefix}matched_cost_proposal_index": common_index,
+        **mismatches,
+    }
+
+
 def validate_consolidated_records(
     entries: Iterable[dict[str, Any]],
     *,
@@ -370,33 +494,71 @@ def validate_consolidated_records(
         )
         near_entry = by_id[near_spec.candidate_id]
         low_entry = by_id[low_spec.candidate_id]
-        if near_entry["source_id"] != low_entry["source_id"]:
-            raise ValueError(
-                f"Support pair {pair_id} crosses source contracts and is not estimable"
-            )
-        metrics = validate_support_pair_records(
+        geometry = validate_support_pair_geometry_records(
             near_entry["record"],
             low_entry["record"],
-            max_oracle_cost_mismatch=float(limits["oracle_cost_mismatch_limit"]),
             max_realized_goal_distance_mismatch=float(
                 limits["realized_goal_distance_mismatch_limit"]
             ),
             max_planned_recovery_distance_mismatch=float(
                 limits["planned_recovery_distance_mismatch_limit"]
             ),
-            max_executed_step_mismatch=float(
-                limits["executed_step_mismatch_limit"]
-            ),
-            max_active_step_mismatch=float(limits["active_step_mismatch_limit"]),
-            max_eef_path_mismatch=float(limits["eef_path_mismatch_limit"]),
-            max_motion_control_effort_mismatch=float(
-                limits["motion_control_effort_mismatch_limit"]
-            ),
         )
+        comparability = oracle_pair_comparability(
+            near_entry["record"], low_entry["record"]
+        )
+        goal_metrics = {
+            key: value
+            for goal in GOALS
+            for key, value in _goal_pair_metrics(
+                near_entry["record"],
+                low_entry["record"],
+                goal=goal,
+                comparable=comparability["by_goal"][goal],
+                limits=limits,
+            ).items()
+        }
+        strict_pass = False
+        if comparability["all_goals_estimable"]:
+            validate_support_pair_records(
+                near_entry["record"],
+                low_entry["record"],
+                max_oracle_cost_mismatch=float(
+                    limits["oracle_cost_mismatch_limit"]
+                ),
+                max_realized_goal_distance_mismatch=float(
+                    limits["realized_goal_distance_mismatch_limit"]
+                ),
+                max_planned_recovery_distance_mismatch=float(
+                    limits["planned_recovery_distance_mismatch_limit"]
+                ),
+                max_executed_step_mismatch=float(
+                    limits["executed_step_mismatch_limit"]
+                ),
+                max_active_step_mismatch=float(
+                    limits["active_step_mismatch_limit"]
+                ),
+                max_eef_path_mismatch=float(
+                    limits["eef_path_mismatch_limit"]
+                ),
+                max_motion_control_effort_mismatch=float(
+                    limits["motion_control_effort_mismatch_limit"]
+                ),
+            )
+            strict_pass = True
         pair_rows.append(
             {
-                "source_id": near_entry["source_id"],
-                **metrics,
+                "near_source_id": near_entry["source_id"],
+                "low_source_id": low_entry["source_id"],
+                "same_source": bool(
+                    near_entry["source_id"] == low_entry["source_id"]
+                ),
+                "oracle_balance_all_goals_estimable": comparability[
+                    "all_goals_estimable"
+                ],
+                "strict_oracle_balance_pass": strict_pass,
+                **geometry,
+                **goal_metrics,
             }
         )
 
@@ -413,6 +575,14 @@ def validate_consolidated_records(
         "pass": True,
         "candidate_count": len(entries),
         "support_pair_count": len(pair_rows),
+        "physical_geometry_pair_count": len(pair_rows),
+        "oracle_balance_all_goals_estimable_pair_count": sum(
+            row["oracle_balance_all_goals_estimable"] for row in pair_rows
+        ),
+        "oracle_balance_estimable_pair_count_by_goal": {
+            goal: sum(row[f"{goal}_oracle_balance_estimable"] for row in pair_rows)
+            for goal in GOALS
+        },
         "source_count": len({entry["source_id"] for entry in entries}),
         "support_reference_bank_sha256": next(iter(support_bank_hashes)),
         "execution_modes_by_goal": execution_modes,

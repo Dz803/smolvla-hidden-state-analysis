@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from scripts.run_phase3b_stage_a_completion import _checkpoint
 from smolvla_analysis.phase3b_completion import (
     oracle_pair_comparability,
     proposal_inventory,
@@ -148,3 +149,45 @@ def test_oracle_pair_comparability_is_goal_specific() -> None:
     assert result["by_goal"]["drawer"]["estimable"] is False
     assert result["by_goal"]["cabinet"]["estimable"] is True
     assert result["all_goals_estimable"] is False
+
+
+def test_completion_checkpoint_accepts_sparse_import_without_rerun(tmp_path) -> None:
+    (tmp_path / "checkpoints").mkdir()
+    proposals = _proposals()
+    phases = tuple(
+        SimpleNamespace(metadata={"proposal_index": index})
+        for index in range(2)
+    )
+    imported = {1: {"pass": True}}
+    provenance = {1: {"kind": "held_root_smoke"}}
+    completed, record, finish = _checkpoint(
+        tmp_path,
+        candidate_id=OPEN_ID,
+        goal="drawer",
+        root_state_sha256="a" * 64,
+        contract_sha256="b" * 64,
+        selection_lock_sha256="c" * 64,
+        proposals=proposals,
+        phase_proposals=phases,
+        imported_results=imported,
+        imported_provenance=provenance,
+    )
+    assert completed == imported
+    record(0, {"pass": False})
+    with pytest.raises(ValueError, match="Refusing to rerun"):
+        record(1, {"pass": True})
+    finish({"pass": True})
+
+    resumed, _, _ = _checkpoint(
+        tmp_path,
+        candidate_id=OPEN_ID,
+        goal="drawer",
+        root_state_sha256="a" * 64,
+        contract_sha256="b" * 64,
+        selection_lock_sha256="c" * 64,
+        proposals=proposals,
+        phase_proposals=phases,
+        imported_results=imported,
+        imported_provenance=provenance,
+    )
+    assert resumed == {0: {"pass": False}, 1: {"pass": True}}

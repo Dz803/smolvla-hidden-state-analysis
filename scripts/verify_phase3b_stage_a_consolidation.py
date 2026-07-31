@@ -61,6 +61,14 @@ def verify_report(report_dir: Path) -> dict:
         or summary.get("validation", {}).get("pass") is not True
     ):
         raise ValueError("Compact Stage A summary fails its primary gate")
+    validation = summary["validation"]
+    if (
+        validation.get("physical_geometry_pair_count") != 16
+        or validation.get("oracle_balance_all_goals_estimable_pair_count") != 14
+        or validation.get("oracle_balance_estimable_pair_count_by_goal")
+        != {"drawer": 14, "cabinet": 15}
+    ):
+        raise ValueError("Compact goal-specific oracle estimability changed")
     construction = summary["validation"].get("construction_compatibility", {})
     if (
         construction.get("shared_root_context_contract_match") is not True
@@ -87,6 +95,10 @@ def verify_report(report_dir: Path) -> dict:
             "historical_construction_parameters_cryptographically_bound"
         )
         is not False
+        or boundary.get("require_support_pair_within_one_source") is not False
+        or boundary.get("require_all_physical_pair_geometry_gates") is not True
+        or boundary.get("require_goal_specific_oracle_comparability_labels")
+        is not True
     ):
         raise ValueError("Compact scientific boundary is missing or incorrect")
 
@@ -186,18 +198,43 @@ def verify_report(report_dir: Path) -> dict:
         or set(pairs["support_pair_id"]) != expected_pair_ids
     ):
         raise ValueError("Compact support-pair inventory is incomplete")
-    pair_source_by_id = pairs.set_index("support_pair_id")["source_id"].to_dict()
-    for pair_id in pair_source_by_id:
+    for _, row in pairs.iterrows():
+        pair_id = row["support_pair_id"]
         pair_specs = [
             spec
             for spec in iter_candidate_specs()
             if spec.support_pair_id == pair_id
         ]
-        expected_sources = {
-            expected_source_by_candidate[spec.candidate_id] for spec in pair_specs
-        }
-        if expected_sources != {pair_source_by_id[pair_id]}:
-            raise ValueError(f"Compact support pair crosses sources: {pair_id}")
+        near_spec = next(
+            spec
+            for spec in pair_specs
+            if spec.support_stratum == "demonstration_near"
+        )
+        low_spec = next(
+            spec
+            for spec in pair_specs
+            if spec.support_stratum == "transverse_low_support"
+        )
+        expected_near = expected_source_by_candidate[near_spec.candidate_id]
+        expected_low = expected_source_by_candidate[low_spec.candidate_id]
+        if (
+            row["near_source_id"] != expected_near
+            or row["low_source_id"] != expected_low
+            or bool(row["same_source"]) != (expected_near == expected_low)
+        ):
+            raise ValueError(f"Compact support-pair provenance changed: {pair_id}")
+        for goal in GOALS:
+            estimable = bool(row[f"{goal}_oracle_balance_estimable"])
+            same_bank = bool(row[f"{goal}_same_proposal_bank"])
+            same_execution = bool(row[f"{goal}_same_execution_contract"])
+            if estimable != (same_bank and same_execution):
+                raise ValueError(
+                    f"Compact {goal} pair estimability changed: {pair_id}"
+                )
+    if int(pairs["same_source"].sum()) != 15:
+        raise ValueError("Compact cross-source support-pair count changed")
+    if int(pairs["oracle_balance_all_goals_estimable"].sum()) != 14:
+        raise ValueError("Compact all-goal oracle estimability count changed")
     return {
         "pass": True,
         "consolidation_revision": manifest["consolidation_revision"],
