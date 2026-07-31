@@ -741,18 +741,15 @@ def validate_oracle_proposal_ledger(
     }
 
 
-def validate_support_pair_records(
+def validate_support_pair_geometry_records(
     near: dict[str, Any],
     low: dict[str, Any],
     *,
-    max_oracle_cost_mismatch: float = 0.10,
     max_realized_goal_distance_mismatch: float = 0.10,
     max_planned_recovery_distance_mismatch: float = 0.10,
-    max_executed_step_mismatch: float = 0.10,
-    max_active_step_mismatch: float = 0.20,
-    max_eef_path_mismatch: float = 0.10,
-    max_motion_control_effort_mismatch: float = 0.10,
-) -> dict[str, Any]:
+ ) -> dict[str, Any]:
+    """Validate the physical support-pair geometry without oracle comparability."""
+
     near_spec = candidate_spec(str(near.get("candidate_id")))
     low_spec = candidate_spec(str(low.get("candidate_id")))
     if (
@@ -768,7 +765,6 @@ def validate_support_pair_records(
     )
     if not np.isfinite(support_distance_difference):
         raise ValueError(f"Support pair {pair_id} has non-finite support distance")
-
     planned_recovery_mismatch = symmetric_relative_difference(
         near["root_geometry"]["planned_recovery_distance_m"],
         low["root_geometry"]["planned_recovery_distance_m"],
@@ -781,9 +777,60 @@ def validate_support_pair_records(
         near["root_geometry"]["realized_recovery_distance_m"],
         low["root_geometry"]["realized_recovery_distance_m"],
     )
+    planned_goal_mismatches = []
+    realized_goal_mismatches = []
+    for goal in GOALS:
+        planned_mismatch = symmetric_relative_difference(
+            near["root_geometry"]["planned_goal_distances_m"][goal],
+            low["root_geometry"]["planned_goal_distances_m"][goal],
+        )
+        planned_goal_mismatches.append(planned_mismatch)
+        if planned_mismatch > 1e-6:
+            raise ValueError(
+                f"Support pair {pair_id} does not preserve planned {goal} distance"
+            )
+        realized_mismatch = symmetric_relative_difference(
+            near["root_geometry"]["realized_goal_distances_m"][goal],
+            low["root_geometry"]["realized_goal_distances_m"][goal],
+        )
+        realized_goal_mismatches.append(realized_mismatch)
+        if realized_mismatch > max_realized_goal_distance_mismatch:
+            raise ValueError(
+                f"Support pair {pair_id} exceeds realized {goal} distance limit"
+            )
+    return {
+        "support_pair_id": pair_id,
+        "support_distance_difference": support_distance_difference,
+        "planned_recovery_mismatch": planned_recovery_mismatch,
+        "realized_recovery_mismatch": realized_recovery_mismatch,
+        "planned_goal_mismatches": planned_goal_mismatches,
+        "realized_goal_mismatches": realized_goal_mismatches,
+    }
 
-    planned_goal_mismatches: list[float] = []
-    realized_goal_mismatches: list[float] = []
+
+def validate_support_pair_records(
+    near: dict[str, Any],
+    low: dict[str, Any],
+    *,
+    max_oracle_cost_mismatch: float = 0.10,
+    max_realized_goal_distance_mismatch: float = 0.10,
+    max_planned_recovery_distance_mismatch: float = 0.10,
+    max_executed_step_mismatch: float = 0.10,
+    max_active_step_mismatch: float = 0.20,
+    max_eef_path_mismatch: float = 0.10,
+    max_motion_control_effort_mismatch: float = 0.10,
+) -> dict[str, Any]:
+    geometry = validate_support_pair_geometry_records(
+        near,
+        low,
+        max_realized_goal_distance_mismatch=max_realized_goal_distance_mismatch,
+        max_planned_recovery_distance_mismatch=(
+            max_planned_recovery_distance_mismatch
+        ),
+    )
+    pair_id = geometry["support_pair_id"]
+    near_spec = candidate_spec(str(near.get("candidate_id")))
+    low_spec = candidate_spec(str(low.get("candidate_id")))
     budgeted_cost_mismatches: list[float] = []
     executed_step_mismatches: list[float] = []
     active_step_mismatches: list[float] = []
@@ -867,24 +914,6 @@ def validate_support_pair_records(
         selected_proposal_matches.append(
             near_ledger["selected_index"] == low_ledger["selected_index"]
         )
-        planned_mismatch = symmetric_relative_difference(
-            near["root_geometry"]["planned_goal_distances_m"][goal],
-            low["root_geometry"]["planned_goal_distances_m"][goal],
-        )
-        planned_goal_mismatches.append(planned_mismatch)
-        if planned_mismatch > 1e-6:
-            raise ValueError(
-                f"Support pair {pair_id} does not preserve planned {goal} distance"
-            )
-        realized_mismatch = symmetric_relative_difference(
-            near["root_geometry"]["realized_goal_distances_m"][goal],
-            low["root_geometry"]["realized_goal_distances_m"][goal],
-        )
-        realized_goal_mismatches.append(realized_mismatch)
-        if realized_mismatch > max_realized_goal_distance_mismatch:
-            raise ValueError(
-                f"Support pair {pair_id} exceeds realized {goal} distance limit"
-            )
         budgeted_mismatch = symmetric_relative_difference(
             near_cost["budgeted_action_steps"],
             low_cost["budgeted_action_steps"],
@@ -914,12 +943,7 @@ def validate_support_pair_records(
                     f"Support pair {pair_id} exceeds the {goal} {field} limit"
                 )
     return {
-        "support_pair_id": pair_id,
-        "support_distance_difference": support_distance_difference,
-        "planned_recovery_mismatch": planned_recovery_mismatch,
-        "realized_recovery_mismatch": realized_recovery_mismatch,
-        "planned_goal_mismatches": planned_goal_mismatches,
-        "realized_goal_mismatches": realized_goal_mismatches,
+        **geometry,
         "budgeted_cost_mismatches": budgeted_cost_mismatches,
         "executed_step_mismatches": executed_step_mismatches,
         "active_step_mismatches": active_step_mismatches,

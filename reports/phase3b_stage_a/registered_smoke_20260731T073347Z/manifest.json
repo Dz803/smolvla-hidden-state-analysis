@@ -1,0 +1,14 @@
+{
+  "artifact_sha256": {
+    "README.md": "c63b52f1f28b82d8c71efef3c193a36266fe7391ccdbd71513acf45fe302bcac",
+    "condition_summary.csv": "39191e91f7cf75baaae91f4a66eb1b70e4a170758ae6eed17e36d24f80117b6d",
+    "contract.json": "aa009d2ef1ef71ee94943a02041c90e8ced38674851ff39c011e41b947b7e296",
+    "summary.json": "359f7d313ffb45ee073c16e4355af0df7ce616a980fc4ba99902be3e1f4db7cb"
+  },
+  "contract_sha256": "1a2ef4d1db35ffadda89f50cabc26fd93485f7bb384500696dd87a65409d937b",
+  "policy_loaded": false,
+  "raw_evidence_location": "local/phase3b_stage_a/registered_generalization_smokes/registered_smoke_20260731T073347Z",
+  "schema_version": 1,
+  "status": "complete",
+  "summary_sha256": "6149c0adb5c4e733c46c8610510a98e1ab88578f464a6e646ed913f3a4f27649"
+}

@@ -24,6 +24,7 @@ from .phase3_crd import (
     evaluate_common_goals,
     nested_field_max_abs_differences,
 )
+from .phase3b_alignment import landmark_registered_point
 from .phase3b_stage_a import (
     GOALS,
     LAYOUT_INIT_STATE_IDS,
@@ -825,6 +826,113 @@ def build_action_phase_proposal_bank(
     expected_indices = list(range(len(entries)))
     if [entry.metadata["proposal_index"] for entry in entries] != expected_indices:
         raise RuntimeError("Action-phase proposal bank order changed")
+    return tuple(entries)
+
+
+def build_landmark_registered_action_phase_proposal_bank(
+    environment,
+    *,
+    target_layout: str,
+    proposals: tuple[DemoTrace, ...],
+    config: dict[str, Any],
+) -> tuple[ActionPhaseProposal, ...]:
+    """Register one canonical layout's phase anchors to a target bowl landmark.
+
+    Only translation is transferred.  The source-action slice and orientation
+    come from the declared reference layout, while the anchor position preserves
+    its reference EEF-to-bowl offset at the target layout's bowl position.
+    """
+
+    registration = config["action_phase_oracle"].get("registration", {})
+    expected = {
+        "type": "translation_only",
+        "reference_layout": "A",
+        "landmark": BOWL_NAME,
+    }
+    if any(registration.get(key) != value for key, value in expected.items()):
+        raise ValueError(
+            "Landmark-registered action phases require the locked layout-A "
+            "bowl-translation contract"
+        )
+    reference_layout = str(registration["reference_layout"])
+    if target_layout not in LAYOUT_INIT_STATE_IDS:
+        raise ValueError(f"Unknown registered target layout: {target_layout}")
+    reference_bank = build_action_phase_proposal_bank(
+        environment,
+        layout=reference_layout,
+        proposals=proposals,
+        config=config,
+    )
+    controller = PolicyFreeController(environment)
+    controller.reset_layout(
+        LAYOUT_INIT_STATE_IDS[reference_layout],
+        int(config["environment"]["reset_seed"]),
+    )
+    reference_landmark = controller.bowl_position()
+    controller.reset_layout(
+        LAYOUT_INIT_STATE_IDS[target_layout],
+        int(config["environment"]["reset_seed"]),
+    )
+    target_landmark = controller.bowl_position()
+    entries = []
+    for reference in reference_bank:
+        anchor = landmark_registered_point(
+            reference.anchor_position,
+            reference_landmark,
+            target_landmark,
+        )
+        target_neutral_metadata = {
+            key: value
+            for key, value in reference.metadata.items()
+            if key
+            not in {
+                "layout",
+                "init_state_id",
+                "anchor_eef_position",
+                "anchor_eef_orientation",
+                "reference_drawer_joint",
+                "reference_bowl_drift_m",
+                "reference_goals",
+                "reference_nonterminal",
+                "reference_bowl_grasped",
+            }
+        }
+        metadata = {
+            **target_neutral_metadata,
+            "execution_mode": config["action_phase_oracle"]["execution_mode"],
+            "anchor_rule": config["action_phase_oracle"]["anchor_rule"],
+            "layout": target_layout,
+            "init_state_id": LAYOUT_INIT_STATE_IDS[target_layout],
+            "anchor_eef_position": anchor.tolist(),
+            "anchor_eef_orientation": reference.anchor_orientation.tolist(),
+            "canonical_reference": reference.metadata,
+            "landmark_registration": {
+                "type": registration["type"],
+                "landmark": registration["landmark"],
+                "reference_layout": reference_layout,
+                "target_layout": target_layout,
+                "reference_landmark_position": reference_landmark.tolist(),
+                "target_landmark_position": target_landmark.tolist(),
+                "reference_anchor_position": reference.anchor_position.tolist(),
+                "translation_m": (target_landmark - reference_landmark).tolist(),
+                "translation_norm_m": float(
+                    np.linalg.norm(target_landmark - reference_landmark)
+                ),
+                "orientation_transform": "none",
+                "target_landmark_tolerance_m": float(
+                    registration["target_landmark_tolerance_m"]
+                ),
+            },
+        }
+        entries.append(
+            ActionPhaseProposal(
+                source=reference.source,
+                suffix=reference.suffix,
+                anchor_position=anchor,
+                anchor_orientation=reference.anchor_orientation.copy(),
+                metadata=metadata,
+            )
+        )
     return tuple(entries)
 
 
@@ -2385,6 +2493,32 @@ def run_action_phase_oracle_from_prepared_root(
             )
         controller = PolicyFreeController(environment)
         initial_bowl_position = controller.bowl_position()
+        registration = proposal.metadata.get("landmark_registration")
+        if registration is not None:
+            if (
+                registration.get("type") != "translation_only"
+                or registration.get("landmark") != BOWL_NAME
+                or registration.get("target_layout") != spec.layout
+            ):
+                raise ValueError("Action-phase landmark registration changed")
+            expected_landmark = np.asarray(
+                registration.get("target_landmark_position"), dtype=np.float64
+            )
+            tolerance = float(
+                registration.get("target_landmark_tolerance_m", np.nan)
+            )
+            if (
+                expected_landmark.shape != (3,)
+                or not np.isfinite(expected_landmark).all()
+                or not np.isfinite(tolerance)
+                or tolerance <= 0.0
+                or np.linalg.norm(initial_bowl_position - expected_landmark)
+                > tolerance
+            ):
+                raise RuntimeError(
+                    f"Registered target landmark changed for "
+                    f"{spec.candidate_id}/{goal}"
+                )
         route = grasped_root_transit_plan(
             controller.eef_position(),
             proposal.anchor_position,

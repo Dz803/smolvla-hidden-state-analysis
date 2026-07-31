@@ -17,7 +17,7 @@ tail -120 ".planning/$PLAN_ID/progress.md"
 sed -n '1,260p' docs/experiment_log.md
 ```
 
-Phase 3 is complete. The first incomplete work item is Stage A of the occupancy-balanced Phase 3b gate in the active task plan. Nineteen unique roots are promoted across immutable v31/v32/v34 evidence. v34's second root has a complete `18/36` drawer ledger and exhaustive `0/46` cabinet ledger; do not rerun either. The bounded alignment report at `reports/phase3b_stage_a/layout_alignment_20260731T070614Z/` shows that a frozen bowl-relative anchor is the next additive feasibility candidate. Stage B/C still require separate scope decisions. Do not rerun the benchmark, paired perturbations, corrected Phase 2 gate, Phase 3 matrix, or completed Stage A candidate/proposal attempts.
+Phase 3 is complete. The first incomplete work item is Stage A of the occupancy-balanced Phase 3b gate in the active task plan. Nineteen unique roots are promoted across immutable v31/v32/v34 evidence. v34's second root has a complete `18/36` drawer ledger and exhaustive `0/46` cabinet ledger; do not rerun either. The bounded alignment report and prospective transverse-root report under `reports/phase3b_stage_a/` show that the frozen bowl-relative rule passes both untouched layout replicates. Their episode-474 attempts must be imported into the next 13-candidate shard, not rerun. Stage B/C still require separate scope decisions.
 
 ## Canonical local paths
 

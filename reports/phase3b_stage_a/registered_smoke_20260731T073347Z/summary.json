@@ -1,0 +1,79 @@
+{
+  "canonical_rollout_reused": false,
+  "condition_count": 2,
+  "conditions": [
+    {
+      "bridge_active_action_steps": 11,
+      "bridge_bowl_drift_m": 0.0,
+      "bridge_pass": true,
+      "candidate_id": "stagea__drawer-open__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-a",
+      "certificate_pass": true,
+      "eef_path_length_m": 1.1680065418884171,
+      "executed_action_steps": 623,
+      "executed_source_action_steps": 83,
+      "first_goal_source_frame": 83,
+      "goal_ever_achieved": true,
+      "layout": "A",
+      "motion_control_effort": 93.74287177622318,
+      "normalized_state_sha256": "818f7f665ee4d688073f9b3357a6162594be791fea400b27fe281613a6bf947c",
+      "registration_translation_norm_m": 0.0,
+      "registration_translation_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_state_sha256": "af2e6ead2e84b76012bbe45c3e4e54b5dcef31f96d88f87c299668e09b42d8ae",
+      "support_distance": 0.5826856804590246
+    },
+    {
+      "bridge_active_action_steps": 16,
+      "bridge_bowl_drift_m": 0.0,
+      "bridge_pass": true,
+      "candidate_id": "stagea__drawer-open__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-b",
+      "certificate_pass": true,
+      "eef_path_length_m": 1.1522276164546064,
+      "executed_action_steps": 619,
+      "executed_source_action_steps": 79,
+      "first_goal_source_frame": 79,
+      "goal_ever_achieved": true,
+      "layout": "B",
+      "motion_control_effort": 91.89877574145794,
+      "normalized_state_sha256": "9111df1eff410402e943b2c666e9bbe354e39f95b82c18e3dc90fd313d36d4be",
+      "registration_translation_norm_m": 0.01737156671271895,
+      "registration_translation_xyz_m": [
+        -0.01693335842018376,
+        -0.003877202943880661,
+        0.0
+      ],
+      "root_state_sha256": "f7ba460ba36b0ddb65e207351719e95f35f996aa3d8f23a07b551875d823545d",
+      "support_distance": 0.58090093115186
+    }
+  ],
+  "contract_sha256": "1a2ef4d1db35ffadda89f50cabc26fd93485f7bb384500696dd87a65409d937b",
+  "diagnostic_revision": "phase3b-v35-registered-held-roots-v1",
+  "pass_count": 2,
+  "phase_proposal_contract_sha256_by_layout": {
+    "A": "81053de3f224d028153536da348157c8d8fcbae359549b74a6b9581a2586a671",
+    "B": "4c2151ebdc9de0f3d5acac281140f8affa61efce6f3a8e6a83e78345b71d1fe8"
+  },
+  "policy_loaded": false,
+  "proposal": {
+    "action_sha256": "5d93ae0bbe8618d7ad32e89a85261166b35dec3bcaa972751dddbaae8f07150c",
+    "episode_index": 474,
+    "proposal_index": 31
+  },
+  "prospective_generalization": {
+    "frozen_on": "prior demonstration-near layout-A/layout-B pair",
+    "held_factor": "transverse_low_support",
+    "interpretation": "the registered proposal transfers across the locked support displacement and both scene-layout replicates",
+    "layout_a_pass": true,
+    "layout_b_pass": true
+  },
+  "schema_version": 1,
+  "scientific_boundary": {
+    "does_not_establish": "universal proposal coverage, cross-task generalization, language grounding, or a hidden-state mechanism",
+    "establishes": "held-root generalization of one policy-free registered proposal within one LIBERO task and physical family"
+  },
+  "selection_status": "prospective_after_freezing_on_prior_layout_pair",
+  "support_reference_bank_sha256": "456f9c969e0d9befa67a1659a9bebbee222ebc4c5b134daef9eedbd2f1c07f39"
+}

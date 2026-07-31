@@ -17,6 +17,7 @@ from smolvla_analysis.phase3b_libero import (
     PreparedOracleRoot,
     _validate_grasped_transport_phase,
     action_phase_suffix,
+    build_landmark_registered_action_phase_proposal_bank,
     grasped_root_recovery_plan,
     grasped_root_transit_plan,
     run_goal_oracle_bank,
@@ -43,6 +44,80 @@ from smolvla_analysis.phase3b_stage_a import (
     validate_selection_lock,
     validate_stage_a_records,
 )
+
+
+def test_registered_phase_bank_preserves_reference_bowl_offset(monkeypatch) -> None:
+    source = DemoTrace(
+        goal="cabinet",
+        episode_index=474,
+        task_index=18,
+        frame_indices=np.asarray([1]),
+        states=np.zeros((1, 8), dtype=np.float32),
+        actions=np.zeros((1, 7), dtype=np.float32),
+        action_sha256="a" * 64,
+    )
+    reference_anchor = np.asarray([0.2, -0.1, 1.1])
+    reference_orientation = np.eye(3)
+    reference = ActionPhaseProposal(
+        source=source,
+        suffix=source,
+        anchor_position=reference_anchor,
+        anchor_orientation=reference_orientation,
+        metadata={
+            "proposal_index": 0,
+            "layout": "A",
+            "anchor_eef_position": reference_anchor.tolist(),
+        },
+    )
+    landmarks = {
+        0: np.asarray([-0.08, 0.01, 0.90]),
+        1: np.asarray([-0.10, -0.02, 0.90]),
+    }
+
+    class Controller:
+        def __init__(self, environment):
+            self.layout = 0
+
+        def reset_layout(self, init_state_id, seed):
+            self.layout = init_state_id
+
+        def bowl_position(self):
+            return landmarks[self.layout].copy()
+
+    monkeypatch.setattr(
+        phase3b_libero,
+        "build_action_phase_proposal_bank",
+        lambda *args, **kwargs: (reference,),
+    )
+    monkeypatch.setattr(phase3b_libero, "PolicyFreeController", Controller)
+    config = {
+        "environment": {"reset_seed": 0},
+        "action_phase_oracle": {
+            "execution_mode": "action_intrinsic_pregrasp_bowl_registered_v1",
+            "anchor_rule": (
+                "canonical_layout_a_pregrasp_anchor_translated_by_bowl_landmark"
+            ),
+            "registration": {
+                "type": "translation_only",
+                "reference_layout": "A",
+                "landmark": "akita_black_bowl_1",
+                "target_landmark_tolerance_m": 1e-9,
+            },
+        },
+    }
+    (registered,) = build_landmark_registered_action_phase_proposal_bank(
+        object(), target_layout="B", proposals=(source,), config=config
+    )
+    np.testing.assert_allclose(
+        registered.anchor_position - landmarks[1],
+        reference_anchor - landmarks[0],
+    )
+    np.testing.assert_array_equal(
+        registered.anchor_orientation, reference_orientation
+    )
+    assert registered.metadata["layout"] == "B"
+    assert registered.metadata["landmark_registration"]["reference_layout"] == "A"
+    assert registered.metadata["landmark_registration"]["target_layout"] == "B"
 
 
 def _record(spec: StageACandidateSpec) -> dict:

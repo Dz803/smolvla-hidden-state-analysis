@@ -177,22 +177,60 @@ def _load_config(path: Path) -> dict[str, Any]:
             "Grasped-root clearance must exceed its positive waypoint tolerance"
         )
     action_phase = config.get("action_phase_oracle", {})
-    expected_phase_labels = {
+    common_phase_labels = {
         "applicability": "all_goals_all_drawer_apertures",
-        "execution_mode": "action_intrinsic_pregrasp_phase_continuation_v2",
-        "anchor_rule": (
-            "capped_pregrasp_lead_before_first_gripper_close_transition"
-        ),
         "bridge_mode": "three_leg_clearance_lift_transit_descent",
         "normalization_preparation": (
             "normalization_only_no_source_replay"
         ),
     }
-    for field, expected in expected_phase_labels.items():
+    for field, expected in common_phase_labels.items():
         if action_phase.get(field) != expected:
             raise ValueError(
                 f"Stage A action-phase field {field} must be {expected!r}"
             )
+    execution_contracts = {
+        "action_intrinsic_pregrasp_phase_continuation_v2": {
+            "anchor_rule": (
+                "capped_pregrasp_lead_before_first_gripper_close_transition"
+            ),
+            "registration": None,
+        },
+        "action_intrinsic_pregrasp_bowl_registered_v1": {
+            "anchor_rule": (
+                "canonical_layout_a_pregrasp_anchor_translated_by_bowl_landmark"
+            ),
+            "registration": {
+                "type": "translation_only",
+                "reference_layout": "A",
+                "landmark": "akita_black_bowl_1",
+            },
+        },
+    }
+    execution_mode = action_phase.get("execution_mode")
+    if execution_mode not in execution_contracts:
+        raise ValueError("Stage A action-phase execution mode is not supported")
+    execution_contract = execution_contracts[execution_mode]
+    if action_phase.get("anchor_rule") != execution_contract["anchor_rule"]:
+        raise ValueError("Stage A action-phase anchor rule changed")
+    expected_registration = execution_contract["registration"]
+    observed_registration = action_phase.get("registration")
+    if expected_registration is None:
+        if observed_registration is not None:
+            raise ValueError("World-frame action phases cannot declare registration")
+    else:
+        if not isinstance(observed_registration, dict) or any(
+            observed_registration.get(field) != expected
+            for field, expected in expected_registration.items()
+        ):
+            raise ValueError("Stage A landmark-registration contract changed")
+        landmark_tolerance = float(
+            observed_registration.get("target_landmark_tolerance_m", np.nan)
+        )
+        if not np.isfinite(landmark_tolerance) or not (
+            0.0 < landmark_tolerance <= 1e-6
+        ):
+            raise ValueError("Stage A landmark tolerance is invalid")
     phase_budgets = action_phase.get("bridge_phase_budgets", {})
     if set(phase_budgets) != expected_transit_phases or any(
         int(value) < 1 for value in phase_budgets.values()

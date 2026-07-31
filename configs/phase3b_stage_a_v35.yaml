@@ -1,0 +1,171 @@
+schema_version: 1
+construction_revision: phase3b-stage-a-v35
+
+environment:
+  task_id: 3
+  episode_length: 2200
+  observation_height: 256
+  observation_width: 256
+  control_mode: relative
+  reset_seed: 0
+
+demonstrations:
+  dataset_root: local/training_data/lerobot_libero_a1aaacb
+  drawer_construction:
+    episode_index: 382
+    task_index: 12
+  grasp_construction:
+    episode_index: 474
+    task_index: 18
+  drawer:
+    episode_index: 414
+    task_index: 12
+  cabinet:
+    episode_index: 474
+    task_index: 18
+
+oracle_proposals:
+  drawer:
+    source: all_cached_task_demonstrations
+    task_index: 12
+    order_by: [frame_count, episode_index]
+  cabinet:
+    source: all_cached_task_demonstrations
+    task_index: 18
+    order_by: [frame_count, episode_index]
+
+construction:
+  open_drawer_threshold: -0.14
+  closed_drawer_tolerance: 0.005
+  root_final_timestep: 540
+  stability_steps: 10
+  construction_grasp_stability_steps: 1
+  safe_lift_m: 0.06
+  safe_lift_budget: 40
+  root_servo_budget: 340
+  root_tolerance_m: 0.012
+  max_translation_action_on_table: 0.35
+  max_translation_action_grasped: 0.18
+  grasped_root_clearance_margin_m: 0.04
+  grasped_root_waypoint_tolerance_m: 0.02
+  grasped_root_transit_budgets:
+    clearance_lift: 150
+    clearance_transit: 120
+    target_descent: 70
+  demonstration_near_offsets_m:
+    drawer_side: [0.0, 0.10, 0.10]
+    cabinet_side: [0.0, 0.10, 0.12]
+  maximum_transverse_rotation_degrees: 20.0
+  target_planned_recovery_mismatch: 0.08
+  minimum_support_pair_separation_m: 0.015
+  workspace_bounds_m:
+    x: [-0.35, 0.35]
+    y: [-0.38, 0.25]
+    z: [0.94, 1.36]
+
+oracle:
+  proposal_selection_rule: minimum_executed_steps_then_path_effort_index
+  normalized_bowl_position_tolerance_m: 0.02
+  setdown_safe_height_m: 0.10
+  setdown_release_height_m: 0.01
+  setdown_reverse_root_budget: 340
+  setdown_return_lifted_budget: 80
+  setdown_return_grasp_budget: 60
+  setdown_table_safe_budget: 120
+  setdown_descend_budget: 110
+  setdown_release_budget: 20
+  setdown_retreat_budget: 40
+  setdown_retrace_max_translation_action: 0.18
+  setdown_table_max_translation_action: 0.12
+  setdown_descend_max_translation_action: 0.10
+  home_budget: 200
+  servo_tolerance_m: 0.012
+  max_translation_action: 0.35
+
+action_phase_oracle:
+  applicability: all_goals_all_drawer_apertures
+  execution_mode: action_intrinsic_pregrasp_bowl_registered_v1
+  anchor_rule: canonical_layout_a_pregrasp_anchor_translated_by_bowl_landmark
+  maximum_pregrasp_lead_frames: 50
+  minimum_anchor_prefix_frames: 1
+  gripper_close_threshold: 0.25
+  bridge_mode: three_leg_clearance_lift_transit_descent
+  normalization_preparation: normalization_only_no_source_replay
+  registration:
+    type: translation_only
+    reference_layout: A
+    landmark: akita_black_bowl_1
+    target_landmark_tolerance_m: 1.0e-9
+  gripper_action: -1.0
+  clearance_margin_m: 0.04
+  intermediate_tolerance_m: 0.02
+  final_tolerance_m: 0.012
+  orientation_tolerance_rad: 0.10
+  max_translation_action: 0.35
+  bowl_drift_tolerance_m: 0.02
+  bridge_phase_budgets:
+    clearance_lift: 150
+    clearance_transit: 120
+    target_descent: 70
+  workspace_bounds_m:
+    x: [-0.35, 0.35]
+    y: [-0.38, 0.25]
+    z: [0.94, 1.36]
+
+support_metric:
+  motion_event_threshold_m: 0.002
+  categorical_mismatch_penalty: 2.0
+  scales:
+    eef_position_m: 0.10
+    eef_orientation_rad: 0.50
+    robot_joint_rms_rad: 0.50
+    bowl_position_m: 0.10
+    drawer_joint_m: 0.05
+    eef_motion_m: 0.02
+    bowl_motion_m: 0.02
+    action_motion_rms: 0.50
+    grasp_relative_position_m: 0.05
+    goal_distance_m: 0.15
+
+validation:
+  penetration_limit_m: 0.003
+  max_transient_grasp_dropout_steps: 1
+  max_transport_relative_pose_deviation_m: 0.02
+  stable_position_drift_m: 0.012
+  stable_relative_pose_drift_m: 0.012
+  realized_goal_distance_mismatch_limit: 0.10
+  planned_recovery_distance_mismatch_limit: 0.10
+  oracle_cost_mismatch_limit: 0.10
+  executed_step_mismatch_limit: 0.10
+  active_step_mismatch_limit: 0.20
+  eef_path_mismatch_limit: 0.10
+  motion_control_effort_mismatch_limit: 0.10
+
+certificate:
+  actions:
+    - [0.04, 0.00, 0.00, 0.00, 0.00, 0.00]
+    - [0.00, -0.03, 0.00, 0.00, 0.00, 0.00]
+    - [-0.02, 0.01, 0.02, 0.00, 0.00, 0.00]
+
+completion:
+  expected_candidate_count: 13
+  candidate_ids:
+    - stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-b
+    - stagea__drawer-open__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-a
+    - stagea__drawer-open__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-b
+    - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-a
+    - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-b
+    - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-a
+    - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-b
+    - stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-a
+    - stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-b
+    - stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-a
+    - stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-b
+    - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-a
+    - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-a
+  imports:
+    - candidate_id: stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-b
+      goal: drawer
+      source_run: local/phase3b_stage_a/phase3b_stage_a_20260731T035449Z
+      source_config: configs/phase3b_stage_a.yaml
+      preserve_negative_goal: cabinet

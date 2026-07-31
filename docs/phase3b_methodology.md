@@ -67,6 +67,8 @@ The resulting 32-state artifact is an exact observed-root bank, not a clean aper
 
 Every imported or additive record must validate the original state payload, root and normalized hashes, source-action identity, complete proposal indices, state certificate, and raw artifact hashes. A completed negative bank is evidence, not an invitation to repeat the search. Registered-controller evidence discovered on the first failed layout pair remains exploratory; its first untouched-state applications are the relevant generalization test.
 
+That prospective gate passed on the two transverse-low-support layout replicates using the frozen episode-474 proposal. This authorizes an additive completion shard under the same registration contract; it does not authorize pooling registered and legacy proposal-basin rates. The two smoke attempts are part of the completion evidence and must be imported, not executed again.
+
 ## Stage B: bounded SmolVLA manipulation pilot
 
 Select 16 locked states, one from every affordance-family/support cell, with scene layouts balanced across the design. For each exact state evaluate:
