@@ -214,3 +214,15 @@ Append a dated entry when any of the following changes: canonical run set, prima
 - The unchanged completion shard promotes `open/on-table/drawer-side/transverse-low-support/layout A` with exact state hash `af2e6ead…d8ae`; root and certificate gates pass. Registered drawer coverage is `11/36`, selecting episode 694.
 - Registered cabinet coverage is `1/46`, with episode 474 (index 31) as the only success. That attempt is the exact pre-locked held-root smoke payload and is imported with zero re-execution; the remaining 45 proposals are newly evaluated once.
 - This is root 2/13 in v35 and the 21st unique physical Stage A root. The result confirms prospective transfer without treating the imported smoke as a second independent run, and shows strong residual state-specific basin heterogeneity after coordinate registration.
+
+### 2026-07-31 — v35 layout/locus replication checkpoint
+
+- The held transverse layout-B root passes its full banks at drawer `8/36` and cabinet `5/46`; its locked episode-474 cabinet smoke payload is imported without re-execution. The paired layout-A root is `11/36` and `1/46`, so prospective feasibility transfers but basin width remains layout-sensitive.
+- Cabinet-side demonstration-near roots also pass in both layouts: drawer coverage is `10/36` versus `9/36`, and cabinet coverage is `1/46` versus `4/46`. Root hashes are `0ccfffb3…8eae` and `dffa9087…2e6d`; all physical and repeated-action certificates pass.
+- v35 now contains 5/13 candidates and the complete physical bank contains 24/32 unique roots. The additive shard continues with no error record or exhausted feasibility bank.
+
+### 2026-07-31 — v35 registered-validator recovery
+
+- Candidate 6 completed exhaustive registered banks at drawer `10/36` and cabinet `1/46`, then hit a post-bank software false negative: the strict pair-ledger validator omitted `action_intrinsic_pregrasp_bowl_registered_v1` from its execution-mode allow-list.
+- A provenance-bound compatibility gate validates every registered transform and proposal identity before invoking the unchanged strict cost/balance calculations. It passes 33 focused tests and real layout-A/B contracts. Recovery reassembled both completed checkpoints with zero proposal reruns and promoted state `12db007b…ebdc`; the original error file remains intact.
+- The raw audit `audits/registered_validation_compatibility.json` binds the frozen contract, original sources, error, wrapper, and compatibility-validator hashes and states that proposal execution and state construction were unchanged. v35 continues at 6/13.

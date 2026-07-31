@@ -4,6 +4,7 @@ from copy import deepcopy
 
 import pytest
 
+from scripts.consolidate_phase3b_stage_a import _oracle_counterfactual_rows
 from smolvla_analysis.phase3b_consolidation import (
     LEGACY_EXECUTION_CONTRACT,
     LEGACY_EXECUTION_MODE,
@@ -133,3 +134,45 @@ def test_legacy_migration_is_additive_and_rejects_partial_provenance() -> None:
     )
     with pytest.raises(ValueError, match="Partially migrated"):
         migrate_legacy_full_replay_record(partial)
+
+
+def test_oracle_counterfactual_preserves_both_execution_ledgers() -> None:
+    entry = {
+        "source_id": "v35",
+        "record": {
+            "candidate_id": "candidate",
+            "prior_negative_oracle_evidence": {
+                "cabinet": {
+                    "normalized_state_sha256": "a" * 64,
+                    "proposal_execution_mode": "world_anchor",
+                    "proposal_count": 46,
+                    "successful_proposal_count": 0,
+                    "source_checkpoint_file_sha256": "b" * 64,
+                }
+            },
+            "oracles": {
+                "cabinet": {
+                    "shared_normalized_state_sha256": "a" * 64,
+                    "proposal_execution_mode": "bowl_registered",
+                    "proposal_attempt_count": 46,
+                    "proposal_success_count": 5,
+                }
+            },
+        },
+    }
+    assert _oracle_counterfactual_rows(entry) == [
+        {
+            "candidate_id": "candidate",
+            "source_id": "v35",
+            "goal": "cabinet",
+            "identical_normalized_state": True,
+            "normalized_state_sha256": "a" * 64,
+            "prior_execution_mode": "world_anchor",
+            "prior_proposal_count": 46,
+            "prior_success_count": 0,
+            "current_execution_mode": "bowl_registered",
+            "current_proposal_count": 46,
+            "current_success_count": 5,
+            "source_checkpoint_file_sha256": "b" * 64,
+        }
+    ]
