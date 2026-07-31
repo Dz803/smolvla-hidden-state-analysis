@@ -1,0 +1,81 @@
+{
+  "acquisition_source": {
+    "action_sha256": "5d93ae0bbe8618d7ad32e89a85261166b35dec3bcaa972751dddbaae8f07150c",
+    "episode_index": 474,
+    "full_inventory_proposal_index": 31,
+    "task_index": 18
+  },
+  "candidate_ids": [
+    "stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-a",
+    "stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-b",
+    "stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-a",
+    "stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-b",
+    "stagea__drawer-open__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-a",
+    "stagea__drawer-open__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-a"
+  ],
+  "config_path": "configs/phase3b_stage_a_v36.yaml",
+  "config_sha256": "5d2d2412597cb30ee5db9b42fd6cdfe6c98369582cdc5593b8a2e506dc713bdd",
+  "construction": {
+    "closed_drawer_tolerance": 0.005,
+    "construction_grasp_stability_steps": 3,
+    "demonstration_near_offsets_m": {
+      "cabinet_side": [
+        0.0,
+        0.1,
+        0.12
+      ],
+      "drawer_side": [
+        0.0,
+        0.1,
+        0.1
+      ]
+    },
+    "grasped_root_clearance_margin_m": 0.04,
+    "grasped_root_transit_budgets": {
+      "clearance_lift": 150,
+      "clearance_transit": 120,
+      "target_descent": 70
+    },
+    "grasped_root_waypoint_tolerance_m": 0.02,
+    "max_translation_action_grasped": 0.18,
+    "max_translation_action_on_table": 0.35,
+    "maximum_transverse_rotation_degrees": 20.0,
+    "minimum_support_pair_separation_m": 0.015,
+    "open_drawer_threshold": -0.14,
+    "open_grasped_acquisition_mode": "registered_cabinet_phase_v1",
+    "registered_grasp_acquisition_episode_index": 474,
+    "registered_grasp_bridge_pad_to_budget": false,
+    "root_final_timestep": 560,
+    "root_servo_budget": 340,
+    "root_tolerance_m": 0.012,
+    "safe_lift_budget": 40,
+    "safe_lift_m": 0.06,
+    "stability_steps": 10,
+    "target_planned_recovery_mismatch": 0.08,
+    "workspace_bounds_m": {
+      "x": [
+        -0.35,
+        0.35
+      ],
+      "y": [
+        -0.38,
+        0.25
+      ],
+      "z": [
+        0.94,
+        1.36
+      ]
+    }
+  },
+  "construction_revision": "phase3b-stage-a-v36",
+  "gate_revision": "phase3b-stage-a-v36-construction-gate-v1",
+  "phase_bank_setup": "Build only the locked acquisition source; the landmark, anchor, orientation, suffix, and physical execution are identical to its entry in the full bank.",
+  "policy_loaded": false,
+  "proposal_oracles_executed": 0,
+  "schema_version": 1,
+  "source_sha256": {
+    "libero": "7ffd984f4ce07f2dedf50612f7cc68f87bc7a38321f0d92743e926e7ab15efcd",
+    "runner": "855af3a581075246525fdbb27ebed550c1c57de24a6393361b4057a6ffe1aadd",
+    "stage_a_runner": "ee5cb57921efafe073e8d6f78c0680dccb77584bf74931a3b1366bc530c04344"
+  }
+}

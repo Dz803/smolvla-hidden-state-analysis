@@ -1,0 +1,15 @@
+{
+  "artifact_sha256": {
+    "README.md": "78ba399852e41e72a83a56afeb6764b4d44790b9522681a8e2120bf4428e006c",
+    "condition_summary.csv": "765376a1b59996645ed5e60da32ac4ddec7c1ed0e1d47cc901422ac997555756",
+    "contract.json": "02a6c495f9dd9d1163bf249407d5182ad620680e8da6b9548c4dd25dc7f5c872",
+    "summary.json": "d6495a768d4af06d90facce47c3dcc476f35f3498c89b6f867d400fb6beff4e8",
+    "support_pair_geometry.csv": "cccf902035e752f34ec96f2bf6a6108c4a43f4450d9cc052b26fda67854ac650"
+  },
+  "contract_sha256": "5f46e5e2fbe61ed19ed3b027b47fc62e7a266310053c75622c4d1f041f2d2f4b",
+  "policy_loaded": false,
+  "raw_evidence_location": "local/phase3b_stage_a/construction_gates/phase3b_stage_a_construction_gate_20260731T094517Z",
+  "schema_version": 1,
+  "status": "complete",
+  "summary_sha256": "dea590d8ee520a0d8bbb7e9d25422524c0402d4bf88a1e25a83ea2a3cf54158e"
+}

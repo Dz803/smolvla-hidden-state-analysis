@@ -8,6 +8,7 @@ import smolvla_analysis.phase3b_registered_validation as registered_validation
 from smolvla_analysis.phase3b_registered_validation import (
     REGISTERED_ANCHOR_RULE,
     REGISTERED_EXECUTION_MODE,
+    validate_oracle_proposal_ledger_compatible,
     validate_registered_oracle_execution,
     validate_support_pair_records_compatible,
 )
@@ -137,3 +138,39 @@ def test_compatibility_gate_adapts_only_outer_mode(monkeypatch) -> None:
         records[0]["oracles"]["drawer"]["proposal_execution_mode"]
         == REGISTERED_EXECUTION_MODE
     )
+
+
+def test_compatible_single_ledger_restores_registered_mode(monkeypatch) -> None:
+    oracle = _oracle()
+
+    def downstream(adapted, *, candidate_id, goal):
+        assert candidate_id == NEAR_A
+        assert goal == "drawer"
+        assert adapted["proposal_execution_mode"] == (
+            registered_validation.LEGACY_ACTION_PHASE_MODE
+        )
+        assert adapted["proposal_attempts"][0]["proposal_execution_mode"] == (
+            registered_validation.LEGACY_ACTION_PHASE_MODE
+        )
+        assert adapted["proposal_execution_contract"][0]["execution_mode"] == (
+            REGISTERED_EXECUTION_MODE
+        )
+        return {
+            "successful_indices": [0],
+            "selected_index": 0,
+            "attempts": adapted["proposal_attempts"],
+            "execution_mode": registered_validation.LEGACY_ACTION_PHASE_MODE,
+            "execution_contract_sha256": adapted[
+                "proposal_execution_contract_sha256"
+            ],
+        }
+
+    monkeypatch.setattr(
+        registered_validation, "validate_oracle_proposal_ledger", downstream
+    )
+    result = validate_oracle_proposal_ledger_compatible(
+        oracle, candidate_id=NEAR_A, goal="drawer"
+    )
+    assert result["execution_mode"] == REGISTERED_EXECUTION_MODE
+    assert result["registered_execution_validation"]["pass"] is True
+    assert oracle["proposal_execution_mode"] == REGISTERED_EXECUTION_MODE

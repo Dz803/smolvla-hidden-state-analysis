@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Complete the 13 missing Stage A roots without replaying finished evidence."""
+"""Complete an additive Stage A root shard without replaying finished evidence."""
 
 from __future__ import annotations
 
@@ -46,6 +46,9 @@ from smolvla_analysis.phase3b_completion import (
     validate_completion_candidate_ids,
     validate_imported_checkpoint,
 )
+from smolvla_analysis.phase3b_registered_validation import (
+    validate_support_pair_records_compatible,
+)
 from smolvla_analysis.phase3b_libero import (
     build_action_phase_proposal_bank,
     build_landmark_registered_action_phase_proposal_bank,
@@ -66,7 +69,6 @@ from smolvla_analysis.phase3b_stage_a import (
     snapshot_sha256,
     validate_selection_lock,
     validate_support_pair_geometry_records,
-    validate_support_pair_records,
 )
 
 
@@ -80,7 +82,7 @@ DEFAULT_REGISTERED_SMOKE = (
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run the additive v35 Stage A completion shard."
+        description="Run an additive Stage A completion shard."
     )
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--run-dir", type=Path)
@@ -109,14 +111,23 @@ def _run_dir(requested: Path | None) -> Path:
 def _validate_completion_config(config: dict[str, Any]) -> dict[str, Any]:
     completion = config.get("completion")
     if not isinstance(completion, dict):
-        raise ValueError("v35 config has no completion block")
+        raise ValueError("Stage A config has no completion block")
+    revision = str(completion.get("revision", COMPLETION_REVISION))
+    if not revision.startswith("phase3b-stage-a-"):
+        raise ValueError("Completion revision is not namespaced")
     expected_count = int(completion.get("expected_candidate_count", -1))
     candidate_ids = validate_completion_candidate_ids(
         completion.get("candidate_ids", ()), expected_count=expected_count
     )
     imports = completion.get("imports")
-    if not isinstance(imports, list) or len(imports) != 1:
-        raise ValueError("v35 completion requires exactly one prior goal import")
+    if not isinstance(imports, list) or len(imports) > 1:
+        raise ValueError("Completion accepts at most one prior goal import")
+    if not imports:
+        return {
+            **completion,
+            "revision": revision,
+            "candidate_ids": candidate_ids,
+        }
     imported = imports[0]
     required = {
         "candidate_id",
@@ -126,14 +137,18 @@ def _validate_completion_config(config: dict[str, Any]) -> dict[str, Any]:
         "preserve_negative_goal",
     }
     if set(imported) != required:
-        raise ValueError("v35 completion import contract changed")
+        raise ValueError("Completion import contract changed")
     if (
         imported["candidate_id"] not in candidate_ids
         or imported["goal"] != "drawer"
         or imported["preserve_negative_goal"] != "cabinet"
     ):
-        raise ValueError("v35 completion import identity changed")
-    return {**completion, "candidate_ids": candidate_ids}
+        raise ValueError("Completion import identity changed")
+    return {
+        **completion,
+        "revision": revision,
+        "candidate_ids": candidate_ids,
+    }
 
 
 def _completion_contract(
@@ -142,26 +157,29 @@ def _completion_contract(
     demos: dict[str, Any],
     proposal_banks: dict[str, tuple[Any, ...]],
     completion: dict[str, Any],
-    smoke_dir: Path,
+    smoke_dir: Path | None,
 ) -> dict[str, Any]:
     base = _contract(config_path, config, demos, proposal_banks)
-    smoke_files = {
-        name: _file_sha256(smoke_dir / name)
-        for name in ("contract.json", "result.json", "manifest.json")
-    }
+    registered_smoke = None
+    if smoke_dir is not None:
+        smoke_files = {
+            name: _file_sha256(smoke_dir / name)
+            for name in ("contract.json", "result.json", "manifest.json")
+        }
+        registered_smoke = {
+            "run_dir": smoke_dir.relative_to(PROJECT).as_posix(),
+            "artifact_sha256": smoke_files,
+        }
     return {
         **base,
         "stage": "phase3b_stage_a_completion",
-        "completion_revision": COMPLETION_REVISION,
+        "completion_revision": completion["revision"],
         "completion_assignment": {
             "expected_candidate_count": completion["expected_candidate_count"],
             "candidate_ids": list(completion["candidate_ids"]),
             "imports": completion["imports"],
         },
-        "registered_smoke": {
-            "run_dir": smoke_dir.relative_to(PROJECT).as_posix(),
-            "artifact_sha256": smoke_files,
-        },
+        "registered_smoke": registered_smoke,
         "completion_source_sha256": {
             "runner": _file_sha256(Path(__file__).resolve()),
             "completion": _file_sha256(
@@ -302,7 +320,7 @@ def _checkpoint(
     path = run_dir / "checkpoints" / f"{candidate_id}__{goal}.json"
     expected = {
         "schema_version": 1,
-        "checkpoint_revision": "phase3b-v35-sparse-import-v1",
+        "checkpoint_revision": "phase3b-additive-sparse-import-v1",
         "candidate_id": candidate_id,
         "goal": goal,
         "root_state_sha256": root_state_sha256,
@@ -563,19 +581,23 @@ def main() -> None:
     if args.stop_after_candidates is not None and args.stop_after_candidates < 1:
         raise ValueError("--stop-after-candidates must be positive")
     config_path = args.config.resolve()
-    smoke_dir = args.registered_smoke.resolve()
     config = _load_config(config_path)
     completion = _validate_completion_config(config)
     demos = _load_demos(config)
     proposal_banks = _load_proposal_bank(config)
     minimum_horizon = _minimum_native_horizon(config, demos, proposal_banks)
     if int(config["environment"]["episode_length"]) < minimum_horizon:
-        raise ValueError("v35 completion native horizon is too short")
+        raise ValueError("Completion native horizon is too short")
     base_contract_sha = canonical_sha256(
         _contract(config_path, config, demos, proposal_banks)
     )
-    smoke_conditions = _load_registered_smoke(
-        smoke_dir, base_contract_sha256=base_contract_sha
+    smoke_dir = args.registered_smoke.resolve() if completion["imports"] else None
+    smoke_conditions = (
+        _load_registered_smoke(
+            smoke_dir, base_contract_sha256=base_contract_sha
+        )
+        if smoke_dir is not None
+        else {}
     )
     contract = _completion_contract(
         config_path,
@@ -594,7 +616,7 @@ def main() -> None:
         print(
             json.dumps(
                 {
-                    "completion_revision": COMPLETION_REVISION,
+                    "completion_revision": completion["revision"],
                     "contract_sha256": contract_sha,
                     "selection_lock_sha256": selection_lock[
                         "selection_lock_sha256"
@@ -642,7 +664,7 @@ def main() -> None:
     )
     support_bank = None
     phase_banks: dict[tuple[str, str], tuple[Any, ...]] = {}
-    import_spec = completion["imports"][0]
+    import_spec = completion["imports"][0] if completion["imports"] else None
     for candidate_id in selected:
         existing = _completed_record(
             run_dir,
@@ -687,6 +709,28 @@ def main() -> None:
                     )
                 finally:
                     phase_environment.close()
+        registered_grasp_acquisition = None
+        if (
+            spec.drawer_aperture == "open"
+            and spec.possession == "grasped"
+            and config["construction"].get("open_grasped_acquisition_mode")
+            == "registered_cabinet_phase_v1"
+        ):
+            acquisition_episode = int(
+                config["construction"][
+                    "registered_grasp_acquisition_episode_index"
+                ]
+            )
+            matches = [
+                proposal
+                for proposal in phase_banks[("cabinet", spec.layout)]
+                if proposal.source.episode_index == acquisition_episode
+            ]
+            if len(matches) != 1:
+                raise ValueError(
+                    f"Registered grasp proposal changed for {candidate_id}"
+                )
+            registered_grasp_acquisition = matches[0]
         print(f"construct {candidate_id}", flush=True)
         environment = make_stage_a_environment(PROJECT, run_dir, config)
         try:
@@ -696,6 +740,7 @@ def main() -> None:
                 demos,
                 config,
                 support_reference_bank=support_bank,
+                registered_grasp_acquisition=registered_grasp_acquisition,
             )
             certificate = certify_computational_state(
                 environment,
@@ -704,14 +749,18 @@ def main() -> None:
                 probe_actions=config["certificate"]["actions"],
             )
             if certificate["pass"] is not True:
-                raise RuntimeError(f"v35 certificate failed for {candidate_id}")
+                raise RuntimeError(
+                    f"Completion certificate failed for {candidate_id}"
+                )
             oracles = {}
             imports = {}
             prior_negative = {}
             for goal in GOALS:
-                if candidate_id == import_spec["candidate_id"] and goal == import_spec[
-                    "goal"
-                ]:
+                if (
+                    import_spec is not None
+                    and candidate_id == import_spec["candidate_id"]
+                    and goal == import_spec["goal"]
+                ):
                     oracle, negative = _source_import(
                         import_spec,
                         environment=environment,
@@ -732,6 +781,10 @@ def main() -> None:
                     smoke_index = int(
                         smoke_conditions[candidate_id]["proposal_index"]
                     )
+                    if smoke_dir is None:
+                        raise RuntimeError(
+                            "Registered smoke condition exists without a source"
+                        )
                     smoke_results, smoke_provenance = _smoke_seed(
                         smoke_conditions,
                         spec=spec,
@@ -790,7 +843,7 @@ def main() -> None:
             record["snapshot_metadata"] = compact_snapshot_metadata(
                 constructed.snapshot
             )
-            record["completion_revision"] = COMPLETION_REVISION
+            record["completion_revision"] = completion["revision"]
             record["oracle_imports"] = imports
             record["prior_negative_oracle_evidence"] = prior_negative
             counterpart_spec = next(
@@ -825,7 +878,7 @@ def main() -> None:
                 comparability = oracle_pair_comparability(near, low)
                 strict = None
                 if comparability["all_goals_estimable"]:
-                    strict = validate_support_pair_records(
+                    strict = validate_support_pair_records_compatible(
                         near, low, **limits
                     )
                 atomic_write_json(
@@ -901,7 +954,7 @@ def main() -> None:
             candidate_records_sha256=canonical_sha256(records),
             completed_at=datetime.now(UTC).isoformat(),
         )
-        print(f"v35 completion shard complete: {run_dir}")
+        print(f"Completion shard complete: {run_dir}")
     else:
         _update_manifest(
             run_dir,
@@ -909,7 +962,10 @@ def main() -> None:
             status="in_progress",
             candidate_count=actual_count,
         )
-        print(f"v35 completion shard paused at {actual_count}/13")
+        print(
+            "Completion shard paused at "
+            f"{actual_count}/{completion['expected_candidate_count']}"
+        )
 
 
 if __name__ == "__main__":

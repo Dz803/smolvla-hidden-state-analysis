@@ -11,6 +11,7 @@ from .phase3b_stage_a import (
     GOALS,
     canonical_sha256,
     candidate_spec,
+    validate_oracle_proposal_ledger,
     validate_support_pair_records,
 )
 
@@ -205,5 +206,29 @@ def validate_support_pair_records_compatible(
             for attempt in oracle["proposal_attempts"]:
                 attempt["proposal_execution_mode"] = LEGACY_ACTION_PHASE_MODE
     result = validate_support_pair_records(adapted[0], adapted[1], **limits)
+    result["registered_execution_validation"] = registered
+    return result
+
+
+def validate_oracle_proposal_ledger_compatible(
+    oracle: dict[str, Any], *, candidate_id: str, goal: str
+) -> dict[str, Any]:
+    """Validate legacy or registered ledgers through one fail-closed entry point."""
+
+    if oracle.get("proposal_execution_mode") != REGISTERED_EXECUTION_MODE:
+        return validate_oracle_proposal_ledger(
+            oracle, candidate_id=candidate_id, goal=goal
+        )
+    registered = validate_registered_oracle_execution(
+        oracle, candidate_id=candidate_id, goal=goal
+    )
+    adapted = deepcopy(oracle)
+    adapted["proposal_execution_mode"] = LEGACY_ACTION_PHASE_MODE
+    for attempt in adapted["proposal_attempts"]:
+        attempt["proposal_execution_mode"] = LEGACY_ACTION_PHASE_MODE
+    result = validate_oracle_proposal_ledger(
+        adapted, candidate_id=candidate_id, goal=goal
+    )
+    result["execution_mode"] = REGISTERED_EXECUTION_MODE
     result["registered_execution_validation"] = registered
     return result

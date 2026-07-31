@@ -355,6 +355,7 @@ class PolicyFreeController:
         max_translation_action: float,
         position_tolerance_m: float,
         orientation_tolerance_rad: float = 0.10,
+        pad_to_budget: bool = True,
     ) -> dict[str, Any]:
         from robosuite.utils import transform_utils as transform
 
@@ -376,10 +377,13 @@ class PolicyFreeController:
             orientation_norm = float(np.linalg.norm(axis_angle))
             max_position_error = max(max_position_error, position_norm)
             action = np.zeros(7, dtype=np.float32)
-            if (
+            needs_motion = bool(
                 position_norm > position_tolerance_m
                 or orientation_norm > orientation_tolerance_rad
-            ):
+            )
+            if not needs_motion and not pad_to_budget:
+                break
+            if needs_motion:
                 active_steps += 1
                 action[:3] = np.clip(
                     position_error / 0.035,
@@ -417,6 +421,8 @@ class PolicyFreeController:
         )
         return {
             "budgeted_action_steps": int(budget),
+            "executed_action_steps": int(len(self.actions) - history_start),
+            "padded_to_budget": bool(pad_to_budget),
             "active_action_steps": int(active_steps),
             "max_position_error_m": max_position_error,
             "final_position_error_m": final_position_error,
@@ -936,6 +942,196 @@ def build_landmark_registered_action_phase_proposal_bank(
     return tuple(entries)
 
 
+def run_registered_grasp_acquisition(
+    controller: PolicyFreeController,
+    *,
+    spec: StageACandidateSpec,
+    proposal: ActionPhaseProposal,
+    config: dict[str, Any],
+) -> dict[str, Any]:
+    """Acquire the bowl after drawer opening without replaying a placement tail."""
+
+    construction_cfg = config["construction"]
+    if (
+        spec.drawer_aperture != "open"
+        or spec.possession != "grasped"
+        or proposal.source.episode_index
+        != int(construction_cfg["registered_grasp_acquisition_episode_index"])
+        or proposal.source.task_index
+        != int(config["oracle_proposals"]["cabinet"]["task_index"])
+        or proposal.metadata.get("execution_mode")
+        != "action_intrinsic_pregrasp_bowl_registered_v1"
+        or proposal.metadata.get("anchor_rule")
+        != "canonical_layout_a_pregrasp_anchor_translated_by_bowl_landmark"
+        or proposal.metadata.get("layout") != spec.layout
+        or proposal.metadata.get("init_state_id") != spec.init_state_id
+        or proposal.metadata.get("landmark_registration", {}).get("target_layout")
+        != spec.layout
+        or bool(construction_cfg["registered_grasp_bridge_pad_to_budget"])
+    ):
+        raise ValueError(
+            f"Registered grasp-acquisition contract changed for {spec.candidate_id}"
+        )
+    if (
+        controller.top_drawer_position()
+        > float(construction_cfg["open_drawer_threshold"])
+        or controller.bowl_grasped()
+        or any(evaluate_common_goals(controller.environment).values())
+    ):
+        raise RuntimeError(
+            f"Registered grasp acquisition received an invalid root for "
+            f"{spec.candidate_id}"
+        )
+    registration = proposal.metadata["landmark_registration"]
+    initial_bowl_position = controller.bowl_position()
+    expected_landmark = np.asarray(
+        registration["target_landmark_position"], dtype=np.float64
+    )
+    if np.linalg.norm(initial_bowl_position - expected_landmark) > float(
+        registration["target_landmark_tolerance_m"]
+    ):
+        raise RuntimeError(
+            f"Registered grasp landmark changed for {spec.candidate_id}"
+        )
+
+    phase_cfg = config["action_phase_oracle"]
+    bridge_start = len(controller.actions)
+    route = grasped_root_transit_plan(
+        controller.eef_position(),
+        proposal.anchor_position,
+        clearance_margin_m=float(phase_cfg["clearance_margin_m"]),
+        workspace_bounds=phase_cfg["workspace_bounds_m"],
+        phase_budgets=phase_cfg["bridge_phase_budgets"],
+    )
+    bridge_phases = []
+    for phase in route:
+        intermediate = phase["phase"] != "target_descent"
+        result = controller.servo(
+            target_position=phase["target_position"],
+            target_orientation=proposal.anchor_orientation,
+            gripper=float(phase_cfg["gripper_action"]),
+            budget=int(phase["budget"]),
+            max_translation_action=float(phase_cfg["max_translation_action"]),
+            position_tolerance_m=float(
+                phase_cfg[
+                    "intermediate_tolerance_m"
+                    if intermediate
+                    else "final_tolerance_m"
+                ]
+            ),
+            orientation_tolerance_rad=float(
+                phase_cfg["orientation_tolerance_rad"]
+            ),
+            pad_to_budget=False,
+        )
+        _validate_servo_phase(
+            result,
+            candidate_id=spec.candidate_id,
+            phase=f"registered_grasp_bridge_{phase['phase']}",
+        )
+        bridge_phases.append(
+            {
+                "phase": phase["phase"],
+                "target_position": np.asarray(
+                    phase["target_position"]
+                ).tolist(),
+                "intermediate": intermediate,
+                "result": result,
+            }
+        )
+    bridge_stop = len(controller.actions)
+    bridge_bowl_drift = float(
+        np.linalg.norm(controller.bowl_position() - initial_bowl_position)
+    )
+    if (
+        bridge_stop <= bridge_start
+        or any(controller.grasp_values[bridge_start:bridge_stop])
+        or any(controller.done_values[bridge_start:bridge_stop])
+        or any(
+            any(item.values())
+            for item in controller.goal_values[bridge_start:bridge_stop]
+        )
+        or bridge_bowl_drift > float(phase_cfg["bowl_drift_tolerance_m"])
+        or controller.top_drawer_position()
+        > float(construction_cfg["open_drawer_threshold"])
+    ):
+        raise RuntimeError(
+            f"Registered grasp bridge changed the task state for "
+            f"{spec.candidate_id}"
+        )
+
+    required_streak = int(
+        construction_cfg["construction_grasp_stability_steps"]
+    )
+    acquisition_start = len(controller.actions)
+    grasp_streak = 0
+    acquired_at_frame = None
+    for frame_index, action in zip(
+        proposal.suffix.frame_indices,
+        proposal.suffix.actions,
+        strict=True,
+    ):
+        _, _, done, _ = controller.step(action)
+        if done or any(evaluate_common_goals(controller.environment).values()):
+            raise RuntimeError(
+                f"Registered grasp acquisition crossed a terminal or goal for "
+                f"{spec.candidate_id}"
+            )
+        grasp_streak = grasp_streak + 1 if controller.bowl_grasped() else 0
+        if grasp_streak >= required_streak:
+            acquired_at_frame = int(frame_index)
+            break
+    acquisition_stop = len(controller.actions)
+    if acquired_at_frame is None or not controller.bowl_grasped():
+        raise RuntimeError(
+            f"Registered continuation did not acquire the bowl for "
+            f"{spec.candidate_id}"
+        )
+    bridge_actions = np.stack(controller.actions[bridge_start:bridge_stop])
+    acquisition_actions = np.stack(
+        controller.actions[acquisition_start:acquisition_stop]
+    )
+    return {
+        "mode": "registered_cabinet_phase_until_stable_grasp_v1",
+        "source_episode_index": proposal.source.episode_index,
+        "source_task_index": proposal.source.task_index,
+        "source_action_sha256": proposal.source.action_sha256,
+        "phase_proposal": proposal.metadata,
+        "required_stable_grasp_steps": required_streak,
+        "acquired_at_source_frame": acquired_at_frame,
+        "bridge": {
+            "mode": "early_stop_three_leg_clearance_route",
+            "phases": bridge_phases,
+            "budgeted_action_steps": int(
+                sum(int(item["budget"]) for item in route)
+            ),
+            "executed_action_steps": int(len(bridge_actions)),
+            "active_action_steps": int(
+                sum(
+                    int(item["result"]["active_action_steps"])
+                    for item in bridge_phases
+                )
+            ),
+            "action_sha256": _action_sha256(bridge_actions),
+            "bowl_drift_m": bridge_bowl_drift,
+            "drawer_aperture_preserved": True,
+            "goal_ever": False,
+            "done_ever": False,
+            "grasp_ever": False,
+        },
+        "executed_source_action_steps": int(len(acquisition_actions)),
+        "executed_source_action_sha256": _action_sha256(
+            acquisition_actions
+        ),
+        "final_eef_minus_bowl_m": (
+            controller.eef_position() - controller.bowl_position()
+        ).tolist(),
+        "final_drawer_joint": controller.top_drawer_position(),
+        "final_goals": evaluate_common_goals(controller.environment),
+        "final_grasped": controller.bowl_grasped(),
+    }
+
+
 def grasped_root_recovery_plan(
     root_transit_positions: np.ndarray,
     lifted_eef_position: np.ndarray,
@@ -1335,8 +1531,28 @@ def construct_candidate(
     demos: dict[str, DemoTrace],
     config: dict[str, Any],
     support_reference_bank: SupportReferenceBank | None = None,
+    registered_grasp_acquisition: ActionPhaseProposal | None = None,
 ) -> ConstructedCandidate:
     construction_cfg = config["construction"]
+    acquisition_mode = construction_cfg.get(
+        "open_grasped_acquisition_mode", "joint_drawer_construction_trace"
+    )
+    if acquisition_mode not in {
+        "joint_drawer_construction_trace",
+        "registered_cabinet_phase_v1",
+    }:
+        raise ValueError(
+            f"Unsupported open-grasped acquisition mode: {acquisition_mode}"
+        )
+    uses_registered_acquisition = bool(
+        spec.drawer_aperture == "open"
+        and spec.possession == "grasped"
+        and acquisition_mode == "registered_cabinet_phase_v1"
+    )
+    if (registered_grasp_acquisition is not None) != uses_registered_acquisition:
+        raise ValueError(
+            f"Registered grasp acquisition does not match {spec.candidate_id}"
+        )
     controller = PolicyFreeController(environment)
     controller.reset_layout(
         spec.init_state_id, int(config["environment"]["reset_seed"])
@@ -1346,6 +1562,7 @@ def construct_candidate(
     initial_eef_orientation = controller.eef_orientation()
     initial_joint_positions = controller.joint_positions()
     prefix: dict[str, Any] | None = None
+    grasp_acquisition: dict[str, Any] | None = None
     required_grasp_streak = int(
         construction_cfg["construction_grasp_stability_steps"]
     )
@@ -1366,7 +1583,28 @@ def construct_candidate(
             grasp_streak = 0
         return grasp_streak >= required_grasp_streak
 
-    if spec.drawer_aperture == "open":
+    if (
+        spec.drawer_aperture == "open"
+        and spec.possession == "grasped"
+        and acquisition_mode == "registered_cabinet_phase_v1"
+    ):
+        prefix = controller.replay_until(
+            demos["drawer_construction"],
+            condition=lambda: controller.top_drawer_position()
+            <= float(construction_cfg["open_drawer_threshold"]),
+        )
+        if controller.bowl_grasped():
+            raise RuntimeError(
+                f"Drawer-only prefix unexpectedly grasped the bowl for "
+                f"{spec.candidate_id}"
+            )
+        grasp_acquisition = run_registered_grasp_acquisition(
+            controller,
+            spec=spec,
+            proposal=registered_grasp_acquisition,
+            config=config,
+        )
+    elif spec.drawer_aperture == "open":
         prefix = controller.replay_until(
             demos["drawer_construction"],
             condition=lambda: (
@@ -1386,7 +1624,10 @@ def construct_candidate(
 
     if prefix is not None:
         prefix["required_consecutive_grasp_steps"] = (
-            required_grasp_streak if spec.possession == "grasped" else 0
+            required_grasp_streak
+            if spec.possession == "grasped"
+            and grasp_acquisition is None
+            else 0
         )
 
     goals_after_prefix = evaluate_common_goals(environment)
@@ -1444,6 +1685,7 @@ def construct_candidate(
         budget=int(construction_cfg["safe_lift_budget"]),
         max_translation_action=max_action,
         position_tolerance_m=float(construction_cfg["root_tolerance_m"]),
+        pad_to_budget=grasp_acquisition is None,
     )
     if spec.possession == "grasped":
         _validate_grasped_transport_phase(
@@ -1542,7 +1784,11 @@ def construct_candidate(
     padding_steps = final_timestep - stability_steps - int(controller.problem.timestep)
     if padding_steps < 0:
         raise RuntimeError(
-            f"Construction exceeded normalized timestep for {spec.candidate_id}"
+            f"Construction exceeded normalized timestep for {spec.candidate_id}: "
+            f"pre_padding_timestep={controller.problem.timestep}, "
+            f"final_timestep={final_timestep}, "
+            f"reserved_stability_steps={stability_steps}, "
+            f"padding_steps={padding_steps}"
         )
     padding = controller.servo(
         target_position=eef_target,
@@ -1678,6 +1924,7 @@ def construct_candidate(
     construction = {
         "mode": "current_process_policy_independent_script",
         "prefix": prefix,
+        "grasp_acquisition": grasp_acquisition,
         "safe_lift": safe_lift,
         "root_servo": root_servo,
         "root_transit_action_count": int(len(root_servo_actions)),

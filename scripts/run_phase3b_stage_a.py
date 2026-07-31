@@ -161,6 +161,40 @@ def _load_config(path: Path) -> dict[str, Any]:
         raise ValueError(
             "Grasped-root transit budgets must sum to root_servo_budget"
         )
+    construction = config["construction"]
+    acquisition_mode = construction.get(
+        "open_grasped_acquisition_mode", "joint_drawer_construction_trace"
+    )
+    supported_acquisition_modes = {
+        "joint_drawer_construction_trace",
+        "registered_cabinet_phase_v1",
+    }
+    if acquisition_mode not in supported_acquisition_modes:
+        raise ValueError(
+            "Stage A open-grasped acquisition mode is not supported"
+        )
+    grasp_stability_steps = int(
+        construction.get("construction_grasp_stability_steps", 0)
+    )
+    if grasp_stability_steps < 1:
+        raise ValueError(
+            "Construction grasp-stability window must be positive"
+        )
+    if acquisition_mode == "registered_cabinet_phase_v1":
+        acquisition_episode = int(
+            construction.get("registered_grasp_acquisition_episode_index", -1)
+        )
+        if acquisition_episode != int(
+            config["demonstrations"]["grasp_construction"]["episode_index"]
+        ):
+            raise ValueError(
+                "Registered grasp acquisition must use the locked grasp "
+                "construction episode"
+            )
+        if construction.get("registered_grasp_bridge_pad_to_budget") is not False:
+            raise ValueError(
+                "Registered grasp bridge must stop at each reached waypoint"
+            )
     clearance_margin = float(
         config["construction"]["grasped_root_clearance_margin_m"]
     )
@@ -210,6 +244,15 @@ def _load_config(path: Path) -> dict[str, Any]:
     execution_mode = action_phase.get("execution_mode")
     if execution_mode not in execution_contracts:
         raise ValueError("Stage A action-phase execution mode is not supported")
+    if (
+        acquisition_mode == "registered_cabinet_phase_v1"
+        and execution_mode
+        != "action_intrinsic_pregrasp_bowl_registered_v1"
+    ):
+        raise ValueError(
+            "Registered grasp acquisition requires the bowl-registered "
+            "action-phase bank"
+        )
     execution_contract = execution_contracts[execution_mode]
     if action_phase.get("anchor_rule") != execution_contract["anchor_rule"]:
         raise ValueError("Stage A action-phase anchor rule changed")

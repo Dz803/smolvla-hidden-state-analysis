@@ -6,9 +6,10 @@ from types import SimpleNamespace
 import numpy as np
 import pandas as pd
 import pytest
+import yaml
 
 import smolvla_analysis.phase3b_libero as phase3b_libero
-from scripts.run_phase3b_stage_a import _oracle_checkpoint
+from scripts.run_phase3b_stage_a import PROJECT, _load_config, _oracle_checkpoint
 from smolvla_analysis.libero_state import LiberoStateSnapshot
 from smolvla_analysis.phase3b_libero import (
     DemoTrace,
@@ -1200,6 +1201,65 @@ def test_policy_free_controller_exposes_hidden_native_horizon(monkeypatch) -> No
 
     assert done is True
     assert controller.done_values == [True]
+
+
+def test_policy_free_servo_can_stop_without_budget_padding(monkeypatch) -> None:
+    controller = PolicyFreeController(SimpleNamespace())
+    monkeypatch.setattr(controller, "eef_position", lambda: np.zeros(3))
+    monkeypatch.setattr(controller, "eef_orientation", lambda: np.eye(3))
+    monkeypatch.setattr(controller, "bowl_position", lambda: np.zeros(3))
+
+    def step(action):
+        controller.actions.append(np.asarray(action, dtype=np.float32).copy())
+        controller.done_values.append(False)
+        controller.goal_values.append({"drawer": False, "cabinet": False})
+        controller.grasp_values.append(True)
+        controller.grasp_relative_positions.append(np.zeros(3))
+        return {}, 0.0, False, {}
+
+    monkeypatch.setattr(controller, "step", step)
+    early = controller.servo(
+        target_position=np.zeros(3),
+        target_orientation=np.eye(3),
+        gripper=-1.0,
+        budget=5,
+        max_translation_action=0.35,
+        position_tolerance_m=0.01,
+        pad_to_budget=False,
+    )
+    assert early["pass"] is True
+    assert early["executed_action_steps"] == 0
+    assert early["budgeted_action_steps"] == 5
+    assert early["padded_to_budget"] is False
+
+    padded = controller.servo(
+        target_position=np.zeros(3),
+        target_orientation=np.eye(3),
+        gripper=-1.0,
+        budget=5,
+        max_translation_action=0.35,
+        position_tolerance_m=0.01,
+    )
+    assert padded["pass"] is True
+    assert padded["executed_action_steps"] == 5
+    assert padded["padded_to_budget"] is True
+
+
+def test_v36_registered_grasp_acquisition_config_is_locked(tmp_path) -> None:
+    config = _load_config(PROJECT / "configs/phase3b_stage_a_v36.yaml")
+    construction = config["construction"]
+    assert construction["open_grasped_acquisition_mode"] == (
+        "registered_cabinet_phase_v1"
+    )
+    assert construction["registered_grasp_bridge_pad_to_budget"] is False
+    assert construction["root_final_timestep"] == 560
+
+    changed = deepcopy(config)
+    changed["construction"]["registered_grasp_acquisition_episode_index"] = 382
+    changed_path = tmp_path / "changed.yaml"
+    changed_path.write_text(yaml.safe_dump(changed))
+    with pytest.raises(ValueError, match="locked grasp construction episode"):
+        _load_config(changed_path)
 
 
 def test_grasped_transport_requires_both_servo_pass_and_possession() -> None:

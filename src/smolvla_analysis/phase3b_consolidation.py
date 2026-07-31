@@ -6,6 +6,10 @@ from typing import Any, Iterable
 import numpy as np
 
 from .phase3b_completion import oracle_pair_comparability
+from .phase3b_registered_validation import (
+    validate_oracle_proposal_ledger_compatible,
+    validate_support_pair_records_compatible,
+)
 from .phase3b_stage_a import (
     FACTOR_LEVELS,
     GOALS,
@@ -13,9 +17,7 @@ from .phase3b_stage_a import (
     canonical_sha256,
     iter_candidate_specs,
     symmetric_relative_difference,
-    validate_oracle_proposal_ledger,
     validate_support_pair_geometry_records,
-    validate_support_pair_records,
 )
 
 
@@ -257,7 +259,7 @@ def _validate_candidate_record(record: dict[str, Any]) -> dict[str, Any]:
             or oracle.get("goal_ever_achieved") is not True
         ):
             raise ValueError(f"{goal} feasibility failed for {candidate_id}")
-        ledger = validate_oracle_proposal_ledger(
+        ledger = validate_oracle_proposal_ledger_compatible(
             oracle, candidate_id=candidate_id, goal=goal
         )
         modes[goal] = ledger["execution_mode"]
@@ -321,10 +323,10 @@ def _goal_pair_metrics(
             f"{prefix}eef_path_mismatch": None,
             f"{prefix}motion_effort_mismatch": None,
         }
-    near_ledger = validate_oracle_proposal_ledger(
+    near_ledger = validate_oracle_proposal_ledger_compatible(
         near["oracles"][goal], candidate_id=near["candidate_id"], goal=goal
     )
-    low_ledger = validate_oracle_proposal_ledger(
+    low_ledger = validate_oracle_proposal_ledger_compatible(
         low["oracles"][goal], candidate_id=low["candidate_id"], goal=goal
     )
     near_success = set(near_ledger["successful_indices"])
@@ -520,7 +522,7 @@ def validate_consolidated_records(
         }
         strict_pass = False
         if comparability["all_goals_estimable"]:
-            validate_support_pair_records(
+            validate_support_pair_records_compatible(
                 near_entry["record"],
                 low_entry["record"],
                 max_oracle_cost_mismatch=float(

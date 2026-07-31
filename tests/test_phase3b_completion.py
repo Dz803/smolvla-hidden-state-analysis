@@ -5,7 +5,13 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.run_phase3b_stage_a_completion import _checkpoint
+from scripts.run_phase3b_stage_a_completion import (
+    _checkpoint,
+    _validate_completion_config,
+)
+from scripts.run_phase3b_stage_a_construction_gate import (
+    _construction_contract_checks,
+)
 from scripts.status_phase3b_stage_a_completion import brief_summary
 from smolvla_analysis.phase3b_completion import (
     oracle_pair_comparability,
@@ -43,6 +49,47 @@ def test_completion_selection_is_unique_and_open_only() -> None:
         validate_completion_candidate_ids([OPEN_ID, OPEN_ID], expected_count=2)
     with pytest.raises(ValueError, match="only missing open"):
         validate_completion_candidate_ids([CLOSED_ID], expected_count=1)
+
+
+def test_completion_config_accepts_a_fresh_shard_without_imports() -> None:
+    result = _validate_completion_config(
+        {
+            "completion": {
+                "expected_candidate_count": 1,
+                "candidate_ids": [OPEN_ID],
+                "imports": [],
+            }
+        }
+    )
+    assert result["candidate_ids"] == (OPEN_ID,)
+    assert result["imports"] == []
+
+
+def test_construction_gate_allows_the_environment_initial_timestep_offset() -> None:
+    construction = {
+        "grasp_acquisition": {
+            "mode": "registered_cabinet_phase_until_stable_grasp_v1",
+            "final_grasped": True,
+            "final_goals": {"drawer": False, "cabinet": False},
+        },
+        "safe_lift": {
+            "padded_to_budget": False,
+            "executed_action_steps": 17,
+            "budgeted_action_steps": 40,
+        },
+        "final_timestep": 560,
+        "action_count": 550,
+    }
+    checks = _construction_contract_checks(
+        construction, {"construction": {"root_final_timestep": 560}}
+    )
+    assert all(checks.values())
+
+    construction["final_timestep"] = 559
+    checks = _construction_contract_checks(
+        construction, {"construction": {"root_final_timestep": 560}}
+    )
+    assert checks["normalized_final_timestep"] is False
 
 
 def test_imported_checkpoint_is_identity_bound_and_exhaustive() -> None:
