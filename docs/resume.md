@@ -17,7 +17,9 @@ tail -120 ".planning/$PLAN_ID/progress.md"
 sed -n '1,260p' docs/experiment_log.md
 ```
 
-Phase 3 is complete. The first incomplete work item is Stage A of the occupancy-balanced Phase 3b gate in the active task plan. Nineteen unique roots are promoted across immutable v31/v32/v34 evidence. v34's second root has a complete `18/36` drawer ledger and exhaustive `0/46` cabinet ledger; do not rerun either. The bounded alignment report and prospective transverse-root report under `reports/phase3b_stage_a/` show that the frozen bowl-relative rule passes both untouched layout replicates. Their episode-474 attempts must be imported into the next 13-candidate shard, not rerun. Stage B/C still require separate scope decisions.
+Phase 3 is complete. The first incomplete work item is Stage A of the occupancy-balanced Phase 3b gate in the active task plan. Twenty-six unique physical roots are promoted across v31/v32/v34 and the additive v35 shard `local/phase3b_stage_a/phase3b_stage_a_completion_20260731T075647Z`. Do not rerun any completed candidate or checkpoint. v35 contains seven complete roots, including exact imports of the v34 drawer ledger and both held-root episode-474 attempts. A hash-bound compatibility recovery corrected a post-bank registered-mode validator omission without changing construction or proposal execution.
+
+v35 stopped before proposal execution on its first grasped layout-A root because the construction route exceeded the frozen possession-continuity gate (two contact-negative ticks and `20.94 mm` relative-pose shift). Construction-only diagnostics under `local/phase3b_stage_a/construction_diagnostics/` reject longer grasp settling and slower transport as repairs. Continue with the bounded grasp-topology/continuity diagnostic, then freeze one six-root successor shard; do not relax the observed gate or resume the six grasped candidates under v35. Stage B/C still require separate scope decisions.
 
 ## Canonical local paths
 
@@ -99,4 +101,4 @@ PYTHONPATH="$SMOLVLA_ROOT/vendor/lerobot-smolvla/src:$SMOLVLA_ROOT/src" \
   --run-dir "$SMOLVLA_ROOT/local/phase3_crd/phase3_crd_20260728T021125Z"
 ```
 
-The next implementation target is an additive Stage A completion contract: freeze the object-relative certificate, import and verify completed ledgers without replay, test it first on untouched missing roots, and finish the exact 32-root bank. Treat source revision and oracle mode as explicit provenance; do not estimate drawer-aperture effects from the mixed-source bank. Stage A does not run a policy. Do not download π0.5/GR00T weights, launch the 128-branch Stage B pilot, or start Phase 4 patching until the Stage A state certificates and balance report have been reviewed.
+The next implementation target is a six-root grasped-state successor contract that preserves all 26 promoted roots and the strict continuity gate while repairing grasp acquisition topology. Treat source revision and oracle mode as explicit provenance; do not estimate drawer-aperture effects from the mixed-source bank. Stage A does not run a policy. Do not download π0.5/GR00T weights, launch the 128-branch Stage B pilot, or start Phase 4 patching until the 32-state certificates and consolidated balance report have been reviewed.

@@ -226,3 +226,14 @@ Append a dated entry when any of the following changes: canonical run set, prima
 - Candidate 6 completed exhaustive registered banks at drawer `10/36` and cabinet `1/46`, then hit a post-bank software false negative: the strict pair-ledger validator omitted `action_intrinsic_pregrasp_bowl_registered_v1` from its execution-mode allow-list.
 - A provenance-bound compatibility gate validates every registered transform and proposal identity before invoking the unchanged strict cost/balance calculations. It passes 33 focused tests and real layout-A/B contracts. Recovery reassembled both completed checkpoints with zero proposal reruns and promoted state `12db007b…ebdc`; the original error file remains intact.
 - The raw audit `audits/registered_validation_compatibility.json` binds the frozen contract, original sources, error, wrapper, and compatibility-validator hashes and states that proposal execution and state construction were unchanged. v35 continues at 6/13.
+
+### 2026-07-31 — v35 on-table family complete
+
+- Cabinet-side transverse/layout B passes at drawer `8/36` and cabinet `4/46`, promoting state `a33ec8f6…49cb`. Its matched layout-A root is `10/36` and `1/46`.
+- All six remaining on-table roots are now complete. Both locus families independently show a narrow one-proposal cabinet basin in layout A and a four- or five-proposal basin in layout B after registration. v35 is 7/13 and the physical lattice is 26/32.
+
+### 2026-07-31 — v35 grasped-construction stop and bounded falsification
+
+- v35 stops at 7/13 before the first grasped root's proposal banks. Its first clearance lift has two consecutive contact-negative ticks and `20.94 mm` relative-pose deviation, beyond the frozen one-tick/`20 mm` continuity gate. Endpoint grasp, waypoint reach, goal, and terminal checks otherwise pass; the raw error is retained.
+- Earlier successful grasped routes have zero contact dropouts and ≤`1.71 mm` relative-pose drift. Construction-only raw diagnostics `grasp_stability_20260731T085551Z` and `grasp_stability_20260731T085645Z` reject longer acquisition settling (3/5/10 ticks) and slower transport (`0.15/0.12/0.09`) as repairs. No policy or proposal oracle is executed in either diagnostic.
+- Stage A remains at 26/32. The next gate observes the full continuity trajectory under a diagnostic-only allowance, then freezes one six-root successor construction contract; the observed production gate will not be relaxed adaptively.
