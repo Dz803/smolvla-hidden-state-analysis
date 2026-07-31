@@ -1,0 +1,15 @@
+{
+  "artifact_sha256": {
+    "README.md": "8a7a3de4761752c4adb9cadb9ad459e75adb3f5e634ae37328117d0d6bded2c5",
+    "condition_summary.csv": "0bffef8eb9ca8914dbda93aaeff842f6c108258596770e2eea852190d3a9cb21",
+    "contract.json": "1a9aacfacec5dc1ed11e9f644b92a3ddb2f4995f1d258570047475a09afbaafb",
+    "summary.json": "69d978a894763968a000aba56eaedac06ddb333729ba5fe343a16deed5caf8d4"
+  },
+  "canonical_rollout_reused": false,
+  "contract_sha256": "80ebea435cb02b1cc34d72e6e66f2c088c009148099a1a3c89650d95d5cc172d",
+  "policy_loaded": false,
+  "raw_evidence_location": "local/phase3b_stage_a/layout_alignment_diagnostics/layout_alignment_20260731T070614Z",
+  "schema_version": 1,
+  "status": "complete",
+  "summary_sha256": "71c921f443a358c928ded9822556f26596bc530a52f8815b369819059d0c6b24"
+}

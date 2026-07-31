@@ -1,0 +1,40 @@
+{
+  "canonical_rollout_reused": false,
+  "conditions": [
+    "layout_a_world_anchor_full_suffix",
+    "layout_b_world_anchor_full_suffix",
+    "layout_b_bowl_registered_full_suffix",
+    "layout_b_registered_acquisition_then_goal_registered_placement"
+  ],
+  "config_path": "configs/phase3b_stage_a.yaml",
+  "config_sha256": "5839d573a0292cc92fbb12f63a4bb80bb36d744ac124f636e98d8bc8a1614c11",
+  "diagnostic_revision": "phase3b-layout-alignment-v1",
+  "policy_loaded": false,
+  "proposal_episode_index": 474,
+  "proposal_selection_reason": "pre-existing cabinet support and grasp-construction trace",
+  "registration": "preserve layout-A EEF-to-bowl anchor offset in layout B; preserve layout-A achieved bowl-to-cabinet offset for factorized placement",
+  "schema_version": 1,
+  "source_evidence": {
+    "a": {
+      "evidence_file": "local/phase3b_stage_a/phase3b_stage_a_20260731T035449Z/candidates/stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-a.json",
+      "evidence_file_sha256": "08655ea79eb53162b869d39148f76f86723933d626c5ab6bd685b81f00a56a4f",
+      "normalized_state_sha256": "1a197793b93f9ff541867ad66045ec810a66144b8e94f2960809d68a2d35e84a",
+      "root_state_sha256": "e35d668372b7554d68718f9a30e177a7e5c1f2692b30073f7fe643d8bfe2d80d"
+    },
+    "b": {
+      "evidence_file": "local/phase3b_stage_a/phase3b_stage_a_20260731T035449Z/checkpoints/stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-b__cabinet.json",
+      "evidence_file_sha256": "595e631f27abb8a74793dbeccfc4c9269ecc1cfb817aa13a9fb0d3e9434eba64",
+      "normalized_state_sha256": "43226d971e591eccff7f01945688ae15a4202b9170120bd32ba0994809111df6",
+      "root_state_sha256": "f2496d6f78d7cf2379653137b2e83806f5390151211c57d146cf75dd8eb9c792"
+    }
+  },
+  "source_run": "local/phase3b_stage_a/phase3b_stage_a_20260731T035449Z",
+  "source_run_contract_file_sha256": "3680fed014bd61d7d7111b753f217953805b5ac2c765826e3b736e17f591348e",
+  "source_sha256": {
+    "alignment": "48837ca82833d847ce723127fc5989dfc05f0ac02c49d4679608d17c75f5a68d",
+    "lattice": "22b639202f83d018c948ef993eb0f1db7e3a43103e2f5cef396d4e3feb800dce",
+    "runtime": "6f3c9c0acf317029f7ddb8ea0dfd52f9aa0ce63d3569d45fdd6c49aa24007900",
+    "script": "79fe8c65abe431487c9912578d3feef6142ba8000300d264ca1db7bb2c62f611"
+  },
+  "stable_grasp_streak": 3
+}

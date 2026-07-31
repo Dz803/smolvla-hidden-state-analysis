@@ -32,7 +32,7 @@ The two support strata must be constructed without running an evaluated VLA. A `
 Every retained state must satisfy all of the following:
 
 - neither target predicate is already true;
-- both the drawer-inside and cabinet-top goals are reached by a policy-independent scripted continuation;
+- both the drawer-inside and cabinet-top goals are reached by at least one member of a policy-independent, revision-locked human-demonstration proposal inventory;
 - the state contains no invalid penetration, unstable attachment, or unintended terminal condition;
 - its two goal-specific oracle costs and relevant geometry are recorded;
 - archive-independent computational-state restoration passes the existing repeated-action certificate, including solver warm-start state; and
@@ -40,9 +40,32 @@ Every retained state must satisfy all of the following:
 
 Persisted snapshots remain provenance records, not trusted cross-process branch roots. Every new runner process must recreate or replay the scripted construction inside its own hydrated environment, compare it with the recorded state hash, and rerun the probe-action certificate before querying a policy.
 
-Balance is assessed before policy evaluation. The pilot selection must cover every `drawer x possession x locus` family and both support strata. Within each family, the support pair should have the same predicate state and an oracle remaining-cost difference no larger than 10% unless the deviation is documented and included as a covariate. Training-data and canonical-trajectory nearest-neighbour distances are measurements, not labels inferred from VLA success.
+Proposal feasibility is set-valued. Let `N(s)` denote the policy-independent recovery and homing continuation applied before demonstration replay. For the complete cached task-12/task-18 inventories, Stage A measures `Y(N(s),g,k)`, defines feasibility of the original state by the composed continuation `N` followed by `max_k Y`, reports proposal-basin width as the successful-proposal fraction, and selects the minimum executed-step/path/effort success by a fixed rule. The physical balance gate compares those minimum feasible composed costs. Success-set intersection and Jaccard are reported separately; when an intersection exists, same-proposal costs are additional diagnostics. A zero intersection is retained rather than used to remove the off-trajectory state.
 
-Stage A produces code, unit tests, a state-lattice specification, certificates, and a compact manifest. It runs no SmolVLA branch matrix and downloads no new checkpoint.
+This notation matters: possession and transit-locus differences are intentionally removed before the open-loop demonstration suffix, and the full normalized controller/simulator state need not be identical across candidates. Proposal-set changes can therefore be mediated by residual differences in `N(s)` and are not direct evidence of trajectory memory at root `s`. Stage B evaluates the VLA directly from `s`; it must not inherit the oracle normalization step or treat Stage A proposal coverage as model occupancy.
+
+Balance is assessed before policy evaluation. The pilot selection must cover every `drawer x possession x locus` family and both support strata. Within each family, the support pair should have the same predicate state and an oracle remaining-cost difference no larger than 10% unless the deviation is documented and included as a covariate. The joint support reference currently replays two role-separated demonstrations in both layouts; it is a narrow reference-distance diagnostic, not a complete estimate of SmolVLA's training occupancy. Geometric support labels, measured reference distance, exact-event coverage, proposal-basin width, and any future model-specific occupancy distance must remain separate quantities.
+
+Stage A produces code, unit tests, a state-lattice specification, certificates, the full proposal-coverage matrix, and a compact manifest. It runs no SmolVLA branch matrix and downloads no new checkpoint.
+
+### Stage A execution amendment: phase and alignment certificates
+
+The July 2026 execution falsified the assumption that one full-trajectory or world-frame phase bank is a universal feasibility oracle. Complete drawer demonstrations fail after the drawer is already open; the action-phase adapter restores coverage on one root; and its sole cabinet success on layout A fails on the matched layout-B root. A bowl-relative anchor intervention rescues that exact layout-B suffix. These are controller/proposal compatibility effects, not changes in the underlying target predicate.
+
+Stage A therefore distinguishes a competence ladder rather than using “oracle pass” as a primitive:
+
+1. the certified physical root and target predicates;
+2. collision-safe bridge reachability with the original affordances preserved;
+3. contact acquisition and stable possession;
+4. grasp-preserving transport;
+5. target placement and release; and
+6. compatibility of a complete open-loop proposal with the root.
+
+Existing exhaustive ledgers are immutable evidence and must not be rerun. Any completion contract may add a frozen, deterministic object-relative certificate only where evidence is missing, and must retain the original negative ledger. Certificate family, anchor displacement, successful-proposal identity, basin width, and stage of failure are separate fields. Coverage fractions from full replay, phase slicing, and registered/factorized controllers are different estimands and must not be pooled.
+
+The resulting 32-state artifact is an exact observed-root bank, not a clean aperture factorial. Closed roots were completed under v32, while open roots span later revisions; historical contracts do not cryptographically bind the complete construction configuration. Drawer aperture is therefore aliased with source revision. Primary Stage B language tests must use within-state goal/instruction contrasts under one common policy runner. Cross-aperture and cross-certificate interactions are exploratory unless a future balanced lattice is generated under one construction revision.
+
+Every imported or additive record must validate the original state payload, root and normalized hashes, source-action identity, complete proposal indices, state certificate, and raw artifact hashes. A completed negative bank is evidence, not an invitation to repeat the search. Registered-controller evidence discovered on the first failed layout pair remains exploratory; its first untouched-state applications are the relevant generalization test.
 
 ## Stage B: bounded SmolVLA manipulation pilot
 

@@ -1,0 +1,5 @@
+condition,bridge_pass,bridge_drawer_aperture_preserved,stable_grasp_achieved,first_stable_grasp_source_frame,goal_ever_achieved,wrong_goal_ever_achieved,unexpected_done_before_goal,source_actions_executed,source_action_count,minimum_eef_bowl_distance_m,final_goals,status,grasp_preserved_through_transport,goals_before_release,pass,action_count
+layout_a_world_anchor_full_suffix,True,True,True,45.0,True,False,False,85.0,102.0,0.051736721777871544,"{'cabinet': True, 'drawer': False}",,,,,
+layout_b_world_anchor_full_suffix,True,True,True,48.0,False,False,False,102.0,102.0,0.05896572539504802,"{'cabinet': False, 'drawer': False}",,,,,
+layout_b_bowl_registered_full_suffix,True,True,True,46.0,True,False,False,80.0,102.0,0.05576080188703474,"{'cabinet': True, 'drawer': False}",,,,,
+layout_b_registered_acquisition_then_goal_registered_placement,,,,,True,False,False,,,,"{'cabinet': True, 'drawer': False}",complete,True,"{'cabinet': False, 'drawer': False}",True,360.0

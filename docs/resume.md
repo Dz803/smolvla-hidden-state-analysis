@@ -17,7 +17,7 @@ tail -120 ".planning/$PLAN_ID/progress.md"
 sed -n '1,260p' docs/experiment_log.md
 ```
 
-Phase 3 is complete. The first incomplete work item is Stage A of the occupancy-balanced Phase 3b gate in the active task plan. Its locked methodology is `docs/phase3b_methodology.md`; Stage A builds and certifies the policy-independent lattice without launching a VLA branch matrix, while Stages B/C require new simulation-scope decisions. The repaired Phase 3 report is under `reports/phase3_crd/phase3_crd_20260728T021125Z/`, and its implementation/scientific audit is `docs/phase3_engineering_review.md`. Do not rerun the 400-episode benchmark, paired perturbation rollouts, corrected Phase 2 fixed-forward queries, or the completed 160-branch Phase 3 matrix.
+Phase 3 is complete. The first incomplete work item is Stage A of the occupancy-balanced Phase 3b gate in the active task plan. Nineteen unique roots are promoted across immutable v31/v32/v34 evidence. v34's second root has a complete `18/36` drawer ledger and exhaustive `0/46` cabinet ledger; do not rerun either. The bounded alignment report at `reports/phase3b_stage_a/layout_alignment_20260731T070614Z/` shows that a frozen bowl-relative anchor is the next additive feasibility candidate. Stage B/C still require separate scope decisions. Do not rerun the benchmark, paired perturbations, corrected Phase 2 gate, Phase 3 matrix, or completed Stage A candidate/proposal attempts.
 
 ## Canonical local paths
 
@@ -99,4 +99,4 @@ PYTHONPATH="$SMOLVLA_ROOT/vendor/lerobot-smolvla/src:$SMOLVLA_ROOT/src" \
   --run-dir "$SMOLVLA_ROOT/local/phase3_crd/phase3_crd_20260728T021125Z"
 ```
 
-The next implementation target is Phase 3b Stage A: a policy-independent affordance lattice that balances drawer state, bowl/gripper state, subgoal distance, and demonstration support before another CRD run. Stage A does not run a policy. Do not download π0.5/GR00T weights, launch the 128-branch Stage B pilot, or start Phase 4 patching until the Stage A state certificates and balance report have been reviewed.
+The next implementation target is an additive Stage A completion contract: freeze the object-relative certificate, import and verify completed ledgers without replay, test it first on untouched missing roots, and finish the exact 32-root bank. Treat source revision and oracle mode as explicit provenance; do not estimate drawer-aperture effects from the mixed-source bank. Stage A does not run a policy. Do not download π0.5/GR00T weights, launch the 128-branch Stage B pilot, or start Phase 4 patching until the Stage A state certificates and balance report have been reviewed.

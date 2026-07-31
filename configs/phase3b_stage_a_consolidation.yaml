@@ -1,0 +1,52 @@
+schema_version: 1
+consolidation_revision: phase3b-stage-a-consolidated-v1
+
+scientific_boundary:
+  physical_state_lattice_may_span_oracle_contracts: true
+  require_identical_shared_root_context_payload: true
+  historical_construction_parameters_cryptographically_bound: false
+  require_support_pair_within_one_source: true
+  cross_execution_mode_factor_effects_estimable: false
+  cross_source_generation_revision_effects_estimable: false
+  drawer_aperture_source_revision_alias: true
+  rationale: >-
+    Previously completed candidates are immutable and must not be rerun. Candidate
+    IDs, demonstrations, environment context apart from horizon, support,
+    certificate, goal, and validation payloads are identical across the selected
+    runs. Historical contracts omitted the construction-parameter YAML block, while
+    config hashes, revision labels, source-file hashes, the later oracle horizon, and
+    the proposal adapter differ. Exact observed states and within-source support-pair
+    balance may be consolidated. Proposal coverage must remain stratified by
+    execution mode, and cross-aperture effects cannot be separated from source
+    revision in this shard assignment.
+
+sources:
+  - source_id: v32_closed
+    run_dir: local/phase3b_stage_a/phase3b_stage_a_20260729T035043Z
+    selection:
+      factor_equals:
+        drawer_aperture: closed
+  - source_id: v31_open_hard_pair
+    run_dir: local/phase3b_stage_a/phase3b_stage_a_20260729T033540Z
+    selection:
+      candidate_ids:
+        - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-b
+        - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-b
+  - source_id: v34_open_completion
+    run_dir: local/phase3b_stage_a/phase3b_stage_a_20260731T035449Z
+    selection:
+      candidate_ids:
+        - stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-a
+        - stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-b
+        - stagea__drawer-open__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-a
+        - stagea__drawer-open__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-b
+        - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-a
+        - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-b
+        - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-a
+        - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-b
+        - stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-a
+        - stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-b
+        - stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-a
+        - stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-b
+        - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-a
+        - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-a

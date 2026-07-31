@@ -1,0 +1,134 @@
+{
+  "canonical_rollout_reused": false,
+  "causal_contrast": {
+    "bowl_registered_anchor_goal": true,
+    "bowl_registered_anchor_stable_grasp": true,
+    "intervention": "translate only the pre-grasp EEF anchor to preserve the layout-A bowl-relative offset",
+    "root": "identical certified layout-B normalized snapshot",
+    "source_suffix": "identical episode-474 action suffix",
+    "world_anchor_goal": false,
+    "world_anchor_stable_grasp": true
+  },
+  "competence_chain": {
+    "physical_root_certified": true,
+    "registered_anchor_stable_grasp": true,
+    "registered_factorized_release_goal": true,
+    "registered_factorized_transport_preserved_grasp": true,
+    "registered_suffix_goal_placement": true,
+    "world_anchor_bridge_reachable": true,
+    "world_anchor_goal_placement": false,
+    "world_anchor_stable_grasp": true
+  },
+  "conditions": [
+    {
+      "bridge_drawer_aperture_preserved": true,
+      "bridge_pass": true,
+      "condition": "layout_a_world_anchor_full_suffix",
+      "final_goals": {
+        "cabinet": true,
+        "drawer": false
+      },
+      "first_stable_grasp_source_frame": 45,
+      "goal_ever_achieved": true,
+      "minimum_eef_bowl_distance_m": 0.051736721777871544,
+      "source_action_count": 102,
+      "source_actions_executed": 85,
+      "stable_grasp_achieved": true,
+      "unexpected_done_before_goal": false,
+      "wrong_goal_ever_achieved": false
+    },
+    {
+      "bridge_drawer_aperture_preserved": true,
+      "bridge_pass": true,
+      "condition": "layout_b_world_anchor_full_suffix",
+      "final_goals": {
+        "cabinet": false,
+        "drawer": false
+      },
+      "first_stable_grasp_source_frame": 48,
+      "goal_ever_achieved": false,
+      "minimum_eef_bowl_distance_m": 0.05896572539504802,
+      "source_action_count": 102,
+      "source_actions_executed": 102,
+      "stable_grasp_achieved": true,
+      "unexpected_done_before_goal": false,
+      "wrong_goal_ever_achieved": false
+    },
+    {
+      "bridge_drawer_aperture_preserved": true,
+      "bridge_pass": true,
+      "condition": "layout_b_bowl_registered_full_suffix",
+      "final_goals": {
+        "cabinet": true,
+        "drawer": false
+      },
+      "first_stable_grasp_source_frame": 46,
+      "goal_ever_achieved": true,
+      "minimum_eef_bowl_distance_m": 0.05576080188703474,
+      "source_action_count": 102,
+      "source_actions_executed": 80,
+      "stable_grasp_achieved": true,
+      "unexpected_done_before_goal": false,
+      "wrong_goal_ever_achieved": false
+    },
+    {
+      "action_count": 360,
+      "condition": "layout_b_registered_acquisition_then_goal_registered_placement",
+      "final_goals": {
+        "cabinet": true,
+        "drawer": false
+      },
+      "goal_ever_achieved": true,
+      "goals_before_release": {
+        "cabinet": false,
+        "drawer": false
+      },
+      "grasp_preserved_through_transport": true,
+      "pass": true,
+      "status": "complete",
+      "unexpected_done_before_goal": false,
+      "wrong_goal_ever_achieved": false
+    }
+  ],
+  "contract_sha256": "80ebea435cb02b1cc34d72e6e66f2c088c009148099a1a3c89650d95d5cc172d",
+  "diagnostic_revision": "phase3b-layout-alignment-v1",
+  "policy_loaded": false,
+  "proposal": {
+    "action_sha256": "5d93ae0bbe8618d7ad32e89a85261166b35dec3bcaa972751dddbaae8f07150c",
+    "episode_index": 474,
+    "task_index": 18
+  },
+  "registration": {
+    "anchor_displacement_m": 0.025242021254789707,
+    "anchor_displacement_xyz_m": [
+      -0.01841401664986428,
+      -0.017264225655834797,
+      0.00017360976410341067
+    ],
+    "normalized_bowl_displacement_m": 0.01737156671271895,
+    "normalized_bowl_displacement_xyz_m": [
+      -0.01693335842018376,
+      -0.003877202943880661,
+      0.0
+    ]
+  },
+  "root_hashes": {
+    "A": {
+      "certificate_pass": true,
+      "normalized_state_sha256": "1a197793b93f9ff541867ad66045ec810a66144b8e94f2960809d68a2d35e84a",
+      "root_state_sha256": "e35d668372b7554d68718f9a30e177a7e5c1f2692b30073f7fe643d8bfe2d80d"
+    },
+    "B": {
+      "certificate_pass": true,
+      "normalized_state_sha256": "43226d971e591eccff7f01945688ae15a4202b9170120bd32ba0994809111df6",
+      "root_state_sha256": "f2496d6f78d7cf2379653137b2e83806f5390151211c57d146cf75dd8eb9c792"
+    }
+  },
+  "schema_version": 1,
+  "scientific_boundary": {
+    "does_not_establish": "a general oracle, a hidden-state mechanism, language grounding, or cross-layout population-level generalization",
+    "establishes": "a causal controller-input alignment effect for this exact root and proposal, plus stage-wise physical competence",
+    "scope": "one proposal, two layouts, one physical factor cell",
+    "status": "exploratory_post_failure_diagnostic"
+  }
+}

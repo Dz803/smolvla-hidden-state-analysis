@@ -71,7 +71,7 @@ Phase 3 complete; occupancy-balanced Phase 3b is the next scientific gate
 - [ ] Re-estimate the veto–composition gap, `V`, `Q`, and `L` on held-out state families with source-episode/state-family grouping.
 - [ ] Test directional hidden features rather than only norms/dispersion, with fold-local dimension reduction and a predeclared information gate.
 - [ ] Decide whether any representation justifies Phase 4 patching and whether the shared environment interface is ready for π0.5/GR00T.
-- **Status:** design complete; Stage A implementation is next, while Stages B/C remain simulation-scope decisions
+- **Status:** Stage A has 19 unique promoted roots: 16 closed roots from v32, the two-state v31 open hard pair, and one v34 open root. v34 then exhausted all 46 cabinet proposals on the matched layout-B root after completing its `18/36` drawer ledger, so that bank will not be rerun. A bounded diagnostic shows that a `25.24 mm` bowl-relative anchor registration changes the same layout-B episode-474 suffix from failure to success and that independent registered grasp/transport/release stages are physically competent. The next gate is a fresh, additive oracle contract that reuses completed ledgers and runs only missing evidence. Cross-aperture/source-revision and cross-oracle-mode effects are non-estimable; Stages B/C remain separate simulation-scope decisions.
 
 ### Phase 4: Matched causal intervention gate
 
