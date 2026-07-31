@@ -6,6 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from scripts.run_phase3b_stage_a_completion import _checkpoint
+from scripts.status_phase3b_stage_a_completion import brief_summary
 from smolvla_analysis.phase3b_completion import (
     oracle_pair_comparability,
     proposal_inventory,
@@ -191,3 +192,28 @@ def test_completion_checkpoint_accepts_sparse_import_without_rerun(tmp_path) -> 
         imported_provenance=provenance,
     )
     assert resumed == {0: {"pass": False}, 1: {"pass": True}}
+
+
+def test_completion_status_brief_selects_only_first_incomplete_candidate() -> None:
+    complete = {
+        "candidate_id": "complete",
+        "candidate_record_complete": True,
+    }
+    active = {
+        "candidate_id": "active",
+        "candidate_record_complete": False,
+    }
+    report = {
+        "run_id": "run",
+        "status": "in_progress",
+        "manifest_candidate_count": 1,
+        "observed_candidate_count": 1,
+        "expected_candidate_count": 2,
+        "first_incomplete_candidate": "active",
+        "error_count": 0,
+        "errors": [],
+        "candidates": [complete, active],
+    }
+    brief = brief_summary(report)
+    assert brief["active_candidate"] == active
+    assert "candidates" not in brief

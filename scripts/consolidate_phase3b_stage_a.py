@@ -252,6 +252,47 @@ def _proposal_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 
+def _oracle_counterfactual_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
+    record = entry["record"]
+    rows = []
+    for goal, prior in record.get(
+        "prior_negative_oracle_evidence", {}
+    ).items():
+        current = record["oracles"][goal]
+        rows.append(
+            {
+                "candidate_id": record["candidate_id"],
+                "source_id": entry["source_id"],
+                "goal": goal,
+                "identical_normalized_state": bool(
+                    prior["normalized_state_sha256"]
+                    == current["shared_normalized_state_sha256"]
+                ),
+                "normalized_state_sha256": current[
+                    "shared_normalized_state_sha256"
+                ],
+                "prior_execution_mode": prior["proposal_execution_mode"],
+                "prior_proposal_count": int(prior["proposal_count"]),
+                "prior_success_count": int(
+                    prior["successful_proposal_count"]
+                ),
+                "current_execution_mode": current[
+                    "proposal_execution_mode"
+                ],
+                "current_proposal_count": int(
+                    current["proposal_attempt_count"]
+                ),
+                "current_success_count": int(
+                    current["proposal_success_count"]
+                ),
+                "source_checkpoint_file_sha256": prior[
+                    "source_checkpoint_file_sha256"
+                ],
+            }
+        )
+    return rows
+
+
 def main() -> None:
     args = _parse_args()
     config_path = args.config.resolve()
@@ -346,6 +387,12 @@ def main() -> None:
         [row for entry in entries for row in _proposal_rows(entry)]
     ).sort_values(["candidate_id", "goal", "proposal_index"])
     proposal_frame.to_csv(staging / "proposal_coverage.csv", index=False)
+    counterfactual_frame = pd.DataFrame(
+        [row for entry in entries for row in _oracle_counterfactual_rows(entry)]
+    )
+    counterfactual_frame.to_csv(
+        staging / "oracle_execution_counterfactuals.csv", index=False
+    )
 
     pair_frame = pd.DataFrame(validation["pair_metrics"]).sort_values(
         "support_pair_id"
@@ -384,6 +431,7 @@ def main() -> None:
         "source_count": len(loaded_sources),
         "validation": compact_validation,
         "coverage_summary_stratified_by_execution_mode": coverage_summary,
+        "oracle_execution_counterfactual_count": int(len(counterfactual_frame)),
         "scientific_boundary": config["scientific_boundary"],
         "interpretation": (
             "The physical candidate lattice and all 16 support-pair geometry gates "
@@ -420,9 +468,11 @@ def main() -> None:
         "contracts match. Proposal-basin statistics are stratified across full "
         "replay, world-anchor phase, and bowl-registered phase modes. Closed versus "
         "open roots are aliased with source revision, so cross-aperture causal claims "
-        "remain non-estimable. A Stage B runner must revalidate every root under one "
-        "common hydration/certificate path. No VLA was loaded, and this report is not "
-        "evidence of a hidden-state mechanism.\n"
+        "remain non-estimable. `oracle_execution_counterfactuals.csv` preserves the "
+        "exact-root legacy-negative versus registered-positive bank intervention "
+        "without replacing either ledger. A Stage B runner must revalidate every "
+        "root under one common hydration/certificate path. No VLA was loaded, and "
+        "this report is not evidence of a hidden-state mechanism.\n"
     )
     artifact_sha256 = {
         path.name: _file_sha256(path)
@@ -444,6 +494,9 @@ def main() -> None:
             ),
             "proposal_coverage_sha256": canonical_sha256(
                 proposal_frame.to_dict("records")
+            ),
+            "oracle_execution_counterfactuals_sha256": canonical_sha256(
+                counterfactual_frame.to_dict("records")
             ),
             "artifact_sha256": artifact_sha256,
         },

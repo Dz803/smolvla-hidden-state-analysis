@@ -208,3 +208,9 @@ Append a dated entry when any of the following changes: canonical run set, prima
 - v35 shard `phase3b_stage_a_completion_20260731T075647Z` promotes the previously failed near/layout-B root without rerunning its completed drawer bank. The v34 drawer oracle reassembles to its original hash with `18/36` coverage and zero proposal execution; the earlier cabinet `0/46` ledger remains attached as exhaustive negative provenance.
 - On the same normalized root and same complete cabinet proposal inventory, bowl-relative registration yields `5/46` successes (episodes 674, 699, 743, 474, 514), compared with zero under the v34 world-anchor execution contract. This establishes a causal proposal-basin alignment effect for the exact root; it is still controller evidence, not VLA or hidden-state evidence.
 - The first v35 candidate passes all state, certificate, support, and two-goal feasibility gates. Expansion to the remaining 12 assigned roots is authorised under the unchanged, resumable contract.
+
+### 2026-07-31 — v35 held-root full-bank confirmation
+
+- The unchanged completion shard promotes `open/on-table/drawer-side/transverse-low-support/layout A` with exact state hash `af2e6ead…d8ae`; root and certificate gates pass. Registered drawer coverage is `11/36`, selecting episode 694.
+- Registered cabinet coverage is `1/46`, with episode 474 (index 31) as the only success. That attempt is the exact pre-locked held-root smoke payload and is imported with zero re-execution; the remaining 45 proposals are newly evaluated once.
+- This is root 2/13 in v35 and the 21st unique physical Stage A root. The result confirms prospective transfer without treating the imported smoke as a second independent run, and shows strong residual state-specific basin heterogeneity after coordinate registration.

@@ -190,6 +190,27 @@ def verify_report(report_dir: Path) -> dict:
                     f"Compact {goal} execution mode changed for {candidate_id}"
                 )
 
+    counterfactuals = pd.read_csv(
+        report_dir / "oracle_execution_counterfactuals.csv"
+    )
+    expected_counterfactual_candidate = (
+        "stagea__drawer-open__possession-on-table__locus-drawer-side__"
+        "support-demonstration-near__layout-b"
+    )
+    if (
+        len(counterfactuals) != 1
+        or summary.get("oracle_execution_counterfactual_count") != 1
+        or counterfactuals.iloc[0]["candidate_id"]
+        != expected_counterfactual_candidate
+        or counterfactuals.iloc[0]["goal"] != "cabinet"
+        or bool(counterfactuals.iloc[0]["identical_normalized_state"]) is not True
+        or int(counterfactuals.iloc[0]["prior_proposal_count"]) != 46
+        or int(counterfactuals.iloc[0]["prior_success_count"]) != 0
+        or int(counterfactuals.iloc[0]["current_proposal_count"]) != 46
+        or int(counterfactuals.iloc[0]["current_success_count"]) != 5
+    ):
+        raise ValueError("Compact oracle-execution counterfactual changed")
+
     pairs = pd.read_csv(report_dir / "support_pairs.csv")
     expected_pair_ids = {spec.support_pair_id for spec in iter_candidate_specs()}
     if (
