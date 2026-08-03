@@ -7,8 +7,11 @@ import pytest
 
 from scripts.run_phase3b_stage_a_completion import (
     _checkpoint,
+    _load_construction_gate_binding,
+    _smoke_episode_indices,
     _validate_completion_config,
 )
+from scripts.run_phase3b_stage_a import PROJECT, _load_config
 from scripts.run_phase3b_stage_a_construction_gate import (
     _construction_contract_checks,
 )
@@ -63,6 +66,34 @@ def test_completion_config_accepts_a_fresh_shard_without_imports() -> None:
     )
     assert result["candidate_ids"] == (OPEN_ID,)
     assert result["imports"] == []
+
+
+def test_v37_completion_binds_gate_and_prospective_smoke() -> None:
+    config = _load_config(PROJECT / "configs/phase3b_stage_a_v37.yaml")
+    completion = _validate_completion_config(config)
+    gate = _load_construction_gate_binding(completion, config=config)
+    assert gate is not None
+    assert set(gate["expected_candidates"]) == set(
+        completion["candidate_ids"]
+    )
+    assert completion["causal_smoke"]["proposal_episode_by_goal"] == {
+        "drawer": 694,
+        "cabinet": 474,
+    }
+
+
+def test_smoke_episode_indices_require_unique_identity() -> None:
+    banks = {
+        "drawer": _proposals(),
+        "cabinet": _proposals(),
+    }
+    assert _smoke_episode_indices(
+        banks, drawer_episode=10, cabinet_episode=11
+    ) == {"drawer": 0, "cabinet": 1}
+    with pytest.raises(ValueError, match="not unique"):
+        _smoke_episode_indices(
+            banks, drawer_episode=99, cabinet_episode=11
+        )
 
 
 def test_construction_gate_allows_the_environment_initial_timestep_offset() -> None:

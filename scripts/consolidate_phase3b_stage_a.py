@@ -317,6 +317,9 @@ def main() -> None:
             "contract": contract,
             "selection_lock": selection_lock,
             "candidate_ids": candidate_ids,
+            "expected_root_final_timestep": int(
+                source["expected_root_final_timestep"]
+            ),
         }
         assignments[source_id] = candidate_ids
     selected_sources = validate_source_assignment(assignments)
@@ -337,6 +340,10 @@ def main() -> None:
         entries,
         contracts={
             source_id: source["contract"]
+            for source_id, source in loaded_sources.items()
+        },
+        expected_source_root_timesteps={
+            source_id: source["expected_root_final_timestep"]
             for source_id, source in loaded_sources.items()
         },
     )
@@ -373,6 +380,9 @@ def main() -> None:
             ],
             "source_implementation_sha256": source["contract"]["source_sha256"],
             "candidate_ids": source["candidate_ids"],
+            "expected_root_final_timestep": source[
+                "expected_root_final_timestep"
+            ],
         }
     atomic_write_json(staging / "source_inventory.json", source_inventory)
 

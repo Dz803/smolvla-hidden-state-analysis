@@ -930,6 +930,16 @@ def build_landmark_registered_action_phase_proposal_bank(
                 ),
             },
         }
+        root_binding = config["action_phase_oracle"].get(
+            "root_landmark_binding"
+        )
+        if root_binding is not None:
+            metadata["root_landmark_binding"] = root_binding
+            metadata["root_landmark_tolerance_m"] = float(
+                config["oracle"]["normalized_bowl_position_tolerance_m"]
+                if root_binding == "normalized_bowl_translation_v1"
+                else registration["target_landmark_tolerance_m"]
+            )
         entries.append(
             ActionPhaseProposal(
                 source=reference.source,
@@ -940,6 +950,81 @@ def build_landmark_registered_action_phase_proposal_bank(
             )
         )
     return tuple(entries)
+
+
+def registered_root_execution_anchor(
+    proposal: ActionPhaseProposal,
+    actual_bowl_position: np.ndarray,
+    *,
+    config: dict[str, Any],
+) -> tuple[np.ndarray, dict[str, Any]]:
+    """Bind a nominal registered anchor to the bowl in the normalized root."""
+
+    registration = proposal.metadata.get("landmark_registration")
+    if not isinstance(registration, dict):
+        raise ValueError("Registered execution anchor has no landmark contract")
+    expected = np.asarray(
+        registration.get("target_landmark_position"), dtype=np.float64
+    )
+    actual = np.asarray(actual_bowl_position, dtype=np.float64)
+    nominal_anchor = np.asarray(proposal.anchor_position, dtype=np.float64)
+    if (
+        expected.shape != (3,)
+        or actual.shape != (3,)
+        or nominal_anchor.shape != (3,)
+        or not np.isfinite(expected).all()
+        or not np.isfinite(actual).all()
+        or not np.isfinite(nominal_anchor).all()
+    ):
+        raise ValueError("Registered execution anchor contains invalid vectors")
+    binding = proposal.metadata.get(
+        "root_landmark_binding", "nominal_target_landmark_v1"
+    )
+    residual = actual - expected
+    residual_norm = float(np.linalg.norm(residual))
+    if binding == "nominal_target_landmark_v1":
+        tolerance = float(registration["target_landmark_tolerance_m"])
+        executed_anchor = nominal_anchor.copy()
+    elif binding == "normalized_bowl_translation_v1":
+        configured_tolerance = float(
+            config["oracle"]["normalized_bowl_position_tolerance_m"]
+        )
+        declared_tolerance = proposal.metadata.get(
+            "root_landmark_tolerance_m"
+        )
+        if declared_tolerance is None or not np.isclose(
+            float(declared_tolerance),
+            configured_tolerance,
+            rtol=0.0,
+            atol=0.0,
+        ):
+            raise ValueError(
+                "Registered normalized-root tolerance changed"
+            )
+        tolerance = configured_tolerance
+        executed_anchor = nominal_anchor + residual
+    else:
+        raise ValueError(f"Unknown root-landmark binding mode: {binding}")
+    if (
+        not np.isfinite(tolerance)
+        or tolerance <= 0.0
+        or residual_norm > tolerance
+    ):
+        raise RuntimeError(
+            "Registered normalized-root landmark exceeds its binding "
+            f"tolerance: residual={residual_norm:.9f} m, "
+            f"tolerance={tolerance:.9f} m, mode={binding}"
+        )
+    return executed_anchor, {
+        "mode": binding,
+        "expected_target_landmark_position": expected.tolist(),
+        "observed_normalized_bowl_position": actual.tolist(),
+        "normalized_bowl_residual_m": residual.tolist(),
+        "normalized_bowl_residual_norm_m": residual_norm,
+        "tolerance_m": tolerance,
+        "nominal_anchor_position": nominal_anchor.tolist(),
+        "executed_anchor_position": executed_anchor.tolist(),
+    }
 
 
 def run_registered_grasp_acquisition(
@@ -2741,6 +2826,8 @@ def run_action_phase_oracle_from_prepared_root(
         controller = PolicyFreeController(environment)
         initial_bowl_position = controller.bowl_position()
         registration = proposal.metadata.get("landmark_registration")
+        execution_anchor = proposal.anchor_position
+        root_landmark_registration = None
         if registration is not None:
             if (
                 registration.get("type") != "translation_only"
@@ -2748,27 +2835,20 @@ def run_action_phase_oracle_from_prepared_root(
                 or registration.get("target_layout") != spec.layout
             ):
                 raise ValueError("Action-phase landmark registration changed")
-            expected_landmark = np.asarray(
-                registration.get("target_landmark_position"), dtype=np.float64
-            )
-            tolerance = float(
-                registration.get("target_landmark_tolerance_m", np.nan)
-            )
-            if (
-                expected_landmark.shape != (3,)
-                or not np.isfinite(expected_landmark).all()
-                or not np.isfinite(tolerance)
-                or tolerance <= 0.0
-                or np.linalg.norm(initial_bowl_position - expected_landmark)
-                > tolerance
-            ):
+            try:
+                execution_anchor, root_landmark_registration = (
+                    registered_root_execution_anchor(
+                        proposal, initial_bowl_position, config=config
+                    )
+                )
+            except RuntimeError as exc:
                 raise RuntimeError(
                     f"Registered target landmark changed for "
-                    f"{spec.candidate_id}/{goal}"
-                )
+                    f"{spec.candidate_id}/{goal}: {exc}"
+                ) from exc
         route = grasped_root_transit_plan(
             controller.eef_position(),
-            proposal.anchor_position,
+            execution_anchor,
             clearance_margin_m=float(phase_cfg["clearance_margin_m"]),
             workspace_bounds=phase_cfg["workspace_bounds_m"],
             phase_budgets=phase_cfg["bridge_phase_budgets"],
@@ -2895,6 +2975,7 @@ def run_action_phase_oracle_from_prepared_root(
             "final_goals": bridge_goals,
             "final_drawer_joint": bridge_drawer_joint,
             "drawer_aperture_preserved": aperture_preserved,
+            "root_landmark_registration": root_landmark_registration,
         }
         passed = bool(bridge_pass and outcome["pass"] and executed_within_budget)
         return {

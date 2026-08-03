@@ -274,6 +274,16 @@ def _load_config(path: Path) -> dict[str, Any]:
             0.0 < landmark_tolerance <= 1e-6
         ):
             raise ValueError("Stage A landmark tolerance is invalid")
+        root_landmark_binding = action_phase.get(
+            "root_landmark_binding", "nominal_target_landmark_v1"
+        )
+        if root_landmark_binding not in {
+            "nominal_target_landmark_v1",
+            "normalized_bowl_translation_v1",
+        }:
+            raise ValueError(
+                "Stage A root-landmark binding mode is not supported"
+            )
     phase_budgets = action_phase.get("bridge_phase_budgets", {})
     if set(phase_budgets) != expected_transit_phases or any(
         int(value) < 1 for value in phase_budgets.values()

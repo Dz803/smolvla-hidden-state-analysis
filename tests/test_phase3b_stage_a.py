@@ -21,6 +21,7 @@ from smolvla_analysis.phase3b_libero import (
     build_landmark_registered_action_phase_proposal_bank,
     grasped_root_recovery_plan,
     grasped_root_transit_plan,
+    registered_root_execution_anchor,
     run_goal_oracle_bank,
 )
 from smolvla_analysis.phase3b_proposal_analysis import (
@@ -1260,6 +1261,56 @@ def test_v36_registered_grasp_acquisition_config_is_locked(tmp_path) -> None:
     changed_path.write_text(yaml.safe_dump(changed))
     with pytest.raises(ValueError, match="locked grasp construction episode"):
         _load_config(changed_path)
+
+
+def test_v37_binds_registered_anchor_to_normalized_bowl() -> None:
+    config = _load_config(PROJECT / "configs/phase3b_stage_a_v37.yaml")
+    assert config["construction"] == _load_config(
+        PROJECT / "configs/phase3b_stage_a_v36.yaml"
+    )["construction"]
+    assert config["action_phase_oracle"]["root_landmark_binding"] == (
+        "normalized_bowl_translation_v1"
+    )
+    source = DemoTrace(
+        goal="drawer",
+        episode_index=694,
+        task_index=12,
+        frame_indices=np.asarray([1]),
+        states=np.zeros((1, 8), dtype=np.float32),
+        actions=np.zeros((1, 7), dtype=np.float32),
+        action_sha256="a" * 64,
+    )
+    proposal = ActionPhaseProposal(
+        source=source,
+        suffix=source,
+        anchor_position=np.asarray([0.1, 0.2, 1.1]),
+        anchor_orientation=np.eye(3),
+        metadata={
+            "root_landmark_binding": "normalized_bowl_translation_v1",
+            "root_landmark_tolerance_m": 0.02,
+            "landmark_registration": {
+                "target_landmark_position": [0.0, 0.0, 0.9],
+                "target_landmark_tolerance_m": 1e-9,
+            },
+        },
+    )
+    anchor, registration = registered_root_execution_anchor(
+        proposal,
+        np.asarray([0.005, -0.002, 0.903]),
+        config=config,
+    )
+    np.testing.assert_allclose(anchor, [0.105, 0.198, 1.103])
+    assert registration["mode"] == "normalized_bowl_translation_v1"
+    assert registration["tolerance_m"] == 0.02
+
+    nominal = deepcopy(proposal)
+    nominal.metadata["root_landmark_binding"] = "nominal_target_landmark_v1"
+    with pytest.raises(RuntimeError, match="exceeds its binding tolerance"):
+        registered_root_execution_anchor(
+            nominal,
+            np.asarray([0.005, -0.002, 0.903]),
+            config=config,
+        )
 
 
 def test_grasped_transport_requires_both_servo_pass_and_possession() -> None:

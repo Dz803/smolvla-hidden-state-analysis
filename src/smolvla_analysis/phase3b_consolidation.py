@@ -27,7 +27,6 @@ LEGACY_EXECUTION_CONTRACT = {
     "transformation": "none",
 }
 CONSOLIDATION_MIGRATION = "additive_full_replay_provenance_v1"
-EXPECTED_ROOT_FINAL_TIMESTEP = 540
 
 
 def construction_contract_payload(contract: dict[str, Any]) -> dict[str, Any]:
@@ -156,6 +155,45 @@ def validate_source_assignment(
     return selected
 
 
+def validate_source_root_timesteps(
+    observed: dict[str, set[int]],
+    *,
+    contracts: dict[str, dict[str, Any]],
+    expected: dict[str, int],
+) -> dict[str, Any]:
+    """Bind each source to one declared root timestep without conflating sources."""
+
+    source_ids = set(contracts)
+    if set(observed) != source_ids or set(expected) != source_ids:
+        raise ValueError("Root-timestep provenance does not cover every source")
+    normalized_expected = {
+        source_id: int(expected[source_id]) for source_id in source_ids
+    }
+    for source_id in sorted(source_ids):
+        timestep = normalized_expected[source_id]
+        if timestep < 1 or observed[source_id] != {timestep}:
+            raise ValueError(
+                f"Source {source_id} does not use its declared root timestep"
+            )
+        if int(contracts[source_id]["environment"]["episode_length"]) <= timestep:
+            raise ValueError(
+                f"Source {source_id} oracle horizon ends before its roots"
+            )
+    unique = sorted(set(normalized_expected.values()))
+    return {
+        "source_expected_root_final_timesteps": dict(
+            sorted(normalized_expected.items())
+        ),
+        "source_observed_root_final_timesteps": {
+            source_id: sorted(observed[source_id])
+            for source_id in sorted(source_ids)
+        },
+        "observed_root_final_timesteps": unique,
+        "root_final_timestep_identical": len(unique) == 1,
+        "observed_roots_precede_oracle_horizons": True,
+    }
+
+
 def factor_source_overlap(
     assignments: dict[str, Iterable[str]],
 ) -> dict[str, dict[str, Any]]:
@@ -241,11 +279,11 @@ def _validate_candidate_record(record: dict[str, Any]) -> dict[str, Any]:
     if len(str(record.get("state_sha256", ""))) != 64:
         raise ValueError(f"Invalid state identity for {candidate_id}")
     construction = record.get("construction", {})
+    root_final_timestep = int(construction.get("final_timestep", -1))
     if (
         construction.get("mode")
         != "current_process_policy_independent_script"
-        or int(construction.get("final_timestep", -1))
-        != EXPECTED_ROOT_FINAL_TIMESTEP
+        or root_final_timestep < 1
         or len(str(construction.get("action_sha256", ""))) != 64
     ):
         raise ValueError(f"Invalid root construction record for {candidate_id}")
@@ -288,7 +326,7 @@ def _validate_candidate_record(record: dict[str, Any]) -> dict[str, Any]:
         "execution_mode_by_goal": modes,
         "normalized_state_sha256": next(iter(normalized_hashes)),
         "normalization_action_sha256": next(iter(normalization_action_hashes)),
-        "root_final_timestep": int(construction["final_timestep"]),
+        "root_final_timestep": root_final_timestep,
     }
 
 
@@ -417,6 +455,7 @@ def validate_consolidated_records(
     entries: Iterable[dict[str, Any]],
     *,
     contracts: dict[str, dict[str, Any]],
+    expected_source_root_timesteps: dict[str, int],
 ) -> dict[str, Any]:
     entries = tuple(entries)
     expected = {spec.candidate_id for spec in iter_candidate_specs()}
@@ -452,25 +491,13 @@ def validate_consolidated_records(
         source_root_timesteps.setdefault(source_id, set()).add(
             summary["root_final_timestep"]
         )
-    if any(
-        timesteps != {EXPECTED_ROOT_FINAL_TIMESTEP}
-        for timesteps in source_root_timesteps.values()
-    ):
-        raise ValueError("Consolidated sources use different root timesteps")
-    if any(
-        int(contracts[source_id]["environment"]["episode_length"])
-        <= EXPECTED_ROOT_FINAL_TIMESTEP
-        for source_id in source_root_timesteps
-    ):
-        raise ValueError("A source oracle horizon ends before its candidate roots")
-    construction["observed_root_final_timestep"] = (
-        EXPECTED_ROOT_FINAL_TIMESTEP
+    construction.update(
+        validate_source_root_timesteps(
+            source_root_timesteps,
+            contracts=contracts,
+            expected=expected_source_root_timesteps,
+        )
     )
-    construction["source_observed_root_final_timesteps"] = {
-        source_id: sorted(timesteps)
-        for source_id, timesteps in source_root_timesteps.items()
-    }
-    construction["observed_roots_precede_oracle_horizons"] = True
     support_bank_hashes = {
         entry["record"]["support_measurement"]["reference_bank_sha256"]
         for entry in entries
@@ -554,6 +581,10 @@ def validate_consolidated_records(
                 "low_source_id": low_entry["source_id"],
                 "same_source": bool(
                     near_entry["source_id"] == low_entry["source_id"]
+                ),
+                "same_root_final_timestep": bool(
+                    near_entry["record"]["construction"]["final_timestep"]
+                    == low_entry["record"]["construction"]["final_timestep"]
                 ),
                 "oracle_balance_all_goals_estimable": comparability[
                     "all_goals_estimable"

@@ -100,6 +100,47 @@ def test_registered_execution_validation_rejects_changed_transform() -> None:
         )
 
 
+def test_registered_execution_validates_normalized_root_translation() -> None:
+    oracle = _oracle()
+    phase = oracle["proposal_execution_contract"][0]
+    phase["root_landmark_binding"] = "normalized_bowl_translation_v1"
+    phase["root_landmark_tolerance_m"] = 0.02
+    oracle["proposal_execution_contract_sha256"] = canonical_sha256(
+        oracle["proposal_execution_contract"]
+    )
+    attempt = oracle["proposal_attempts"][0]
+    attempt["phase_proposal"] = deepcopy(phase)
+    attempt["action_phase_bridge"] = {
+        "root_landmark_registration": {
+            "mode": "normalized_bowl_translation_v1",
+            "expected_target_landmark_position": [0.0, 0.0, 0.0],
+            "observed_normalized_bowl_position": [0.005, -0.002, 0.0],
+            "normalized_bowl_residual_m": [0.005, -0.002, 0.0],
+            "normalized_bowl_residual_norm_m": (
+                0.005**2 + 0.002**2
+            )
+            ** 0.5,
+            "tolerance_m": 0.02,
+            "nominal_anchor_position": [0.1, 0.2, 0.3],
+            "executed_anchor_position": [0.105, 0.198, 0.3],
+        }
+    }
+    result = validate_registered_oracle_execution(
+        oracle, candidate_id=NEAR_A, goal="drawer"
+    )
+    assert result["root_landmark_binding_modes"] == [
+        "normalized_bowl_translation_v1"
+    ]
+
+    attempt["action_phase_bridge"]["root_landmark_registration"][
+        "executed_anchor_position"
+    ][0] += 0.01
+    with pytest.raises(ValueError, match="normalized-root registration"):
+        validate_registered_oracle_execution(
+            oracle, candidate_id=NEAR_A, goal="drawer"
+        )
+
+
 def test_compatibility_gate_adapts_only_outer_mode(monkeypatch) -> None:
     records = []
     for candidate_id in (NEAR_A, LOW_A):

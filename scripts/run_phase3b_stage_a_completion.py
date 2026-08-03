@@ -58,6 +58,8 @@ from smolvla_analysis.phase3b_libero import (
     compact_snapshot_metadata,
     construct_candidate,
     make_stage_a_environment,
+    run_action_phase_oracle_from_prepared_root,
+    run_goal_oracle,
     run_goal_oracle_bank,
 )
 from smolvla_analysis.phase3b_stage_a import (
@@ -72,7 +74,7 @@ from smolvla_analysis.phase3b_stage_a import (
 )
 
 
-DEFAULT_CONFIG = PROJECT / "configs/phase3b_stage_a_v35.yaml"
+DEFAULT_CONFIG = PROJECT / "configs/phase3b_stage_a_v37.yaml"
 DEFAULT_REGISTERED_SMOKE = (
     PROJECT
     / "local/phase3b_stage_a/registered_generalization_smokes/"
@@ -92,6 +94,15 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--candidate-id", action="append")
     parser.add_argument("--stop-after-candidates", type=int)
     parser.add_argument("--preflight-only", action="store_true")
+    parser.add_argument(
+        "--smoke-candidate-id",
+        help=(
+            "Construct one candidate and checkpoint only the two locked smoke "
+            "proposals; a later normal resume reuses them."
+        ),
+    )
+    parser.add_argument("--smoke-drawer-episode", type=int)
+    parser.add_argument("--smoke-cabinet-episode", type=int)
     return parser.parse_args()
 
 
@@ -122,6 +133,31 @@ def _validate_completion_config(config: dict[str, Any]) -> dict[str, Any]:
     imports = completion.get("imports")
     if not isinstance(imports, list) or len(imports) > 1:
         raise ValueError("Completion accepts at most one prior goal import")
+    gate_report = completion.get("construction_gate_report")
+    if gate_report is not None and (
+        not isinstance(gate_report, str) or not gate_report.strip()
+    ):
+        raise ValueError("Construction-gate report path is invalid")
+    causal_smoke = completion.get("causal_smoke")
+    if causal_smoke is not None:
+        required_smoke = {
+            "candidate_id",
+            "proposal_episode_by_goal",
+            "require_all_pass",
+        }
+        if (
+            not isinstance(causal_smoke, dict)
+            or set(causal_smoke) != required_smoke
+            or causal_smoke.get("candidate_id") not in candidate_ids
+            or set(causal_smoke.get("proposal_episode_by_goal", {}))
+            != set(GOALS)
+            or any(
+                not isinstance(value, int) or isinstance(value, bool)
+                for value in causal_smoke["proposal_episode_by_goal"].values()
+            )
+            or causal_smoke.get("require_all_pass") is not True
+        ):
+            raise ValueError("Completion causal-smoke contract is invalid")
     if not imports:
         return {
             **completion,
@@ -158,6 +194,7 @@ def _completion_contract(
     proposal_banks: dict[str, tuple[Any, ...]],
     completion: dict[str, Any],
     smoke_dir: Path | None,
+    construction_gate: dict[str, Any] | None,
 ) -> dict[str, Any]:
     base = _contract(config_path, config, demos, proposal_banks)
     registered_smoke = None
@@ -178,8 +215,10 @@ def _completion_contract(
             "expected_candidate_count": completion["expected_candidate_count"],
             "candidate_ids": list(completion["candidate_ids"]),
             "imports": completion["imports"],
+            "causal_smoke": completion.get("causal_smoke"),
         },
         "registered_smoke": registered_smoke,
+        "construction_gate": construction_gate,
         "completion_source_sha256": {
             "runner": _file_sha256(Path(__file__).resolve()),
             "completion": _file_sha256(
@@ -190,6 +229,289 @@ def _completion_contract(
             "Import only exact root/contract/proposal-bound results; never "
             "re-execute an imported proposal attempt."
         ),
+    }
+
+
+def _load_construction_gate_binding(
+    completion: dict[str, Any],
+    *,
+    config: dict[str, Any],
+) -> dict[str, Any] | None:
+    """Load a compact, Git-backed construction gate as an identity contract."""
+
+    configured = completion.get("construction_gate_report")
+    if configured is None:
+        return None
+    report_dir = (PROJECT / configured).resolve()
+    report_root = (PROJECT / "reports/phase3b_stage_a").resolve()
+    if report_dir == report_root or report_root not in report_dir.parents:
+        raise ValueError("Construction-gate report must remain under reports")
+    paths = {
+        name: report_dir / name
+        for name in ("contract.json", "summary.json", "manifest.json")
+    }
+    if not all(path.is_file() for path in paths.values()):
+        raise ValueError("Construction-gate report is incomplete")
+    report_contract = json.loads(paths["contract.json"].read_text())
+    summary = json.loads(paths["summary.json"].read_text())
+    manifest = json.loads(paths["manifest.json"].read_text())
+    artifact_hashes = {
+        name: _file_sha256(path)
+        for name, path in paths.items()
+        if name != "manifest.json"
+    }
+    expected_ids = list(completion["candidate_ids"])
+    conditions = summary.get("conditions")
+    by_candidate = {
+        item.get("candidate_id"): item
+        for item in conditions
+        if isinstance(item, dict)
+    } if isinstance(conditions, list) else {}
+    expected_timestep = int(config["construction"]["root_final_timestep"])
+    if (
+        manifest.get("status") != "complete"
+        or manifest.get("policy_loaded") is not False
+        or summary.get("all_pass") is not True
+        or int(summary.get("candidate_count", -1)) != len(expected_ids)
+        or report_contract.get("candidate_ids") != expected_ids
+        or report_contract.get("construction") != config["construction"]
+        or set(by_candidate) != set(expected_ids)
+        or any(
+            item.get("root_pass") is not True
+            or item.get("support_pass") is not True
+            or item.get("certificate_pass") is not True
+            for item in by_candidate.values()
+        )
+        or any(
+            int(item.get("final_timestep", -1)) != expected_timestep
+            for item in by_candidate.values()
+        )
+        or any(
+            len(str(item.get("state_sha256", ""))) != 64
+            or len(str(item.get("construction_action_sha256", ""))) != 64
+            for item in by_candidate.values()
+        )
+        or manifest.get("artifact_sha256", {}).get("contract.json")
+        != artifact_hashes["contract.json"]
+        or manifest.get("artifact_sha256", {}).get("summary.json")
+        != artifact_hashes["summary.json"]
+        or manifest.get("summary_sha256") != canonical_sha256(summary)
+    ):
+        raise ValueError("Construction-gate identity contract changed")
+    return {
+        "report_dir": report_dir.relative_to(PROJECT).as_posix(),
+        "artifact_sha256": {
+            **artifact_hashes,
+            "manifest.json": _file_sha256(paths["manifest.json"]),
+        },
+        "report_contract_sha256": canonical_sha256(report_contract),
+        "summary_sha256": canonical_sha256(summary),
+        "expected_candidates": {
+            candidate_id: {
+                "state_sha256": by_candidate[candidate_id]["state_sha256"],
+                "construction_action_sha256": by_candidate[candidate_id][
+                    "construction_action_sha256"
+                ],
+                "final_timestep": expected_timestep,
+            }
+            for candidate_id in expected_ids
+        },
+    }
+
+
+def _assert_construction_gate_identity(
+    constructed: Any,
+    *,
+    candidate_id: str,
+    gate: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if gate is None:
+        return None
+    expected = gate["expected_candidates"][candidate_id]
+    observed = {
+        "state_sha256": snapshot_sha256(constructed.snapshot),
+        "construction_action_sha256": constructed.construction[
+            "action_sha256"
+        ],
+        "final_timestep": int(constructed.construction["final_timestep"]),
+    }
+    if observed != expected:
+        raise RuntimeError(
+            f"Construction-gate identity mismatch for {candidate_id}"
+        )
+    return {
+        "pass": True,
+        "report_dir": gate["report_dir"],
+        "expected": expected,
+        "observed": observed,
+    }
+
+
+def _smoke_episode_indices(
+    proposal_banks: dict[str, tuple[Any, ...]],
+    *,
+    drawer_episode: int,
+    cabinet_episode: int,
+) -> dict[str, int]:
+    requested = {"drawer": drawer_episode, "cabinet": cabinet_episode}
+    indices: dict[str, int] = {}
+    for goal, episode in requested.items():
+        matches = [
+            index
+            for index, proposal in enumerate(proposal_banks[goal])
+            if proposal.episode_index == episode
+        ]
+        if len(matches) != 1:
+            raise ValueError(
+                f"Smoke proposal episode is not unique: {goal}/{episode}"
+            )
+        indices[goal] = matches[0]
+    return indices
+
+
+def _run_sparse_causal_smoke(
+    environment,
+    *,
+    run_dir: Path,
+    constructed: Any,
+    spec: Any,
+    proposal_banks: dict[str, tuple[Any, ...]],
+    phase_banks: dict[tuple[str, str], tuple[Any, ...]],
+    config: dict[str, Any],
+    contract_sha256: str,
+    selection_lock_sha256: str,
+    smoke_indices: dict[str, int],
+    construction_gate_identity: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Checkpoint two prospective attempts without promoting a candidate."""
+
+    root_sha = snapshot_sha256(constructed.snapshot)
+    results: dict[str, dict[str, Any]] = {}
+    simulated_now = 0
+    for goal in GOALS:
+        proposals = proposal_banks[goal]
+        phases = phase_banks[(goal, spec.layout)]
+        proposal_index = smoke_indices[goal]
+        completed, record_result, _ = _checkpoint(
+            run_dir,
+            candidate_id=spec.candidate_id,
+            goal=goal,
+            root_state_sha256=root_sha,
+            contract_sha256=contract_sha256,
+            selection_lock_sha256=selection_lock_sha256,
+            proposals=proposals,
+            phase_proposals=phases,
+            imported_results={},
+            imported_provenance={},
+        )
+        if proposal_index in completed:
+            result = completed[proposal_index]
+            provenance = "reused_same_run_checkpoint"
+        else:
+            preparation = run_goal_oracle(
+                environment,
+                constructed.snapshot,
+                spec=spec,
+                goal=goal,
+                demo=proposals[proposal_index],
+                initial_bowl_position=constructed.initial_bowl_position,
+                initial_eef_position=constructed.initial_eef_position,
+                initial_eef_orientation=constructed.initial_eef_orientation,
+                initial_joint_positions=constructed.initial_joint_positions,
+                recovery_waypoints=constructed.recovery_waypoints,
+                config=config,
+                raise_on_failure=False,
+                return_prepared_root=True,
+                normalization_only=True,
+            )
+            prepared = preparation.pop("_prepared_oracle_root")
+            result = run_action_phase_oracle_from_prepared_root(
+                environment,
+                constructed.snapshot,
+                prepared,
+                spec=spec,
+                proposal=phases[proposal_index],
+                config=config,
+            )
+            record_result(proposal_index, result)
+            simulated_now += 1
+            provenance = "simulated_now_and_checkpointed"
+        proposal = proposals[proposal_index]
+        bridge = result.get("phases", {}).get("action_phase_bridge", {})
+        registration = bridge.get("root_landmark_registration", {})
+        if (
+            result.get("goal") != goal
+            or result.get("demo_episode_index") != proposal.episode_index
+            or result.get("demo_task_index") != proposal.task_index
+            or result.get("demo_action_sha256") != proposal.action_sha256
+            or result.get("phase_proposal") != phases[proposal_index].metadata
+            or result.get("pass") is not True
+            or bridge.get("pass") is not True
+            or registration.get("mode")
+            != "normalized_bowl_translation_v1"
+            or float(registration.get("normalized_bowl_residual_norm_m", -1.0))
+            < 0.0
+            or float(registration.get("normalized_bowl_residual_norm_m", -1.0))
+            > float(registration.get("tolerance_m", -1.0))
+        ):
+            raise RuntimeError(
+                f"Sparse causal smoke failed for {spec.candidate_id}/{goal}/"
+                f"{proposal_index}"
+            )
+        results[goal] = {
+            "goal": goal,
+            "proposal_index": proposal_index,
+            "proposal_episode_index": proposal.episode_index,
+            "pass": True,
+            "bridge_pass": True,
+            "root_landmark_registration": registration,
+            "normalized_state_sha256": result["normalized_state_sha256"],
+            "normalization_action_sha256": result[
+                "normalization_action_sha256"
+            ],
+            "result_sha256": canonical_sha256(result),
+            "provenance": provenance,
+        }
+    normalized_states = {
+        item["normalized_state_sha256"] for item in results.values()
+    }
+    normalization_actions = {
+        item["normalization_action_sha256"] for item in results.values()
+    }
+    if len(normalized_states) != 1 or len(normalization_actions) != 1:
+        raise RuntimeError("Sparse causal-smoke goals used different normalized roots")
+    checkpoint_hashes = {
+        goal: _file_sha256(
+            run_dir
+            / "checkpoints"
+            / f"{spec.candidate_id}__{goal}.json"
+        )
+        for goal in GOALS
+    }
+    audit = {
+        "schema_version": 1,
+        "audit_revision": "normalized-root-registration-smoke-v1",
+        "candidate_id": spec.candidate_id,
+        "root_state_sha256": root_sha,
+        "construction_gate_identity": construction_gate_identity,
+        "all_pass": True,
+        "candidate_promotions": 0,
+        "proposal_attempts_in_smoke": len(GOALS),
+        "proposal_attempts_simulated_now": simulated_now,
+        "proposal_attempts_reused_from_same_run": len(GOALS) - simulated_now,
+        "shared_normalized_state_sha256": next(iter(normalized_states)),
+        "shared_normalization_action_sha256": next(
+            iter(normalization_actions)
+        ),
+        "conditions": [results[goal] for goal in GOALS],
+        "checkpoint_file_sha256": checkpoint_hashes,
+        "policy_loaded": False,
+    }
+    audit_path = run_dir / "audits/normalized_root_registration_smoke.json"
+    atomic_write_json(audit_path, audit)
+    return {
+        **audit,
+        "audit_file_sha256": _file_sha256(audit_path),
     }
 
 
@@ -580,9 +902,35 @@ def main() -> None:
     args = _parse_args()
     if args.stop_after_candidates is not None and args.stop_after_candidates < 1:
         raise ValueError("--stop-after-candidates must be positive")
+    smoke_arguments = (
+        args.smoke_candidate_id,
+        args.smoke_drawer_episode,
+        args.smoke_cabinet_episode,
+    )
+    smoke_mode = all(value is not None for value in smoke_arguments)
+    if any(value is not None for value in smoke_arguments) and not smoke_mode:
+        raise ValueError("Sparse smoke requires a candidate and both episodes")
+    if smoke_mode and (
+        args.candidate_id
+        or args.stop_after_candidates is not None
+        or args.preflight_only
+    ):
+        raise ValueError("Sparse smoke cannot be combined with run filters")
     config_path = args.config.resolve()
     config = _load_config(config_path)
     completion = _validate_completion_config(config)
+    smoke_plan = completion.get("causal_smoke")
+    if smoke_mode:
+        observed_smoke_plan = {
+            "candidate_id": args.smoke_candidate_id,
+            "proposal_episode_by_goal": {
+                "drawer": args.smoke_drawer_episode,
+                "cabinet": args.smoke_cabinet_episode,
+            },
+            "require_all_pass": True,
+        }
+        if observed_smoke_plan != smoke_plan:
+            raise ValueError("CLI sparse smoke does not match the config contract")
     demos = _load_demos(config)
     proposal_banks = _load_proposal_bank(config)
     minimum_horizon = _minimum_native_horizon(config, demos, proposal_banks)
@@ -599,6 +947,9 @@ def main() -> None:
         if smoke_dir is not None
         else {}
     )
+    construction_gate = _load_construction_gate_binding(
+        completion, config=config
+    )
     contract = _completion_contract(
         config_path,
         config,
@@ -606,6 +957,7 @@ def main() -> None:
         proposal_banks,
         completion,
         smoke_dir,
+        construction_gate,
     )
     contract_sha = canonical_sha256(contract)
     selection_lock = build_selection_lock(
@@ -631,6 +983,12 @@ def main() -> None:
                     ],
                     "registered_smoke_candidate_ids": sorted(smoke_conditions),
                     "prior_goal_imports": completion["imports"],
+                    "causal_smoke": smoke_plan,
+                    "construction_gate_report": (
+                        construction_gate["report_dir"]
+                        if construction_gate is not None
+                        else None
+                    ),
                     "policy_loaded": False,
                 },
                 indent=2,
@@ -646,6 +1004,14 @@ def main() -> None:
         expected_count=int(completion["expected_candidate_count"]),
     )
     selected = tuple(completion["candidate_ids"])
+    smoke_indices = None
+    if smoke_mode:
+        selected = (str(args.smoke_candidate_id),)
+        smoke_indices = _smoke_episode_indices(
+            proposal_banks,
+            drawer_episode=int(args.smoke_drawer_episode),
+            cabinet_episode=int(args.smoke_cabinet_episode),
+        )
     if args.candidate_id:
         requested = set(args.candidate_id)
         unknown = requested - set(selected)
@@ -752,6 +1118,50 @@ def main() -> None:
                 raise RuntimeError(
                     f"Completion certificate failed for {candidate_id}"
                 )
+            construction_gate_identity = _assert_construction_gate_identity(
+                constructed,
+                candidate_id=candidate_id,
+                gate=construction_gate,
+            )
+            if smoke_mode:
+                if smoke_indices is None:
+                    raise RuntimeError("Sparse smoke indices were not resolved")
+                smoke_audit = _run_sparse_causal_smoke(
+                    environment,
+                    run_dir=run_dir,
+                    constructed=constructed,
+                    spec=spec,
+                    proposal_banks=proposal_banks,
+                    phase_banks=phase_banks,
+                    config=config,
+                    contract_sha256=contract_sha,
+                    selection_lock_sha256=selection_lock[
+                        "selection_lock_sha256"
+                    ],
+                    smoke_indices=smoke_indices,
+                    construction_gate_identity=construction_gate_identity,
+                )
+                _update_manifest(
+                    run_dir,
+                    manifest,
+                    status="causal_smoke_complete",
+                    candidate_count=completed_count,
+                    causal_smoke_all_pass=True,
+                    causal_smoke_audit_sha256=smoke_audit[
+                        "audit_file_sha256"
+                    ],
+                    causal_smoke_attempt_count=smoke_audit[
+                        "proposal_attempts_in_smoke"
+                    ],
+                    causal_smoke_candidate_promotions=0,
+                    support_reference_bank_sha256=support_bank.sha256,
+                )
+                print(
+                    "Sparse causal smoke complete; resume this same run "
+                    "without smoke flags.",
+                    flush=True,
+                )
+                return
             oracles = {}
             imports = {}
             prior_negative = {}
@@ -846,6 +1256,7 @@ def main() -> None:
             record["completion_revision"] = completion["revision"]
             record["oracle_imports"] = imports
             record["prior_negative_oracle_evidence"] = prior_negative
+            record["construction_gate_identity"] = construction_gate_identity
             counterpart_spec = next(
                 item
                 for item in iter_candidate_specs()

@@ -69,6 +69,7 @@ def validate_registered_oracle_execution(
 
     target_layout = candidate_spec(candidate_id).layout
     translation_norms = []
+    root_binding_modes = []
     for index, (phase, attempt, proposal) in enumerate(
         zip(contract, attempts, proposals, strict=True)
     ):
@@ -165,6 +166,102 @@ def validate_registered_oracle_execution(
                 f"Changed registered {goal} transform for {candidate_id}"
             )
         translation_norms.append(float(np.linalg.norm(translation)))
+        binding = phase.get(
+            "root_landmark_binding", "nominal_target_landmark_v1"
+        )
+        root_binding_modes.append(binding)
+        action_phase_bridge = attempt.get("action_phase_bridge")
+        root_registration = (
+            action_phase_bridge.get("root_landmark_registration")
+            if isinstance(action_phase_bridge, dict)
+            else None
+        )
+        if binding == "normalized_bowl_translation_v1":
+            if not isinstance(root_registration, dict):
+                raise ValueError(
+                    f"Missing normalized-root registration for "
+                    f"{candidate_id}/{goal}/{index}"
+                )
+            expected_root_landmark = _vector(
+                root_registration.get("expected_target_landmark_position"),
+                field="expected_target_landmark_position",
+            )
+            observed_root_landmark = _vector(
+                root_registration.get("observed_normalized_bowl_position"),
+                field="observed_normalized_bowl_position",
+            )
+            root_residual = _vector(
+                root_registration.get("normalized_bowl_residual_m"),
+                field="normalized_bowl_residual_m",
+            )
+            nominal_root_anchor = _vector(
+                root_registration.get("nominal_anchor_position"),
+                field="nominal_anchor_position",
+            )
+            executed_root_anchor = _vector(
+                root_registration.get("executed_anchor_position"),
+                field="executed_anchor_position",
+            )
+            root_tolerance = float(
+                root_registration.get("tolerance_m", np.nan)
+            )
+            declared_root_tolerance = float(
+                phase.get("root_landmark_tolerance_m", np.nan)
+            )
+            if (
+                root_registration.get("mode") != binding
+                or not np.allclose(
+                    expected_root_landmark,
+                    target_landmark,
+                    rtol=0.0,
+                    atol=1e-12,
+                )
+                or not np.allclose(
+                    root_residual,
+                    observed_root_landmark - expected_root_landmark,
+                    rtol=0.0,
+                    atol=1e-12,
+                )
+                or not np.allclose(
+                    nominal_root_anchor,
+                    target_anchor,
+                    rtol=0.0,
+                    atol=1e-12,
+                )
+                or not np.allclose(
+                    executed_root_anchor,
+                    nominal_root_anchor + root_residual,
+                    rtol=0.0,
+                    atol=1e-12,
+                )
+                or not np.isclose(
+                    float(
+                        root_registration.get(
+                            "normalized_bowl_residual_norm_m", np.nan
+                        )
+                    ),
+                    float(np.linalg.norm(root_residual)),
+                    rtol=0.0,
+                    atol=1e-12,
+                )
+                or not np.isfinite(root_tolerance)
+                or root_tolerance <= 0.0
+                or not np.isclose(
+                    root_tolerance,
+                    declared_root_tolerance,
+                    rtol=0.0,
+                    atol=0.0,
+                )
+                or float(np.linalg.norm(root_residual)) > root_tolerance
+            ):
+                raise ValueError(
+                    f"Changed normalized-root registration for "
+                    f"{candidate_id}/{goal}/{index}"
+                )
+        elif binding != "nominal_target_landmark_v1":
+            raise ValueError(
+                f"Unknown registered root binding for {candidate_id}/{goal}"
+            )
     return {
         "pass": True,
         "candidate_id": candidate_id,
@@ -181,6 +278,7 @@ def validate_registered_oracle_execution(
                 atol=1e-12,
             )
         ),
+        "root_landmark_binding_modes": sorted(set(root_binding_modes)),
     }
 
 

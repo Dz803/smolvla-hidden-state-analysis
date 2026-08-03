@@ -12,6 +12,7 @@ from smolvla_analysis.phase3b_consolidation import (
     migrate_legacy_full_replay_record,
     validate_construction_contracts,
     validate_source_assignment,
+    validate_source_root_timesteps,
 )
 from smolvla_analysis.phase3b_stage_a import canonical_sha256, iter_candidate_specs
 
@@ -78,6 +79,28 @@ def test_source_assignment_is_exact_and_disjoint() -> None:
         )
     with pytest.raises(ValueError, match="omits candidates"):
         validate_source_assignment({"partial": candidate_ids[:-1]})
+
+
+def test_source_root_timesteps_are_bound_per_generation_batch() -> None:
+    contracts = {
+        "legacy": _construction_contract(1850),
+        "registered": _construction_contract(2200),
+    }
+    result = validate_source_root_timesteps(
+        {"legacy": {540}, "registered": {560}},
+        contracts=contracts,
+        expected={"legacy": 540, "registered": 560},
+    )
+    assert result["observed_root_final_timesteps"] == [540, 560]
+    assert result["root_final_timestep_identical"] is False
+    assert result["observed_roots_precede_oracle_horizons"] is True
+
+    with pytest.raises(ValueError, match="declared root timestep"):
+        validate_source_root_timesteps(
+            {"legacy": {540}, "registered": {559}},
+            contracts=contracts,
+            expected={"legacy": 540, "registered": 560},
+        )
 
 
 def test_factor_source_overlap_exposes_aperture_batch_alias() -> None:

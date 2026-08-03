@@ -11,13 +11,15 @@ scientific_boundary:
   cross_execution_mode_factor_effects_estimable: false
   cross_source_generation_revision_effects_estimable: false
   drawer_aperture_source_revision_alias: true
+  root_timestep_generation_batch_alias: true
   rationale: >-
     Previously completed candidates are immutable and must not be rerun. Candidate
     IDs, demonstrations, environment context apart from horizon, support,
     certificate, goal, and validation payloads are identical across the selected
     runs. Historical contracts omitted the construction-parameter YAML block, while
     config hashes, revision labels, source-file hashes, the later oracle horizon, and
-    the proposal adapter differ. Exact observed states and physical support-pair
+    the proposal adapter and root timestep differ. Exact observed states and physical
+    support-pair
     geometry may be consolidated. One pair crosses source contracts and one pair
     contains a reused legacy drawer ledger, so oracle balance is reported per goal
     only where proposal and execution contracts match. Proposal coverage remains
@@ -27,22 +29,26 @@ scientific_boundary:
 sources:
   - source_id: v32_closed
     run_dir: local/phase3b_stage_a/phase3b_stage_a_20260729T035043Z
+    expected_root_final_timestep: 540
     selection:
       factor_equals:
         drawer_aperture: closed
   - source_id: v31_open_hard_pair
     run_dir: local/phase3b_stage_a/phase3b_stage_a_20260729T033540Z
+    expected_root_final_timestep: 540
     selection:
       candidate_ids:
         - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-b
         - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-b
   - source_id: v34_open_completion
     run_dir: local/phase3b_stage_a/phase3b_stage_a_20260731T035449Z
+    expected_root_final_timestep: 540
     selection:
       candidate_ids:
         - stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-a
   - source_id: v35_open_completion
     run_dir: local/phase3b_stage_a/phase3b_stage_a_completion_20260731T075647Z
+    expected_root_final_timestep: 540
     selection:
       candidate_ids:
         - stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-b
