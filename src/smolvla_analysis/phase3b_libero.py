@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from copy import deepcopy
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
@@ -356,6 +357,7 @@ class PolicyFreeController:
         position_tolerance_m: float,
         orientation_tolerance_rad: float = 0.10,
         pad_to_budget: bool = True,
+        stop_on_goal_or_terminal: bool = False,
     ) -> dict[str, Any]:
         from robosuite.utils import transform_utils as transform
 
@@ -369,6 +371,8 @@ class PolicyFreeController:
         start_relative_position = self.eef_position() - self.bowl_position()
         active_steps = 0
         max_position_error = 0.0
+        stopped_on_goal = False
+        stopped_on_terminal = False
         for _ in range(budget):
             position_error = target_position - self.eef_position()
             rotation_error = target_orientation @ self.eef_orientation().T
@@ -393,6 +397,11 @@ class PolicyFreeController:
                 action[3:6] = np.clip(axis_angle / 0.50, -1.0, 1.0)
             action[6] = float(gripper)
             self.step(action)
+            if stop_on_goal_or_terminal:
+                stopped_on_goal = bool(any(self.goal_values[-1].values()))
+                stopped_on_terminal = bool(self.done_values[-1])
+                if stopped_on_goal or stopped_on_terminal:
+                    break
         final_position_error = float(
             np.linalg.norm(target_position - self.eef_position())
         )
@@ -423,6 +432,15 @@ class PolicyFreeController:
             "budgeted_action_steps": int(budget),
             "executed_action_steps": int(len(self.actions) - history_start),
             "padded_to_budget": bool(pad_to_budget),
+            **(
+                {
+                    "stop_on_goal_or_terminal": True,
+                    "stopped_on_goal": stopped_on_goal,
+                    "stopped_on_terminal": stopped_on_terminal,
+                }
+                if stop_on_goal_or_terminal
+                else {}
+            ),
             "active_action_steps": int(active_steps),
             "max_position_error_m": max_position_error,
             "final_position_error_m": final_position_error,
@@ -3066,6 +3084,7 @@ def run_goal_oracle_bank(
     action_phase_proposals: tuple[ActionPhaseProposal, ...] | None = None,
     completed_results: dict[int, dict[str, Any]] | None = None,
     result_callback: Callable[[int, dict[str, Any]], None] | None = None,
+    allow_exhaustive_failure: bool = False,
 ) -> dict[str, Any]:
     if not proposals:
         raise ValueError(f"{goal} oracle proposal bank is empty")
@@ -3112,6 +3131,7 @@ def run_goal_oracle_bank(
         raise ValueError(f"{goal} oracle proposal bank contains another goal")
     proposal_bank_sha256 = canonical_sha256(proposal_metadata)
     attempts: list[dict[str, Any]] = []
+    all_results: dict[int, dict[str, Any]] = {}
     successful_results: dict[int, dict[str, Any]] = {}
     counterfactual_full_attempt_action_steps = 0
     normalized_state_hashes: set[str] = set()
@@ -3228,8 +3248,52 @@ def run_goal_oracle_bank(
                 "action_phase_bridge"
             ]
         attempts.append(attempt)
+        all_results[proposal_index] = result
         if result["pass"]:
             successful_results[proposal_index] = result
+    if prepared is None:
+        raise RuntimeError("Oracle proposal bank has no prepared root")
+    actual_bank_search_action_steps = len(prepared.actions) + sum(
+        int(attempt["cost"]["executed_demonstration_action_steps"])
+        for attempt in attempts
+    )
+    common_ledger = {
+        "proposal_bank_sha256": proposal_bank_sha256,
+        "proposal_bank": proposal_metadata,
+        "proposal_execution_mode": proposal_execution_mode,
+        "proposal_execution_contract_sha256": (
+            proposal_execution_contract_sha256
+        ),
+        "proposal_execution_contract": proposal_execution_contract,
+        "proposal_attempts": attempts,
+        "proposal_attempt_count": len(attempts),
+        "proposal_success_count": len(successful_results),
+        "proposal_success_fraction": float(
+            len(successful_results) / len(attempts)
+        ),
+        "successful_proposal_indices": sorted(successful_results),
+        "proposal_selection_rule": (
+            "minimum_executed_steps_then_path_effort_index"
+        ),
+        "shared_normalized_state_sha256": next(
+            iter(normalized_state_hashes)
+        ),
+        "shared_normalization_action_sha256": next(
+            iter(normalization_action_hashes)
+        ),
+        "shared_normalization_action_steps": len(prepared.actions),
+        "shared_normalization_active_servo_steps": (
+            prepared.active_servo_steps
+        ),
+        "total_attempted_action_steps": actual_bank_search_action_steps,
+        "counterfactual_full_attempt_action_steps": (
+            counterfactual_full_attempt_action_steps
+        ),
+        "normalization_preparation": normalization_preparation,
+        "total_environment_action_steps": int(
+            actual_bank_search_action_steps
+        ),
+    }
     if successful_results:
         selected_index = min(
             successful_results,
@@ -3250,54 +3314,27 @@ def run_goal_oracle_bank(
                 int(index),
             ),
         )
-        result = successful_results[selected_index]
-        successful_indices = sorted(successful_results)
-        if prepared is None:
-            raise RuntimeError("Oracle proposal bank has no prepared root")
-        actual_bank_search_action_steps = len(prepared.actions) + sum(
-            int(attempt["cost"]["executed_demonstration_action_steps"])
-            for attempt in attempts
-        )
+        result = deepcopy(successful_results[selected_index])
         result.update(
             {
-                "proposal_bank_sha256": proposal_bank_sha256,
-                "proposal_bank": proposal_metadata,
-                "proposal_execution_mode": proposal_execution_mode,
-                "proposal_execution_contract_sha256": (
-                    proposal_execution_contract_sha256
-                ),
-                "proposal_execution_contract": proposal_execution_contract,
-                "proposal_attempts": attempts,
-                "proposal_attempt_count": len(attempts),
-                "proposal_success_count": len(successful_indices),
-                "proposal_success_fraction": float(
-                    len(successful_indices) / len(attempts)
-                ),
-                "successful_proposal_indices": successful_indices,
+                **common_ledger,
                 "selected_proposal_index": selected_index,
-                "proposal_selection_rule": (
-                    "minimum_executed_steps_then_path_effort_index"
-                ),
-                "shared_normalized_state_sha256": next(
-                    iter(normalized_state_hashes)
-                ),
-                "shared_normalization_action_sha256": next(
-                    iter(normalization_action_hashes)
-                ),
-                "shared_normalization_action_steps": len(prepared.actions),
-                "shared_normalization_active_servo_steps": (
-                    prepared.active_servo_steps
-                ),
-                "total_attempted_action_steps": (
-                    actual_bank_search_action_steps
-                ),
-                "counterfactual_full_attempt_action_steps": (
-                    counterfactual_full_attempt_action_steps
-                ),
-                "normalization_preparation": normalization_preparation,
-                "total_environment_action_steps": int(
-                    actual_bank_search_action_steps
-                ),
+            }
+        )
+        return result
+    if allow_exhaustive_failure:
+        result = deepcopy(all_results[0])
+        result.update(
+            {
+                **common_ledger,
+                "pass": False,
+                "goal_ever_achieved": False,
+                "demo_episode_index": None,
+                "demo_task_index": None,
+                "demo_action_sha256": None,
+                "selected_proposal_index": None,
+                "cost": None,
+                "proposal_coverage_status": "exhaustive_failure",
             }
         )
         return result

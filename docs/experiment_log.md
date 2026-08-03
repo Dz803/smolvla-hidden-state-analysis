@@ -251,3 +251,41 @@ Append a dated entry when any of the following changes: canonical run set, prima
 - v37 separates nominal cross-layout registration from normalized-root execution. It preserves the exact proposal bank and success gates, but translates each nominal anchor by the observed normalized bowl residual and requires that residual to remain inside the existing `0.02 m` normalization certificate. Every attempt carries a fully auditable root-registration record.
 - The six expected state/action hashes and timestep 560 are loaded from the Git-backed construction report into the completion contract and checked before proposal execution. The prospective smoke is production-ledger work: drawer episode 694 and cabinet episode 474 are written into sparse checkpoints in the same run, then reused without re-execution during exhaustive resume.
 - Unit validation passes across the v37 configuration, anchor arithmetic, tamper rejection, construction-report binding, sparse checkpoint identity, and per-source `540/560` consolidation provenance. No v37 simulator attempt has yet been launched.
+
+### 2026-08-03 — v37 normalized-root production smoke passes
+
+- Git-safe v37 code/config/tests/plans were pushed before simulation at commit `6aa116aab3acdee0acf8bccfe34f3a2e123e9429`; the repository-wide audit passed 98 tests.
+- Run `phase3b_stage_a_completion_v37_20260803T101257Z` matches the certified construction root `4e50e93b…e9cd` and records a `6.577 mm` post-normalization bowl residual. The same residual is added to each nominal anchor under the frozen 20 mm contract.
+- Drawer episode 694 (index 1) and cabinet episode 474 (index 31) both pass from shared normalized state `29c7cc96…ffdc`, with valid bridges and no policy loaded. Candidate count remains zero, and the two results are sparse production checkpoints rather than separate validation rollouts.
+- The exact run is resuming for the remaining 490 attempts; the two smoke indices must be checkpoint-reused and never simulated again.
+
+### 2026-08-03 — v37 exhaustive completion stops one root short
+
+- Run `phase3b_stage_a_completion_v37_20260803T101257Z` reused its two production-smoke rows, promoted five grasped roots, and stopped on the sixth after a complete drawer `10/36` ledger and complete cabinet `0/46` ledger. Stage A therefore contains 31 certified physical roots; the failed root and all `82` completed proposal results remain immutable local evidence.
+- The matched near-support root succeeds only for cabinet episode 474 (index 31). For that identical proposal, both roots pass all bridge gates and have `6.343/6.109 mm` registered bowl-position residuals, yet only the near root reaches the cabinet goal. Position-only normalization is therefore falsified as a sufficient state match; a bounded diagnostic must isolate the remaining dynamical factor before any successor controller is frozen.
+- No Stage B policy branch, model download, or completed canonical rollout was launched. Raw checkpoints remain under ignored `local/`; only compact conclusions and source changes are eligible for Git.
+
+### 2026-08-03 — normalized-state and physical×runtime causal decomposition
+
+- Normalization-only run `normalized_state_20260803T030820Z` exactly reconstructs the v37 near-success/low-failure pair without executing a source suffix. Contact identities and velocities match closely; remaining differences are sub-millimetre EEF/object translations, `0.236°` bowl rotation, and at most `0.148°` robot-joint displacement.
+- State-swap run `state_swap_20260803T032645Z` tests five new hybrids and reruns neither completed baseline. Both physical/runtime crosses fail, as do near bowl-orientation, robot-state, and joint orientation+robot transplants into the low root. All five bridges pass with no wrong goal or early terminal event.
+- The evidence establishes a controller-specific physical-state×runtime compatibility interaction but no sufficient coarse block. The next bounded condition replaces the open-loop placement tail after stable acquisition with an independently certified goal-registered transport/release edge; it tests physical competence rather than another demonstration-bank draw.
+
+### 2026-08-03 — factorized path certifies the 32nd root's physical competence
+
+- Failed factorized v1/v2 attempts are retained as engineering evidence: v1 attached the grasp gate to the released pre-grasp bridge; v2 reached termination during placement but issued a padded post-terminal action. Neither supplies a final scientific result. v3 atomically confirms stable acquisition at source frame 45 and shows that fixed padding reaches the episode horizon after the feedback target is already within tolerance.
+- Complete v4 run `factorized_certificate_20260803T042126Z` uses the exact v37 low root and normalized hash, the same registered episode-474 acquisition, and an early-stop feedback transport with unchanged tolerances. Acquisition state is `8feb702f…`; transport executes `95+95+14=204` actions, reaches cabinet true/drawer false, and ends released with no early terminal or wrong goal.
+- The v37 `0/46` cabinet ledger remains valid negative evidence about open-loop proposal compatibility. The factorized success is distinct positive evidence about physical recoverability. Together they establish a competence–compatibility gap and bring physical Stage A feasibility to 32/32, pending provenance-safe promotion and consolidation.
+
+### 2026-08-03 — v38 additive promotion preserves distinct evidence classes
+
+- Promotion run `phase3b_stage_a_promotion_v38_20260803T045149Z` reconstructs exact root `e800c3ac…ad4255` and normalized state `b9290a99…ca5dc`, reassembles drawer `10/36`, and preserves cabinet `0/46`. It executes zero policy forwards, completed/new proposal suffixes, or factorized branches.
+- A crash-recoverable transaction commits the candidate state and record together. The record binds the raw v4 factorized result (`f8283663…c26c`) as physical feasibility while retaining the exhaustive registered ledger as proposal-compatibility evidence. Independent verification passes and is read-only.
+- A prior import-failed promotion directory ran zero actions and remains raw engineering provenance. No completed canonical rollout or `archive/full_experiment/runs` artifact changed.
+
+### 2026-08-03 — Stage A v4 consolidation is complete
+
+- Compact consolidation `reports/phase3b_stage_a/phase3b-stage-a-consolidated-v4/` verifies 32 distinct exact states, all 16 physical support-pair gates, all 64 physical state-goal gates, and all 2,624 proposal rows across six immutable source shards.
+- Sixty-three cells use successful proposal ledgers; the final cabinet cell uses one separate factorized certificate and intentionally retains `0/46` proposal success. Proposal-outcome comparability is reported separately from selected-cost comparability; unavailable final cabinet cost contrasts are null.
+- The aperture/source revision, root timestep/generation batch, execution mode, and certificate mode remain aliased or stratified non-estimands. The single adaptive factorized route is an existence witness, not a population rate or VLA result.
+- Compact analysis `reports/phase3b_stage_a/competence_compatibility_gap_v1/` records `F_C=1, P_K=0`, passes independent verification, and narrows the next methodology to state-matched policy residuals and internal self-specificity. The repository suite passes 112 tests; Stage B remains separately gated.

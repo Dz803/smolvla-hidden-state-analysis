@@ -6,6 +6,13 @@
 
 > **Phase 3 update (2026-07-28):** The 160-branch CRD smoke is complete. It finds state/goal-dominated outcome variance, a language veto–composition gap, and no conditional value from the tested low-dimensional hidden summaries. Source-task states are strongly imbalanced in physical subgoal progress, so the next gate is a policy-independent, occupancy-balanced affordance lattice—not immediate activation patching or cross-model scaling. See [`phase3_engineering_review.md`](phase3_engineering_review.md).
 
+> **Stage A update:** The verified 32-state lattice separates 64/64 physical
+> feasibility cells from 63/64 successful finite-bank proposal cells. The final
+> `F_C=1, P_K=0` cell is an adaptive existence certificate that exposes a
+> competence–compatibility measurement blind spot; it is not a VLA result. The
+> resulting state-matched, multi-policy and self-specificity methodology is in
+> [`competence_compatibility_methodology.md`](competence_compatibility_methodology.md).
+
 ## Decision summary
 
 The next goal is not to make a larger failure classifier. It is to determine what the hidden-state warning signal represents and whether that representation participates causally in failure.

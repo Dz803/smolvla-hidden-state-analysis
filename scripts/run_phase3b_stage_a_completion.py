@@ -21,7 +21,8 @@ try:
         _load_demos,
         _load_proposal_bank,
         _minimum_native_horizon,
-        _persist_candidate_state,
+        persist_candidate_artifacts_transactional,
+        recover_candidate_transactions,
         _validation_limits,
     )
 except ModuleNotFoundError:  # imported as scripts.run_phase3b_stage_a_completion
@@ -34,7 +35,8 @@ except ModuleNotFoundError:  # imported as scripts.run_phase3b_stage_a_completio
         _load_demos,
         _load_proposal_bank,
         _minimum_native_horizon,
-        _persist_candidate_state,
+        persist_candidate_artifacts_transactional,
+        recover_candidate_transactions,
         _validation_limits,
     )
 from smolvla_analysis.phase3_crd import atomic_write_json
@@ -1003,6 +1005,13 @@ def main() -> None:
         selection_lock,
         expected_count=int(completion["expected_candidate_count"]),
     )
+    recovered_transactions = recover_candidate_transactions(run_dir)
+    if recovered_transactions:
+        print(
+            "recovered candidate transactions: "
+            f"{recovered_transactions}",
+            flush=True,
+        )
     selected = tuple(completion["candidate_ids"])
     smoke_indices = None
     if smoke_mode:
@@ -1304,14 +1313,11 @@ def main() -> None:
                         "strict_oracle_balance": strict,
                     },
                 )
-            _persist_candidate_state(
+            persist_candidate_artifacts_transactional(
                 run_dir,
-                candidate_id,
-                constructed.snapshot,
-                record["state_sha256"],
-            )
-            atomic_write_json(
-                run_dir / "candidates" / f"{candidate_id}.json", record
+                candidate_id=candidate_id,
+                snapshot=constructed.snapshot,
+                record=record,
             )
             completed_count += 1
             _update_manifest(

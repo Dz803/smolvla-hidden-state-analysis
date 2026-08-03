@@ -14,6 +14,40 @@ from smolvla_analysis.phase3b_stage_a import GOALS, iter_candidate_specs
 
 
 PROJECT = Path(__file__).resolve().parents[1]
+FINAL_FACTORIZED_CANDIDATE = (
+    "stagea__drawer-open__possession-grasped__locus-cabinet-side__"
+    "support-transverse-low-support__layout-a"
+)
+SUCCESSFUL_LEDGER_KIND = "successful_proposal_ledger_v1"
+FACTORIZED_PATH_KIND = "factorized_policy_free_path_v1"
+EXPECTED_SOURCE_COUNTS = {
+    "v31_open_hard_pair": 2,
+    "v32_closed": 16,
+    "v34_open_completion": 1,
+    "v35_open_completion": 7,
+    "v37_open_grasped_completion": 5,
+    "v38_factorized_promotion": 1,
+}
+EXPECTED_SOURCE_TIMESTEPS = {
+    "v31_open_hard_pair": 540,
+    "v32_closed": 540,
+    "v34_open_completion": 540,
+    "v35_open_completion": 540,
+    "v37_open_grasped_completion": 560,
+    "v38_factorized_promotion": 560,
+}
+IMPLEMENTATION_PATHS = {
+    "consolidator": PROJECT / "scripts/consolidate_phase3b_stage_a.py",
+    "consolidation": PROJECT / "src/smolvla_analysis/phase3b_consolidation.py",
+    "feasibility": PROJECT / "src/smolvla_analysis/phase3b_feasibility.py",
+    "registered_validation": (
+        PROJECT / "src/smolvla_analysis/phase3b_registered_validation.py"
+    ),
+    "completion": PROJECT / "src/smolvla_analysis/phase3b_completion.py",
+    "stage_a_lattice": PROJECT / "src/smolvla_analysis/phase3b_stage_a.py",
+    "snapshot_storage": PROJECT / "src/smolvla_analysis/phase2_storage.py",
+    "snapshot_schema": PROJECT / "src/smolvla_analysis/libero_state.py",
+}
 
 
 def _parse_args() -> argparse.Namespace:
@@ -38,7 +72,7 @@ def verify_report(report_dir: Path) -> dict:
     if not manifest_path.is_file():
         raise FileNotFoundError(f"Missing compact manifest: {manifest_path}")
     manifest = json.loads(manifest_path.read_text())
-    if manifest.get("status") != "complete":
+    if manifest.get("schema_version") != 2 or manifest.get("status") != "complete":
         raise ValueError("Stage A consolidation manifest is not complete")
     expected_artifacts = manifest.get("artifact_sha256")
     observed_files = {
@@ -51,10 +85,18 @@ def verify_report(report_dir: Path) -> dict:
     for name, expected_sha in expected_artifacts.items():
         if _file_sha256(report_dir / name) != expected_sha:
             raise ValueError(f"Compact artifact hash mismatch: {name}")
+    expected_implementation = {
+        name: _file_sha256(path) for name, path in IMPLEMENTATION_PATHS.items()
+    }
+    if manifest.get("implementation_sha256") != expected_implementation:
+        raise ValueError("Compact consolidation implementation provenance changed")
 
     summary = json.loads((report_dir / "summary.json").read_text())
     if (
-        summary.get("status") != "complete"
+        summary.get("schema_version") != 2
+        or summary.get("status") != "complete"
+        or summary.get("consolidation_revision")
+        != manifest.get("consolidation_revision")
         or summary.get("candidate_count") != 32
         or summary.get("support_pair_count") != 16
         or summary.get("policy_loaded") is not False
@@ -64,9 +106,17 @@ def verify_report(report_dir: Path) -> dict:
     validation = summary["validation"]
     if (
         validation.get("physical_geometry_pair_count") != 16
-        or validation.get("oracle_balance_all_goals_estimable_pair_count") != 14
+        or validation.get("oracle_balance_all_goals_estimable_pair_count") != 13
         or validation.get("oracle_balance_estimable_pair_count_by_goal")
+        != {"drawer": 14, "cabinet": 14}
+        or validation.get("proposal_outcome_all_goals_estimable_pair_count") != 14
+        or validation.get("proposal_outcome_estimable_pair_count_by_goal")
         != {"drawer": 14, "cabinet": 15}
+        or validation.get("feasibility_kinds_by_goal")
+        != {
+            "drawer": [SUCCESSFUL_LEDGER_KIND],
+            "cabinet": [FACTORIZED_PATH_KIND, SUCCESSFUL_LEDGER_KIND],
+        }
     ):
         raise ValueError("Compact goal-specific oracle estimability changed")
     construction = summary["validation"].get("construction_compatibility", {})
@@ -76,7 +126,10 @@ def verify_report(report_dir: Path) -> dict:
         is not False
         or construction.get("construction_revision_identical") is not False
         or construction.get("source_implementation_identical") is not False
-        or construction.get("observed_root_final_timestep") != 540
+        or construction.get("observed_root_final_timesteps") != [540, 560]
+        or construction.get("root_final_timestep_identical") is not False
+        or construction.get("source_expected_root_final_timesteps")
+        != EXPECTED_SOURCE_TIMESTEPS
         or construction.get("observed_roots_precede_oracle_horizons") is not True
     ):
         raise ValueError("Compact source-revision boundary is missing or incorrect")
@@ -99,6 +152,13 @@ def verify_report(report_dir: Path) -> dict:
         or boundary.get("require_all_physical_pair_geometry_gates") is not True
         or boundary.get("require_goal_specific_oracle_comparability_labels")
         is not True
+        or boundary.get("proposal_compatibility_is_not_physical_feasibility")
+        is not True
+        or boundary.get(
+            "adaptive_factorized_certificate_precludes_population_inference"
+        )
+        is not True
+        or boundary.get("factorized_controller_certificate_count") != 1
     ):
         raise ValueError("Compact scientific boundary is missing or incorrect")
 
@@ -114,8 +174,19 @@ def verify_report(report_dir: Path) -> dict:
         raise ValueError("Compact candidate inventory has an invalid state hash")
     if candidates["state_sha256"].nunique() != 32:
         raise ValueError("Compact candidate inventory contains duplicate states")
-    if set(candidates["root_final_timestep"]) != {540}:
+    if set(candidates["root_final_timestep"]) != {540, 560}:
         raise ValueError("Compact candidate inventory has an invalid root timestep")
+    observed_source_counts = candidates.groupby("source_id").size().to_dict()
+    if observed_source_counts != EXPECTED_SOURCE_COUNTS:
+        raise ValueError("Compact candidate/source counts changed")
+    for source_id, timestep in EXPECTED_SOURCE_TIMESTEPS.items():
+        observed = set(
+            candidates.loc[
+                candidates["source_id"] == source_id, "root_final_timestep"
+            ]
+        )
+        if observed != {timestep}:
+            raise ValueError(f"Compact source root timestep changed: {source_id}")
 
     source_inventory = json.loads(
         (report_dir / "source_inventory.json").read_text()
@@ -160,13 +231,21 @@ def verify_report(report_dir: Path) -> dict:
             raise ValueError(f"Drawer proposal identities changed for {candidate_id}")
         if proposal_indices[(candidate_id, "cabinet")] != list(range(46)):
             raise ValueError(f"Cabinet proposal identities changed for {candidate_id}")
-    selected_counts = proposals.groupby(["candidate_id", "goal"])[
-        "selected"
-    ].sum()
-    if not (selected_counts == 1).all():
-        raise ValueError("A compact proposal ledger has no unique selection")
-    if not proposals.groupby(["candidate_id", "goal"])["pass"].any().all():
-        raise ValueError("A compact candidate-goal cell has no feasible proposal")
+    cell_index = ["candidate_id", "goal"]
+    selected_counts = proposals.groupby(cell_index)["selected"].sum()
+    success_counts = proposals.groupby(cell_index)["pass"].sum()
+    zero_success_cells = {
+        (str(candidate_id), str(goal))
+        for candidate_id, goal in success_counts[success_counts == 0].index
+    }
+    expected_zero_cell = {(FINAL_FACTORIZED_CANDIDATE, "cabinet")}
+    if zero_success_cells != expected_zero_cell:
+        raise ValueError("Compact zero-success proposal cell changed")
+    if int(selected_counts.loc[(FINAL_FACTORIZED_CANDIDATE, "cabinet")]) != 0:
+        raise ValueError("Exhaustive negative cabinet ledger has a selection")
+    positive_cells = success_counts[success_counts > 0].index
+    if not (selected_counts.loc[positive_cells] == 1).all():
+        raise ValueError("A positive compact proposal ledger lacks one selection")
     if not proposals.loc[proposals["selected"], "pass"].all():
         raise ValueError("A compact proposal ledger selects an infeasible proposal")
     if proposals["action_sha256"].str.len().ne(64).any():
@@ -189,6 +268,60 @@ def verify_report(report_dir: Path) -> dict:
                 raise ValueError(
                     f"Compact {goal} execution mode changed for {candidate_id}"
                 )
+
+    final_cabinet = proposals[
+        (proposals["candidate_id"] == FINAL_FACTORIZED_CANDIDATE)
+        & (proposals["goal"] == "cabinet")
+    ]
+    if (
+        len(final_cabinet) != 46
+        or int(final_cabinet["pass"].sum()) != 0
+        or int(final_cabinet["selected"].sum()) != 0
+        or int(final_cabinet["wrong_goal_ever_achieved"].sum()) != 0
+        or int(final_cabinet["unexpected_done_before_goal"].sum()) != 0
+        or not final_cabinet["action_phase_bridge_pass"].all()
+    ):
+        raise ValueError("Final exhaustive negative cabinet ledger changed")
+
+    feasibility = pd.read_csv(report_dir / "goal_feasibility_evidence.csv")
+    if (
+        len(feasibility) != 64
+        or set(feasibility["candidate_id"]) != expected_ids
+        or set(feasibility["goal"]) != set(GOALS)
+        or not feasibility["pass"].all()
+        or feasibility["policy_loaded"].any()
+        or feasibility.groupby(cell_index).size().ne(1).any()
+    ):
+        raise ValueError("Compact physical-feasibility inventory changed")
+    factorized = feasibility[
+        feasibility["feasibility_kind"] == FACTORIZED_PATH_KIND
+    ]
+    successful = feasibility[
+        feasibility["feasibility_kind"] == SUCCESSFUL_LEDGER_KIND
+    ]
+    if (
+        len(factorized) != 1
+        or len(successful) != 63
+        or factorized.iloc[0]["candidate_id"] != FINAL_FACTORIZED_CANDIDATE
+        or factorized.iloc[0]["goal"] != "cabinet"
+        or int(factorized.iloc[0]["proposal_success_count"]) != 0
+        or int(factorized.iloc[0]["factorized_placement_action_count"]) != 204
+        or factorized.iloc[0]["factorized_result_file_sha256"]
+        != "f8283663b953e97ac62afef0c6685c6c4e1a1b373b83a45845dc6ef29614c26c"
+        or successful["proposal_success_count"].le(0).any()
+    ):
+        raise ValueError("Compact feasibility evidence classes changed")
+    expected_feasibility_summary = {
+        ("cabinet", FACTORIZED_PATH_KIND, 1),
+        ("cabinet", SUCCESSFUL_LEDGER_KIND, 31),
+        ("drawer", SUCCESSFUL_LEDGER_KIND, 32),
+    }
+    observed_feasibility_summary = {
+        (row["goal"], row["feasibility_kind"], int(row["candidate_count"]))
+        for row in summary.get("physical_feasibility_summary_by_kind", [])
+    }
+    if observed_feasibility_summary != expected_feasibility_summary:
+        raise ValueError("Compact feasibility summary changed")
 
     counterfactuals = pd.read_csv(
         report_dir / "oracle_execution_counterfactuals.csv"
@@ -245,17 +378,60 @@ def verify_report(report_dir: Path) -> dict:
         ):
             raise ValueError(f"Compact support-pair provenance changed: {pair_id}")
         for goal in GOALS:
-            estimable = bool(row[f"{goal}_oracle_balance_estimable"])
+            proposal_estimable = bool(
+                row[f"{goal}_proposal_outcome_estimable"]
+            )
+            selected_cost_estimable = bool(
+                row[f"{goal}_oracle_balance_estimable"]
+            )
             same_bank = bool(row[f"{goal}_same_proposal_bank"])
             same_execution = bool(row[f"{goal}_same_execution_contract"])
-            if estimable != (same_bank and same_execution):
+            if proposal_estimable != (same_bank and same_execution):
                 raise ValueError(
-                    f"Compact {goal} pair estimability changed: {pair_id}"
+                    f"Compact {goal} proposal estimability changed: {pair_id}"
                 )
-    if int(pairs["same_source"].sum()) != 15:
+            has_both_selections = (
+                int(selected_counts.loc[(near_spec.candidate_id, goal)]) == 1
+                and int(selected_counts.loc[(low_spec.candidate_id, goal)]) == 1
+            )
+            if selected_cost_estimable != (
+                proposal_estimable and has_both_selections
+            ):
+                raise ValueError(
+                    f"Compact {goal} selected-cost estimability changed: {pair_id}"
+                )
+    if int(pairs["same_source"].sum()) != 14:
         raise ValueError("Compact cross-source support-pair count changed")
-    if int(pairs["oracle_balance_all_goals_estimable"].sum()) != 14:
-        raise ValueError("Compact all-goal oracle estimability count changed")
+    if int(pairs["proposal_outcome_all_goals_estimable"].sum()) != 14:
+        raise ValueError("Compact all-goal proposal estimability count changed")
+    if int(pairs["oracle_balance_all_goals_estimable"].sum()) != 13:
+        raise ValueError("Compact all-goal selected-cost estimability changed")
+
+    final_spec = next(
+        spec
+        for spec in iter_candidate_specs()
+        if spec.candidate_id == FINAL_FACTORIZED_CANDIDATE
+    )
+    final_pair = pairs[pairs["support_pair_id"] == final_spec.support_pair_id]
+    if len(final_pair) != 1:
+        raise ValueError("Final matched support pair is missing")
+    final_pair_row = final_pair.iloc[0]
+    unavailable_cost_fields = [
+        "cabinet_matched_cost_proposal_index",
+        "cabinet_budgeted_cost_mismatch",
+        "cabinet_executed_step_mismatch",
+        "cabinet_active_step_mismatch",
+        "cabinet_eef_path_mismatch",
+        "cabinet_motion_effort_mismatch",
+    ]
+    if (
+        bool(final_pair_row["cabinet_proposal_outcome_estimable"]) is not True
+        or bool(final_pair_row["cabinet_oracle_balance_estimable"]) is not False
+        or int(final_pair_row["cabinet_shared_success_count"]) != 0
+        or float(final_pair_row["cabinet_success_set_jaccard"]) != 0.0
+        or not all(pd.isna(final_pair_row[field]) for field in unavailable_cost_fields)
+    ):
+        raise ValueError("Final cabinet competence-compatibility pair changed")
     return {
         "pass": True,
         "consolidation_revision": manifest["consolidation_revision"],
@@ -263,6 +439,8 @@ def verify_report(report_dir: Path) -> dict:
         "candidate_count": len(candidates),
         "support_pair_count": len(pairs),
         "proposal_row_count": len(proposals),
+        "physical_goal_cell_count": len(feasibility),
+        "factorized_certificate_count": len(factorized),
         "source_count": len(source_inventory),
         "execution_modes_by_goal": summary["validation"][
             "execution_modes_by_goal"

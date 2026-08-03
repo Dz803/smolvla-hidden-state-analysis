@@ -6,7 +6,7 @@ Determine whether the mid-trajectory SmolVLA hidden-state failure signal general
 
 ## Current Phase
 
-Phase 3 complete; occupancy-balanced Phase 3b is the next scientific gate
+Phase 3b Stage A complete; the bounded Stage B policy pilot is the next approval-gated scientific phase
 
 ## Completed foundation
 
@@ -66,12 +66,13 @@ Phase 3 complete; occupancy-balanced Phase 3b is the next scientific gate
 ### Phase 3b: Occupancy-balanced recoverability gate
 
 - [x] Predeclare the staged occupancy-balanced design, branch ceilings, information gate, cross-model handoff, and stop rules in `docs/phase3b_methodology.md`.
-- [ ] Build a policy-independent affordance lattice spanning drawer opening, bowl grasp/release and pose, end-effector pose, and both goals; certify each state with a policy-independent feasible continuation.
-- [ ] Balance physical subgoal distance and on-/off-policy occupancy so source-task progress cannot masquerade as language grounding or trajectory memory.
+- [x] Build a policy-independent affordance lattice spanning drawer opening, bowl grasp/release and pose, end-effector pose, and both goals; certify each state with a policy-independent feasible continuation.
+- [x] Lock matched physical-support strata, certify all 16 support pairs, and retain source revision, root timestep, execution mode, and certificate class as explicit provenance/non-estimands.
+- [ ] Measure model-specific occupancy and run the bounded Stage B policy matrix so source-task progress cannot masquerade as language grounding or trajectory memory.
 - [ ] Re-estimate the veto–composition gap, `V`, `Q`, and `L` on held-out state families with source-episode/state-family grouping.
 - [ ] Test directional hidden features rather than only norms/dispersion, with fold-local dimension reduction and a predeclared information gate.
 - [ ] Decide whether any representation justifies Phase 4 patching and whether the shared environment interface is ready for π0.5/GR00T.
-- **Status:** Stage A has 26 promoted roots: 16 closed roots from v32, the two-state v31 open hard pair, one v34 open root, and seven v35 roots. The frozen construction gate passes the six untouched grasped roots at timestep 560. v36 then stopped before its first proposal result because it incorrectly required the post-set-down normalized bowl to equal the nominal layout landmark. v37 keeps construction and all physical thresholds fixed, binds each nominal proposal anchor to the measured normalized bowl within the existing 20 mm certificate, and records that transform per attempt. The first incomplete action is the predeclared two-attempt same-run smoke (drawer episode 694, cabinet episode 474), followed—only if it passes—by resuming the same six-root/492-attempt ledger, 32-root consolidation, and reconstruction/accounting audit. Cross-aperture/source-revision, root-timestep, and cross-oracle-mode effects remain non-estimable; Stages B/C are separate simulation-scope decisions.
+- **Status:** Stage A is complete. Provenance-safe promotion `phase3b_stage_a_promotion_v38_20260803T045149Z` adds the 32nd exact root without a policy forward, completed suffix rerun, new proposal suffix, or factorized-branch rerun. Consolidation `reports/phase3b_stage_a/phase3b-stage-a-consolidated-v4/` independently verifies 32 distinct states, 16/16 physical pairs, 64/64 physical state-goal cells, and all 2,624 immutable proposal attempts. The final cabinet cell remains `0/46` for registered proposals and is separately certified by one adaptive factorized path; compact analysis `competence_compatibility_gap_v1` formalizes `F_C=1, P_K=0`. This is an existence result, not SmolVLA competence, a hidden-state mechanism, or a population rate. Cross-aperture/source-revision, root-timestep, execution-mode, and certificate-mode effects remain non-estimable. Stage B/C and pi0.5/GR00T downloads remain separate compute/scope decisions.
 
 ### Phase 4: Matched causal intervention gate
 
@@ -104,11 +105,11 @@ The project may claim a causal, grounded hidden-state mechanism only if a locali
 
 ## Resume checkpoint
 
-Phase 3 is complete. The first incomplete phase is the occupancy-balanced Phase 3b gate; do not launch it, Phase 4 patching, or cross-policy downloads as an automatic continuation. Do not rerun the completed benchmark, paired perturbation rollouts, corrected Phase 2 fixed-forward queries, or the completed Phase 3 branch matrix. The canonical benchmark is:
+Phase 3b Stage A is complete. The first incomplete phase is the bounded Stage B SmolVLA policy pilot; do not launch it, Stage C, Phase 4 patching, or cross-policy downloads as an automatic continuation. Do not rerun any completed Stage A candidate/proposal checkpoint, the benchmark, paired perturbation rollouts, corrected Phase 2 fixed-forward queries, or the completed Phase 3 branch matrix. The canonical benchmark is:
 
 `archive/full_experiment/runs/benchmark_400_20260723T021424Z_e0638bea`
 
-Use `reports/offline_robustness_gate/`, `reports/trajectory_confound_audit/`, `reports/phase2_forward_gate/phase2_forward_gate_20260727T123138Z/`, `reports/phase2_state_gate/`, `reports/trajectory_memorization_audit/`, and `reports/phase3_crd/phase3_crd_20260728T021125Z/` as completed derived evidence. The Phase 3 review and occupancy-balanced successor design are in `docs/phase3_engineering_review.md`. Raw Phase 3 evidence remains workstation-only under `local/phase3_crd/phase3_crd_20260728T021125Z/`.
+Use `reports/offline_robustness_gate/`, `reports/trajectory_confound_audit/`, `reports/phase2_forward_gate/phase2_forward_gate_20260727T123138Z/`, `reports/phase2_state_gate/`, `reports/trajectory_memorization_audit/`, `reports/phase3_crd/phase3_crd_20260728T021125Z/`, `reports/phase3b_stage_a/phase3b-stage-a-consolidated-v4/`, and `reports/phase3b_stage_a/competence_compatibility_gap_v1/` as completed derived evidence. The Stage A result and cross-model successor methodology are in `docs/competence_compatibility_methodology.md`. Raw evidence remains workstation-only under ignored `local/` paths.
 
 ## Errors to remember
 

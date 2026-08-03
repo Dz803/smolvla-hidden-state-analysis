@@ -1,5 +1,5 @@
 schema_version: 1
-consolidation_revision: phase3b-stage-a-consolidated-v2
+consolidation_revision: phase3b-stage-a-consolidated-v4
 
 scientific_boundary:
   physical_state_lattice_may_span_oracle_contracts: true
@@ -12,6 +12,9 @@ scientific_boundary:
   cross_source_generation_revision_effects_estimable: false
   drawer_aperture_source_revision_alias: true
   root_timestep_generation_batch_alias: true
+  proposal_compatibility_is_not_physical_feasibility: true
+  adaptive_factorized_certificate_precludes_population_inference: true
+  factorized_controller_certificate_count: 1
   rationale: >-
     Previously completed candidates are immutable and must not be rerun. Candidate
     IDs, demonstrations, environment context apart from horizon, support,
@@ -20,11 +23,13 @@ scientific_boundary:
     config hashes, revision labels, source-file hashes, the later oracle horizon, and
     the proposal adapter and root timestep differ. Exact observed states and physical
     support-pair
-    geometry may be consolidated. One pair crosses source contracts and one pair
-    contains a reused legacy drawer ledger, so oracle balance is reported per goal
-    only where proposal and execution contracts match. Proposal coverage remains
-    stratified by execution mode, and cross-aperture effects cannot be separated
-    from source revision.
+    geometry may be consolidated. Two pairs cross source-run boundaries. The final
+    root preserves an exhaustive registered cabinet bank at 0/46 while a separate
+    factorized controller certificate establishes physical feasibility; proposal
+    outcomes and physical feasibility are therefore reported as different evidence
+    classes. Oracle cost balance is reported per goal only when both sides have a
+    selected successful proposal. Proposal coverage remains stratified by execution
+    mode, and cross-aperture effects cannot be separated from source revision.
 
 sources:
   - source_id: v32_closed
@@ -58,9 +63,19 @@ sources:
         - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-b
         - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-a
         - stagea__drawer-open__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-b
+  - source_id: v37_open_grasped_completion
+    run_dir: local/phase3b_stage_a/phase3b_stage_a_completion_v37_20260803T101257Z
+    expected_root_final_timestep: 560
+    selection:
+      candidate_ids:
         - stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-a
         - stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-b
         - stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-a
         - stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-b
         - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-a
+  - source_id: v38_factorized_promotion
+    run_dir: local/phase3b_stage_a/phase3b_stage_a_promotion_v38_20260803T045149Z
+    expected_root_final_timestep: 560
+    selection:
+      candidate_ids:
         - stagea__drawer-open__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-a

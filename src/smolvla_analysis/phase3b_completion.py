@@ -139,8 +139,18 @@ def oracle_pair_comparability(
         same_execution = near_oracle.get(
             "proposal_execution_contract_sha256"
         ) == low_oracle.get("proposal_execution_contract_sha256")
+        proposal_outcome_estimable = bool(same_bank and same_execution)
+        selected_oracle_balance_estimable = bool(
+            proposal_outcome_estimable
+            and near_oracle.get("pass", True) is True
+            and low_oracle.get("pass", True) is True
+        )
         by_goal[goal] = {
-            "estimable": bool(same_bank and same_execution),
+            "estimable": selected_oracle_balance_estimable,
+            "proposal_outcome_estimable": proposal_outcome_estimable,
+            "selected_oracle_balance_estimable": (
+                selected_oracle_balance_estimable
+            ),
             "same_proposal_bank": bool(same_bank),
             "same_execution_contract": bool(same_execution),
             "near_execution_mode": near_oracle.get("proposal_execution_mode"),
@@ -149,4 +159,7 @@ def oracle_pair_comparability(
     return {
         "by_goal": by_goal,
         "all_goals_estimable": all(item["estimable"] for item in by_goal.values()),
+        "all_goal_proposal_outcomes_estimable": all(
+            item["proposal_outcome_estimable"] for item in by_goal.values()
+        ),
     }

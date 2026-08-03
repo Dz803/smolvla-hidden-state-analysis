@@ -525,7 +525,11 @@ def symmetric_relative_difference(first: float, second: float) -> float:
 
 
 def validate_oracle_proposal_ledger(
-    oracle: dict[str, Any], *, candidate_id: str, goal: str
+    oracle: dict[str, Any],
+    *,
+    candidate_id: str,
+    goal: str,
+    allow_exhaustive_failure: bool = False,
 ) -> dict[str, Any]:
     proposal_bank = oracle.get("proposal_bank")
     attempts = oracle.get("proposal_attempts")
@@ -646,12 +650,10 @@ def validate_oracle_proposal_ledger(
     successful_indices = [
         index for index, attempt in enumerate(attempts) if attempt["pass"]
     ]
-    if not successful_indices:
+    if not successful_indices and not allow_exhaustive_failure:
         raise ValueError(f"No successful {goal} proposal for {candidate_id}")
     if (
-        not isinstance(selected_index, int)
-        or selected_index not in successful_indices
-        or oracle.get("successful_proposal_indices") != successful_indices
+        oracle.get("successful_proposal_indices") != successful_indices
         or int(oracle.get("proposal_attempt_count", -1)) != len(attempts)
         or int(oracle.get("proposal_success_count", -1))
         != len(successful_indices)
@@ -665,28 +667,51 @@ def validate_oracle_proposal_ledger(
         != "minimum_executed_steps_then_path_effort_index"
     ):
         raise ValueError(f"Invalid {goal} proposal selection for {candidate_id}")
-    expected_selected_index = min(
-        successful_indices,
-        key=lambda index: (
-            int(attempts[index]["cost"]["executed_action_steps"]),
-            float(attempts[index]["cost"]["eef_path_length_m"]),
-            float(attempts[index]["cost"]["motion_control_effort"]),
-            int(index),
-        ),
-    )
-    selected_attempt = attempts[selected_index]
-    selected_proposal = proposal_bank[selected_index]
-    if (
-        selected_index != expected_selected_index
-        or oracle.get("demo_episode_index")
-        != selected_proposal["episode_index"]
-        or oracle.get("demo_task_index") != selected_proposal["task_index"]
-        or oracle.get("demo_action_sha256")
-        != selected_proposal["action_sha256"]
-        or oracle.get("cost") != selected_attempt.get("cost")
+    if successful_indices:
+        expected_selected_index = min(
+            successful_indices,
+            key=lambda index: (
+                int(attempts[index]["cost"]["executed_action_steps"]),
+                float(attempts[index]["cost"]["eef_path_length_m"]),
+                float(attempts[index]["cost"]["motion_control_effort"]),
+                int(index),
+            ),
+        )
+        if (
+            not isinstance(selected_index, int)
+            or selected_index not in successful_indices
+        ):
+            raise ValueError(
+                f"Invalid {goal} selected proposal for {candidate_id}"
+            )
+        selected_attempt = attempts[selected_index]
+        selected_proposal = proposal_bank[selected_index]
+        if (
+            selected_index != expected_selected_index
+            or oracle.get("demo_episode_index")
+            != selected_proposal["episode_index"]
+            or oracle.get("demo_task_index") != selected_proposal["task_index"]
+            or oracle.get("demo_action_sha256")
+            != selected_proposal["action_sha256"]
+            or oracle.get("cost") != selected_attempt.get("cost")
+            or oracle.get("pass") is not True
+            or oracle.get("goal_ever_achieved") is not True
+        ):
+            raise ValueError(
+                f"Selected {goal} proposal payload mismatch for {candidate_id}"
+            )
+    elif (
+        selected_index is not None
+        or oracle.get("demo_episode_index") is not None
+        or oracle.get("demo_task_index") is not None
+        or oracle.get("demo_action_sha256") is not None
+        or oracle.get("cost") is not None
+        or oracle.get("pass") is not False
+        or oracle.get("goal_ever_achieved") is not False
+        or oracle.get("proposal_coverage_status") != "exhaustive_failure"
     ):
         raise ValueError(
-            f"Selected {goal} proposal payload mismatch for {candidate_id}"
+            f"Invalid exhaustive-negative {goal} ledger for {candidate_id}"
         )
     actual_search_steps = int(oracle.get("shared_normalization_action_steps", -1))
     actual_search_steps += sum(
@@ -735,6 +760,7 @@ def validate_oracle_proposal_ledger(
     return {
         "successful_indices": successful_indices,
         "selected_index": selected_index,
+        "exhaustive_failure": not successful_indices,
         "attempts": attempts,
         "execution_mode": execution_mode,
         "execution_contract_sha256": execution_contract_sha256,

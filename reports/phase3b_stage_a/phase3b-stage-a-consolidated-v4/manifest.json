@@ -1,0 +1,32 @@
+{
+  "artifact_sha256": {
+    "README.md": "74d5e2a25a3d2c528087a069f4e87ad993b856a7f5efcf3582dd0048d2ee44e7",
+    "candidate_inventory.csv": "83d5e73bebc04601ac60db6f5adac7c57db678d59a946242c97c56b21dc21cbf",
+    "goal_feasibility_evidence.csv": "3835e856a6ace4e0f7d99de4cfcf29a97659b1b92cc10034bb15c01c0b55dccd",
+    "oracle_execution_counterfactuals.csv": "0bfb1d6b0a67c816744dfaf1f8a4ae480b0a7a03081bf26165a2e81ed27c9bf8",
+    "proposal_coverage.csv": "388b9ac54a305db742f429aa8e2bb7d4fd466b0607f1b18c1181d53e5c989de5",
+    "source_inventory.json": "20e77a90a7e3a7861a6eb2d1f1d0d422a9a49514ae4ac7a2e00691a41cded9a3",
+    "summary.json": "abca2a02bb44760a6aa09e67cd2d5492bf9cabab935dc5f13a82c96a25e0e65f",
+    "support_pairs.csv": "5fb9e989ab35566faa4cec3c8d14ae1951d4a54cbc513708833c73fc08c3e2d1"
+  },
+  "candidate_inventory_sha256": "99159d1da9768476c1f677fe994484356773270bfee967ef3d4afe64d1665440",
+  "config_path": "configs/phase3b_stage_a_consolidation.yaml",
+  "config_sha256": "63f0753d6da866de2b4f5d87c6d802e71c47877de28ab6fb43eef89bcf810aba",
+  "consolidation_revision": "phase3b-stage-a-consolidated-v4",
+  "created_at": "2026-08-03T06:15:17.264560+00:00",
+  "goal_feasibility_evidence_sha256": "a46d8705abe5f62810ad7a2861f0f67e291941803671c4c734ee3d28b1f9c6a9",
+  "implementation_sha256": {
+    "completion": "be01073c990f1b84e9957b9c8438e1d8689a0efca3047d66cc6f4870ab8f895d",
+    "consolidation": "e6c8c24f51d363e84a422ef2dd8add42c3485bdd9ce8170942367c6e1df23d75",
+    "consolidator": "bf31fb340f88f70070dfcbb3f6f1059f4de22c3ce2c209ea26953d6adff82379",
+    "feasibility": "7d3cc46f53370a133396cc724aa90d2361770cd4a55e2370c252dcc70b0a11e6",
+    "registered_validation": "7fdaca27c4794a946e0442d1ae60cc73192cc922bd158d9849ef2fafb0003865",
+    "snapshot_schema": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+    "snapshot_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+    "stage_a_lattice": "1cca6a7adc0c8a780c667fec2fb45ed01a51cf1097f867cb4e23ff2cca3e2f4d"
+  },
+  "oracle_execution_counterfactuals_sha256": "10bc5f551c47e467284c90ed077e35bc298c2493ea504f20f2af3a591cbc0cd6",
+  "proposal_coverage_sha256": "be09554b94161192a1eb6fd35ab9405247e1c6d6549bb29a513ca264010489eb",
+  "schema_version": 2,
+  "status": "complete"
+}

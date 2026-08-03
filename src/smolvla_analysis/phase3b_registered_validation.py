@@ -309,14 +309,19 @@ def validate_support_pair_records_compatible(
 
 
 def validate_oracle_proposal_ledger_compatible(
-    oracle: dict[str, Any], *, candidate_id: str, goal: str
+    oracle: dict[str, Any],
+    *,
+    candidate_id: str,
+    goal: str,
+    allow_exhaustive_failure: bool = False,
 ) -> dict[str, Any]:
     """Validate legacy or registered ledgers through one fail-closed entry point."""
 
     if oracle.get("proposal_execution_mode") != REGISTERED_EXECUTION_MODE:
-        return validate_oracle_proposal_ledger(
-            oracle, candidate_id=candidate_id, goal=goal
-        )
+        kwargs = {"candidate_id": candidate_id, "goal": goal}
+        if allow_exhaustive_failure:
+            kwargs["allow_exhaustive_failure"] = True
+        return validate_oracle_proposal_ledger(oracle, **kwargs)
     registered = validate_registered_oracle_execution(
         oracle, candidate_id=candidate_id, goal=goal
     )
@@ -324,9 +329,10 @@ def validate_oracle_proposal_ledger_compatible(
     adapted["proposal_execution_mode"] = LEGACY_ACTION_PHASE_MODE
     for attempt in adapted["proposal_attempts"]:
         attempt["proposal_execution_mode"] = LEGACY_ACTION_PHASE_MODE
-    result = validate_oracle_proposal_ledger(
-        adapted, candidate_id=candidate_id, goal=goal
-    )
+    kwargs = {"candidate_id": candidate_id, "goal": goal}
+    if allow_exhaustive_failure:
+        kwargs["allow_exhaustive_failure"] = True
+    result = validate_oracle_proposal_ledger(adapted, **kwargs)
     result["execution_mode"] = REGISTERED_EXECUTION_MODE
     result["registered_execution_validation"] = registered
     return result

@@ -2,9 +2,13 @@ from __future__ import annotations
 
 from copy import deepcopy
 
+import pandas as pd
 import pytest
 
-from scripts.consolidate_phase3b_stage_a import _oracle_counterfactual_rows
+from scripts.consolidate_phase3b_stage_a import (
+    _json_safe_records,
+    _oracle_counterfactual_rows,
+)
 from smolvla_analysis.phase3b_consolidation import (
     LEGACY_EXECUTION_CONTRACT,
     LEGACY_EXECUTION_MODE,
@@ -199,3 +203,10 @@ def test_oracle_counterfactual_preserves_both_execution_ledgers() -> None:
             "source_checkpoint_file_sha256": "b" * 64,
         }
     ]
+
+
+def test_json_safe_records_maps_tabular_nan_to_null() -> None:
+    records = _json_safe_records(
+        pd.DataFrame([{"selected": None, "count": 0, "fraction": 0.0}])
+    )
+    assert records == [{"selected": None, "count": 0, "fraction": 0.0}]

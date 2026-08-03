@@ -17,6 +17,10 @@ import zarr
 
 from smolvla_analysis.phase2_storage import read_libero_snapshot, write_libero_snapshot
 from smolvla_analysis.phase3_crd import atomic_write_json
+from smolvla_analysis.phase3b_persistence import (
+    persist_candidate_artifacts_transactional,
+    recover_candidate_transactions,
+)
 from smolvla_analysis.phase3b_libero import (
     action_phase_suffix,
     build_action_phase_proposal_bank,
@@ -673,6 +677,7 @@ def _candidate_paths(run_dir: Path, candidate_id: str) -> tuple[Path, Path]:
 
 
 def _validate_run_inventory(run_dir: Path) -> None:
+    recover_candidate_transactions(run_dir)
     expected = {spec.candidate_id for spec in iter_candidate_specs()}
     candidate_dir = run_dir / "candidates"
     observed_records = {
@@ -1836,14 +1841,11 @@ def main() -> None:
                     f"support_delta={pair_metrics['support_distance_difference']:.6f}",
                     flush=True,
                 )
-            _persist_candidate_state(
+            persist_candidate_artifacts_transactional(
                 run_dir,
-                spec.candidate_id,
-                constructed.snapshot,
-                record["state_sha256"],
-            )
-            atomic_write_json(
-                run_dir / "candidates" / f"{spec.candidate_id}.json", record
+                candidate_id=spec.candidate_id,
+                snapshot=constructed.snapshot,
+                record=record,
             )
             completed_count += 1
             _update_manifest(

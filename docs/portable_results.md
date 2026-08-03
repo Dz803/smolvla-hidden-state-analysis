@@ -30,13 +30,22 @@ Always compare `git rev-parse HEAD` with the commit hash reported at handoff. Ac
 - source code and tests;
 - active planning and resume records;
 - experiment methodology and engineering reviews;
-- compact Markdown, CSV, and JSON reports for the completed offline, Phase 2, and Phase 3 gates; and
+- compact Markdown, CSV, and JSON reports for the completed offline, Phase 2,
+  Phase 3, and Phase 3b Stage A gates; and
 - scripts needed to regenerate compact analyses when the local evidence is available.
 
 The current canonical compact Phase 3 report is:
 
 ```text
 reports/phase3_crd/phase3_crd_20260728T021125Z/
+```
+
+The canonical compact Stage A physical lattice and its competence–compatibility
+analysis are:
+
+```text
+reports/phase3b_stage_a/phase3b-stage-a-consolidated-v4/
+reports/phase3b_stage_a/competence_compatibility_gap_v1/
 ```
 
 ## What remains workstation-only

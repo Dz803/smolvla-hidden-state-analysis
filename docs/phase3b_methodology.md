@@ -69,6 +69,24 @@ Every imported or additive record must validate the original state payload, root
 
 That prospective gate passed on the two transverse-low-support layout replicates using the frozen episode-474 proposal. This authorizes an additive completion shard under the same registration contract; it does not authorize pooling registered and legacy proposal-basin rates. The two smoke attempts are part of the completion evidence and must be imported, not executed again.
 
+### Stage A final result
+
+The consolidated v4 lattice passes all 16 physical support-pair gates and all 64
+state-goal feasibility gates. Sixty-three cells use a successful proposal-ledger
+certificate. The final open/grasped/cabinet-side/transverse/layout-A cabinet cell
+retains a complete registered `0/46` ledger and instead uses a separate factorized
+policy-free path certificate with 204 placement actions. Its matched near-support
+cell is `1/46` under the same bank and execution contract. This establishes a
+physical-recoverability/proposal-compatibility gap, not a successful replay and not
+a SmolVLA capability result.
+
+Because the factorized route was developed after observing the failed bank, its
+scientific status is an adaptive single-cell existence certificate. Population
+claims require a frozen controller class tested on untouched roots. The formal
+estimands, cross-model decomposition, self-knowledge test, and literature boundary
+are specified in
+[`competence_compatibility_methodology.md`](competence_compatibility_methodology.md).
+
 ## Stage B: bounded SmolVLA manipulation pilot
 
 Select 16 locked states, one from every affordance-family/support cell, with scene layouts balanced across the design. For each exact state evaluate:

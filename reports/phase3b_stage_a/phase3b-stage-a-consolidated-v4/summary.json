@@ -1,0 +1,382 @@
+{
+  "candidate_count": 32,
+  "consolidation_revision": "phase3b-stage-a-consolidated-v4",
+  "coverage_summary_stratified_by_execution_mode": [
+    {
+      "attempt_count": 598,
+      "candidate_count": 13,
+      "execution_mode": "action_intrinsic_pregrasp_bowl_registered_v1",
+      "goal": "cabinet",
+      "mean_candidate_success_fraction": 0.046822742474916385,
+      "success_count": 28
+    },
+    {
+      "attempt_count": 46,
+      "candidate_count": 1,
+      "execution_mode": "action_intrinsic_pregrasp_phase_continuation_v2",
+      "goal": "cabinet",
+      "mean_candidate_success_fraction": 0.021739130434782608,
+      "success_count": 1
+    },
+    {
+      "attempt_count": 828,
+      "candidate_count": 18,
+      "execution_mode": "full_trajectory_replay",
+      "goal": "cabinet",
+      "mean_candidate_success_fraction": 0.5531400966183576,
+      "success_count": 458
+    },
+    {
+      "attempt_count": 432,
+      "candidate_count": 12,
+      "execution_mode": "action_intrinsic_pregrasp_bowl_registered_v1",
+      "goal": "drawer",
+      "mean_candidate_success_fraction": 0.2638888888888889,
+      "success_count": 114
+    },
+    {
+      "attempt_count": 72,
+      "candidate_count": 2,
+      "execution_mode": "action_intrinsic_pregrasp_phase_continuation_v2",
+      "goal": "drawer",
+      "mean_candidate_success_fraction": 0.3888888888888889,
+      "success_count": 28
+    },
+    {
+      "attempt_count": 648,
+      "candidate_count": 18,
+      "execution_mode": "full_trajectory_replay",
+      "goal": "drawer",
+      "mean_candidate_success_fraction": 0.4861111111111112,
+      "success_count": 315
+    }
+  ],
+  "interpretation": "The exact observed 32-state lattice passes all 16 physical geometry gates and all 64 candidate-goal feasibility gates. Sixty-three goal cells are certified by a successful proposal ledger; the final cabinet cell instead preserves registered proposal compatibility at 0/46 and uses one separate factorized policy-free path certificate. That cell establishes a competence-compatibility gap, not a successful replay. Proposal outcomes are compared only when bank and execution contracts match; selected-path costs additionally require a successful selection on both sides. Execution modes are not pooled. Historical construction configurations were not fully contract-bound, and aperture remains aliased with source revision. The one adaptively developed factorized certificate supports an existence claim only, not a population rate.",
+  "oracle_execution_counterfactual_count": 1,
+  "physical_feasibility_summary_by_kind": [
+    {
+      "candidate_count": 1,
+      "feasibility_kind": "factorized_policy_free_path_v1",
+      "goal": "cabinet"
+    },
+    {
+      "candidate_count": 31,
+      "feasibility_kind": "successful_proposal_ledger_v1",
+      "goal": "cabinet"
+    },
+    {
+      "candidate_count": 32,
+      "feasibility_kind": "successful_proposal_ledger_v1",
+      "goal": "drawer"
+    }
+  ],
+  "policy_loaded": false,
+  "schema_version": 2,
+  "scientific_boundary": {
+    "adaptive_factorized_certificate_precludes_population_inference": true,
+    "cross_execution_mode_factor_effects_estimable": false,
+    "cross_source_generation_revision_effects_estimable": false,
+    "drawer_aperture_source_revision_alias": true,
+    "factorized_controller_certificate_count": 1,
+    "historical_construction_parameters_cryptographically_bound": false,
+    "physical_state_lattice_may_span_oracle_contracts": true,
+    "proposal_compatibility_is_not_physical_feasibility": true,
+    "rationale": "Previously completed candidates are immutable and must not be rerun. Candidate IDs, demonstrations, environment context apart from horizon, support, certificate, goal, and validation payloads are identical across the selected runs. Historical contracts omitted the construction-parameter YAML block, while config hashes, revision labels, source-file hashes, the later oracle horizon, and the proposal adapter and root timestep differ. Exact observed states and physical support-pair geometry may be consolidated. Two pairs cross source-run boundaries. The final root preserves an exhaustive registered cabinet bank at 0/46 while a separate factorized controller certificate establishes physical feasibility; proposal outcomes and physical feasibility are therefore reported as different evidence classes. Oracle cost balance is reported per goal only when both sides have a selected successful proposal. Proposal coverage remains stratified by execution mode, and cross-aperture effects cannot be separated from source revision.",
+    "require_all_physical_pair_geometry_gates": true,
+    "require_goal_specific_oracle_comparability_labels": true,
+    "require_identical_shared_root_context_payload": true,
+    "require_support_pair_within_one_source": false,
+    "root_timestep_generation_batch_alias": true
+  },
+  "source_count": 6,
+  "status": "complete",
+  "support_pair_count": 16,
+  "validation": {
+    "candidate_count": 32,
+    "construction_compatibility": {
+      "compatibility_boundary": "Shared contract context matches, but historical contracts omitted the construction-parameter block. Differing config, revision, and source hashes remain explicit generation-batch provenance; cross-revision construction equivalence is not cryptographically established.",
+      "config_bytes_available_in_historical_contract": false,
+      "construction_parameters_cryptographically_bound": false,
+      "construction_revision_identical": false,
+      "horizon_excluded_reason": "The observed candidate records, rather than the historical contract, bind the common root timestep. Later oracle horizons are reported separately.",
+      "observed_root_final_timesteps": [
+        540,
+        560
+      ],
+      "observed_roots_precede_oracle_horizons": true,
+      "pass": true,
+      "root_final_timestep_identical": false,
+      "shared_root_context_contract_match": true,
+      "shared_root_context_contract_sha256": "13fb19a92eee196101a46364cd4232fc9be61aed02a40ecb543b52692888db97",
+      "source_config_sha256": {
+        "v31_open_hard_pair": "761f03ffcdb1658c71728a424bd99658d760eba75cd6cca9b04383b317e029aa",
+        "v32_closed": "8cb86ae016a40400e3d6def07608fa0f3b340d9c36eb0ffcbf147c07fc05cfbb",
+        "v34_open_completion": "5839d573a0292cc92fbb12f63a4bb80bb36d744ac124f636e98d8bc8a1614c11",
+        "v35_open_completion": "611e064f5f19d0067e5289800fcc5892d72b1e41a160b6d8725ce8dc4866f3fe",
+        "v37_open_grasped_completion": "4649febff82c92a0fe7c8f7c2f13d03b413e9d2a159184aa5daf18f17f8c0f3b",
+        "v38_factorized_promotion": "4649febff82c92a0fe7c8f7c2f13d03b413e9d2a159184aa5daf18f17f8c0f3b"
+      },
+      "source_construction_revisions": {
+        "v31_open_hard_pair": "phase3b-stage-a-v31",
+        "v32_closed": "phase3b-stage-a-v32",
+        "v34_open_completion": "phase3b-stage-a-v34",
+        "v35_open_completion": "phase3b-stage-a-v35",
+        "v37_open_grasped_completion": "phase3b-stage-a-v37",
+        "v38_factorized_promotion": "phase3b-stage-a-v37"
+      },
+      "source_episode_horizons": {
+        "v31_open_hard_pair": 1850,
+        "v32_closed": 1850,
+        "v34_open_completion": 2200,
+        "v35_open_completion": 2200,
+        "v37_open_grasped_completion": 2200,
+        "v38_factorized_promotion": 2200
+      },
+      "source_expected_root_final_timesteps": {
+        "v31_open_hard_pair": 540,
+        "v32_closed": 540,
+        "v34_open_completion": 540,
+        "v35_open_completion": 540,
+        "v37_open_grasped_completion": 560,
+        "v38_factorized_promotion": 560
+      },
+      "source_implementation_identical": false,
+      "source_implementation_sha256": {
+        "v31_open_hard_pair": {
+          "lattice": "355050e5223ede076df04f7161b040dcff475449854a891fb7af78c7ece0c574",
+          "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+          "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+          "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+          "runner": "26fa94f4dc5ce03d4bc02c8eeeec15e758d47c1e5b39970625fc7d991f2ae34d",
+          "runtime": "0aa0b0374732d066fb3f10362dd159edcf17b9e7f991758ddb2319090ed5298c",
+          "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+        },
+        "v32_closed": {
+          "lattice": "355050e5223ede076df04f7161b040dcff475449854a891fb7af78c7ece0c574",
+          "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+          "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+          "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+          "runner": "9b2a84d39e54764bf80e256e468068701edbc75c8fcfbe1da6b751216d3a8f31",
+          "runtime": "0aa0b0374732d066fb3f10362dd159edcf17b9e7f991758ddb2319090ed5298c",
+          "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+        },
+        "v34_open_completion": {
+          "lattice": "22b639202f83d018c948ef993eb0f1db7e3a43103e2f5cef396d4e3feb800dce",
+          "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+          "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+          "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+          "runner": "13eb6fb9d6cfa8b543ee96ee7bd2e6fd20e3a27c34d22e1ef7ea27dcc9e54da9",
+          "runtime": "6f3c9c0acf317029f7ddb8ea0dfd52f9aa0ce63d3569d45fdd6c49aa24007900",
+          "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+        },
+        "v35_open_completion": {
+          "lattice": "e1998c0b115de091f0fc93c22b35dfc59ba326e57eca1e69e138624db322aa2d",
+          "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+          "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+          "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+          "runner": "25884acb9131c6d47237e5b716b0d8c288b7210289173107bc010c49468b91e3",
+          "runtime": "ae9ebe380cf3312051e84644aa54563a359e09da0ba4a1c4bc5f386c504ab7ac",
+          "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+        },
+        "v37_open_grasped_completion": {
+          "lattice": "e1998c0b115de091f0fc93c22b35dfc59ba326e57eca1e69e138624db322aa2d",
+          "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+          "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+          "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+          "runner": "6525d8c8e43b755259314da20f7820136677167d79b561e222dbd40a91698e80",
+          "runtime": "459e07b8596e32ee2b72df7a24ec9c139e1d87781e5d81e37af3cdc87fcecff8",
+          "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+        },
+        "v38_factorized_promotion": {
+          "lattice": "e1998c0b115de091f0fc93c22b35dfc59ba326e57eca1e69e138624db322aa2d",
+          "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+          "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+          "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+          "runner": "6525d8c8e43b755259314da20f7820136677167d79b561e222dbd40a91698e80",
+          "runtime": "459e07b8596e32ee2b72df7a24ec9c139e1d87781e5d81e37af3cdc87fcecff8",
+          "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+        }
+      },
+      "source_observed_root_final_timesteps": {
+        "v31_open_hard_pair": [
+          540
+        ],
+        "v32_closed": [
+          540
+        ],
+        "v34_open_completion": [
+          540
+        ],
+        "v35_open_completion": [
+          540
+        ],
+        "v37_open_grasped_completion": [
+          560
+        ],
+        "v38_factorized_promotion": [
+          560
+        ]
+      },
+      "source_shared_root_context_contract_sha256": {
+        "v31_open_hard_pair": "13fb19a92eee196101a46364cd4232fc9be61aed02a40ecb543b52692888db97",
+        "v32_closed": "13fb19a92eee196101a46364cd4232fc9be61aed02a40ecb543b52692888db97",
+        "v34_open_completion": "13fb19a92eee196101a46364cd4232fc9be61aed02a40ecb543b52692888db97",
+        "v35_open_completion": "13fb19a92eee196101a46364cd4232fc9be61aed02a40ecb543b52692888db97",
+        "v37_open_grasped_completion": "13fb19a92eee196101a46364cd4232fc9be61aed02a40ecb543b52692888db97",
+        "v38_factorized_promotion": "13fb19a92eee196101a46364cd4232fc9be61aed02a40ecb543b52692888db97"
+      }
+    },
+    "cross_mode_factor_effects_estimable": false,
+    "execution_modes_by_goal": {
+      "cabinet": [
+        "action_intrinsic_pregrasp_bowl_registered_v1",
+        "action_intrinsic_pregrasp_phase_continuation_v2",
+        "full_trajectory_replay"
+      ],
+      "drawer": [
+        "action_intrinsic_pregrasp_bowl_registered_v1",
+        "action_intrinsic_pregrasp_phase_continuation_v2",
+        "full_trajectory_replay"
+      ]
+    },
+    "factor_source_overlap": {
+      "drawer_aperture": {
+        "common_sources_across_levels": [],
+        "source_blocked_contrast_available": false,
+        "sources_by_level": {
+          "closed": [
+            "v32_closed"
+          ],
+          "open": [
+            "v31_open_hard_pair",
+            "v34_open_completion",
+            "v35_open_completion",
+            "v37_open_grasped_completion",
+            "v38_factorized_promotion"
+          ]
+        }
+      },
+      "layout": {
+        "common_sources_across_levels": [
+          "v32_closed",
+          "v35_open_completion",
+          "v37_open_grasped_completion"
+        ],
+        "source_blocked_contrast_available": true,
+        "sources_by_level": {
+          "A": [
+            "v32_closed",
+            "v34_open_completion",
+            "v35_open_completion",
+            "v37_open_grasped_completion",
+            "v38_factorized_promotion"
+          ],
+          "B": [
+            "v31_open_hard_pair",
+            "v32_closed",
+            "v35_open_completion",
+            "v37_open_grasped_completion"
+          ]
+        }
+      },
+      "possession": {
+        "common_sources_across_levels": [
+          "v32_closed"
+        ],
+        "source_blocked_contrast_available": true,
+        "sources_by_level": {
+          "grasped": [
+            "v31_open_hard_pair",
+            "v32_closed",
+            "v37_open_grasped_completion",
+            "v38_factorized_promotion"
+          ],
+          "on_table": [
+            "v32_closed",
+            "v34_open_completion",
+            "v35_open_completion"
+          ]
+        }
+      },
+      "support_stratum": {
+        "common_sources_across_levels": [
+          "v31_open_hard_pair",
+          "v32_closed",
+          "v35_open_completion",
+          "v37_open_grasped_completion"
+        ],
+        "source_blocked_contrast_available": true,
+        "sources_by_level": {
+          "demonstration_near": [
+            "v31_open_hard_pair",
+            "v32_closed",
+            "v34_open_completion",
+            "v35_open_completion",
+            "v37_open_grasped_completion"
+          ],
+          "transverse_low_support": [
+            "v31_open_hard_pair",
+            "v32_closed",
+            "v35_open_completion",
+            "v37_open_grasped_completion",
+            "v38_factorized_promotion"
+          ]
+        }
+      },
+      "transit_locus": {
+        "common_sources_across_levels": [
+          "v32_closed",
+          "v35_open_completion",
+          "v37_open_grasped_completion"
+        ],
+        "source_blocked_contrast_available": true,
+        "sources_by_level": {
+          "cabinet_side": [
+            "v31_open_hard_pair",
+            "v32_closed",
+            "v35_open_completion",
+            "v37_open_grasped_completion",
+            "v38_factorized_promotion"
+          ],
+          "drawer_side": [
+            "v32_closed",
+            "v34_open_completion",
+            "v35_open_completion",
+            "v37_open_grasped_completion"
+          ]
+        }
+      }
+    },
+    "feasibility_kinds_by_goal": {
+      "cabinet": [
+        "factorized_policy_free_path_v1",
+        "successful_proposal_ledger_v1"
+      ],
+      "drawer": [
+        "successful_proposal_ledger_v1"
+      ]
+    },
+    "oracle_balance_all_goals_estimable_pair_count": 13,
+    "oracle_balance_estimable_pair_count_by_goal": {
+      "cabinet": 14,
+      "drawer": 14
+    },
+    "pass": true,
+    "physical_geometry_pair_count": 16,
+    "proposal_outcome_all_goals_estimable_pair_count": 14,
+    "proposal_outcome_estimable_pair_count_by_goal": {
+      "cabinet": 15,
+      "drawer": 14
+    },
+    "source_blocked_factor_contrast_available": {
+      "drawer_aperture": false,
+      "layout": true,
+      "possession": true,
+      "support_stratum": true,
+      "transit_locus": true
+    },
+    "source_count": 6,
+    "support_pair_count": 16,
+    "support_reference_bank_sha256": "456f9c969e0d9befa67a1659a9bebbee222ebc4c5b134daef9eedbd2f1c07f39"
+  }
+}

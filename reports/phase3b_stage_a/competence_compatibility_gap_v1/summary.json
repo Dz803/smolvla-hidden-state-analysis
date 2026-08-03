@@ -1,0 +1,27 @@
+{
+  "analysis_revision": "competence_compatibility_gap_v1",
+  "competence_compatibility_gap_cell_count": 1,
+  "competence_compatibility_gap_fraction": 0.015625,
+  "confirmatory_requirement": "Freeze the certificate/controller family and tolerances before testing held-out roots; then evaluate model-specific V, Q, and self-knowledge targets separately on identical restored states.",
+  "estimands": {
+    "competence_compatibility_gap": "F_C(s,g)=1 and P_K(s,g)=0",
+    "finite_bank_proposal_compatibility": "P_K(s,g)=max_{k in K} Y(N(s),g,k) for the complete registered proposal bank K and its bound execution contract",
+    "physical_recoverability": "F_C(s,g): existence of a passing path in the declared policy-independent controller/certificate class C"
+  },
+  "falsified_inference": "Failure of every member of a finite registered replay bank implies physical infeasibility of that state-goal cell.",
+  "goal_cell_count": 64,
+  "not_supported": [
+    "The SmolVLA policy can solve the gap cell.",
+    "A hidden-state mechanism caused the proposal incompatibility.",
+    "The adaptively developed factorized route estimates a population rate.",
+    "The observed gap transfers to another state, task, or model."
+  ],
+  "physically_feasible_goal_cell_count": 64,
+  "policy_loaded": false,
+  "proposal_compatible_goal_cell_count": 63,
+  "schema_version": 1,
+  "source_consolidation_revision": "phase3b-stage-a-consolidated-v4",
+  "source_manifest_sha256": "0a2cbe69268db3728260bfc512147ed5ce7402944e3cb378a6f4859368ab7ab0",
+  "status": "complete",
+  "supported_claim": "At least one certified Stage A state-goal cell is physically recoverable despite zero success in its complete registered replay bank."
+}

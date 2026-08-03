@@ -6,6 +6,12 @@ from typing import Any, Iterable
 import numpy as np
 
 from .phase3b_completion import oracle_pair_comparability
+from .phase3b_feasibility import (
+    FACTORIZED_FEASIBILITY_KIND,
+    PROPOSAL_FEASIBILITY_KIND,
+    resolve_goal_feasibility_evidence,
+    validate_factorized_feasibility_evidence,
+)
 from .phase3b_registered_validation import (
     validate_oracle_proposal_ledger_compatible,
     validate_support_pair_records_compatible,
@@ -288,23 +294,62 @@ def _validate_candidate_record(record: dict[str, Any]) -> dict[str, Any]:
     ):
         raise ValueError(f"Invalid root construction record for {candidate_id}")
     modes = {}
+    feasibility_kinds = {}
     normalized_hashes = set()
     normalization_action_hashes = set()
     for goal in GOALS:
         oracle = record.get("oracles", {}).get(goal, {})
-        if (
-            oracle.get("pass") is not True
-            or oracle.get("goal_ever_achieved") is not True
-        ):
-            raise ValueError(f"{goal} feasibility failed for {candidate_id}")
         ledger = validate_oracle_proposal_ledger_compatible(
-            oracle, candidate_id=candidate_id, goal=goal
+            oracle,
+            candidate_id=candidate_id,
+            goal=goal,
+            allow_exhaustive_failure=True,
         )
         modes[goal] = ledger["execution_mode"]
         normalized_hashes.add(oracle["shared_normalized_state_sha256"])
         normalization_action_hashes.add(
             oracle["shared_normalization_action_sha256"]
         )
+        evidence = resolve_goal_feasibility_evidence(record, goal=goal)
+        kind = evidence.get("kind")
+        if kind == PROPOSAL_FEASIBILITY_KIND:
+            if (
+                ledger["exhaustive_failure"]
+                or oracle.get("pass") is not True
+                or oracle.get("goal_ever_achieved") is not True
+                or evidence.get("proposal_ledger_sha256")
+                != canonical_sha256(oracle)
+                or evidence.get("normalized_state_sha256")
+                != oracle["shared_normalized_state_sha256"]
+                or evidence.get("normalization_action_sha256")
+                != oracle["shared_normalization_action_sha256"]
+            ):
+                raise ValueError(
+                    f"Invalid proposal feasibility evidence for {candidate_id}/{goal}"
+                )
+        elif kind == FACTORIZED_FEASIBILITY_KIND:
+            if not ledger["exhaustive_failure"]:
+                raise ValueError(
+                    f"Factorized evidence obscures a successful proposal for "
+                    f"{candidate_id}/{goal}"
+                )
+            validate_factorized_feasibility_evidence(
+                evidence,
+                candidate_id=candidate_id,
+                goal=goal,
+                root_state_sha256=record["state_sha256"],
+                normalized_state_sha256=oracle[
+                    "shared_normalized_state_sha256"
+                ],
+                normalization_action_sha256=oracle[
+                    "shared_normalization_action_sha256"
+                ],
+            )
+        else:
+            raise ValueError(
+                f"Unknown feasibility evidence for {candidate_id}/{goal}: {kind}"
+            )
+        feasibility_kinds[goal] = kind
     if len(normalized_hashes) != 1 or len(normalization_action_hashes) != 1:
         raise ValueError(f"Goal-specific normalization differs for {candidate_id}")
     support = record.get("support_measurement", {})
@@ -324,6 +369,7 @@ def _validate_candidate_record(record: dict[str, Any]) -> dict[str, Any]:
     return {
         "candidate_id": candidate_id,
         "execution_mode_by_goal": modes,
+        "feasibility_kind_by_goal": feasibility_kinds,
         "normalized_state_sha256": next(iter(normalized_hashes)),
         "normalization_action_sha256": next(iter(normalization_action_hashes)),
         "root_final_timestep": root_final_timestep,
@@ -341,6 +387,9 @@ def _goal_pair_metrics(
     prefix = f"{goal}_"
     base = {
         f"{prefix}oracle_balance_estimable": bool(comparable["estimable"]),
+        f"{prefix}proposal_outcome_estimable": bool(
+            comparable["proposal_outcome_estimable"]
+        ),
         f"{prefix}same_proposal_bank": bool(comparable["same_proposal_bank"]),
         f"{prefix}same_execution_contract": bool(
             comparable["same_execution_contract"]
@@ -348,7 +397,7 @@ def _goal_pair_metrics(
         f"{prefix}near_execution_mode": comparable["near_execution_mode"],
         f"{prefix}low_execution_mode": comparable["low_execution_mode"],
     }
-    if not comparable["estimable"]:
+    if not comparable["proposal_outcome_estimable"]:
         return {
             **base,
             f"{prefix}selected_proposal_match": None,
@@ -362,10 +411,16 @@ def _goal_pair_metrics(
             f"{prefix}motion_effort_mismatch": None,
         }
     near_ledger = validate_oracle_proposal_ledger_compatible(
-        near["oracles"][goal], candidate_id=near["candidate_id"], goal=goal
+        near["oracles"][goal],
+        candidate_id=near["candidate_id"],
+        goal=goal,
+        allow_exhaustive_failure=True,
     )
     low_ledger = validate_oracle_proposal_ledger_compatible(
-        low["oracles"][goal], candidate_id=low["candidate_id"], goal=goal
+        low["oracles"][goal],
+        candidate_id=low["candidate_id"],
+        goal=goal,
+        allow_exhaustive_failure=True,
     )
     near_success = set(near_ledger["successful_indices"])
     low_success = set(low_ledger["successful_indices"])
@@ -399,8 +454,9 @@ def _goal_pair_metrics(
         if shared
         else None
     )
-    near_cost = near["oracles"][goal]["cost"]
-    low_cost = low["oracles"][goal]["cost"]
+    selected_balance = bool(comparable["selected_oracle_balance_estimable"])
+    near_cost = near["oracles"][goal].get("cost")
+    low_cost = low["oracles"][goal].get("cost")
     mismatch_specs = (
         (
             "budgeted_cost",
@@ -430,22 +486,29 @@ def _goal_pair_metrics(
     )
     mismatches = {}
     for label, field, limit in mismatch_specs:
-        mismatch = symmetric_relative_difference(
-            near_cost[field], low_cost[field]
-        )
-        if mismatch > limit:
-            raise ValueError(
-                f"Support pair {near['factors']['support_pair_id']} exceeds the "
-                f"{goal} {field} limit"
+        if selected_balance:
+            mismatch = symmetric_relative_difference(
+                near_cost[field], low_cost[field]
             )
-        mismatches[f"{prefix}{label}_mismatch"] = mismatch
+            if mismatch > limit:
+                raise ValueError(
+                    f"Support pair {near['factors']['support_pair_id']} exceeds the "
+                    f"{goal} {field} limit"
+                )
+            mismatches[f"{prefix}{label}_mismatch"] = mismatch
+        else:
+            mismatches[f"{prefix}{label}_mismatch"] = None
     return {
         **base,
-        f"{prefix}selected_proposal_match": bool(
-            near_ledger["selected_index"] == low_ledger["selected_index"]
+        f"{prefix}selected_proposal_match": (
+            bool(near_ledger["selected_index"] == low_ledger["selected_index"])
+            if selected_balance
+            else None
         ),
         f"{prefix}shared_success_count": len(shared),
-        f"{prefix}success_set_jaccard": len(shared) / len(union),
+        f"{prefix}success_set_jaccard": (
+            len(shared) / len(union) if union else 1.0
+        ),
         f"{prefix}matched_cost_proposal_index": common_index,
         **mismatches,
     }
@@ -589,6 +652,9 @@ def validate_consolidated_records(
                 "oracle_balance_all_goals_estimable": comparability[
                     "all_goals_estimable"
                 ],
+                "proposal_outcome_all_goals_estimable": comparability[
+                    "all_goal_proposal_outcomes_estimable"
+                ],
                 "strict_oracle_balance_pass": strict_pass,
                 **geometry,
                 **goal_metrics,
@@ -604,6 +670,15 @@ def validate_consolidated_records(
         )
         for goal in GOALS
     }
+    feasibility_kinds = {
+        goal: sorted(
+            {
+                summary["feasibility_kind_by_goal"][goal]
+                for summary in candidate_summaries.values()
+            }
+        )
+        for goal in GOALS
+    }
     return {
         "pass": True,
         "candidate_count": len(entries),
@@ -612,6 +687,15 @@ def validate_consolidated_records(
         "oracle_balance_all_goals_estimable_pair_count": sum(
             row["oracle_balance_all_goals_estimable"] for row in pair_rows
         ),
+        "proposal_outcome_all_goals_estimable_pair_count": sum(
+            row["proposal_outcome_all_goals_estimable"] for row in pair_rows
+        ),
+        "proposal_outcome_estimable_pair_count_by_goal": {
+            goal: sum(
+                row[f"{goal}_proposal_outcome_estimable"] for row in pair_rows
+            )
+            for goal in GOALS
+        },
         "oracle_balance_estimable_pair_count_by_goal": {
             goal: sum(row[f"{goal}_oracle_balance_estimable"] for row in pair_rows)
             for goal in GOALS
@@ -619,6 +703,7 @@ def validate_consolidated_records(
         "source_count": len({entry["source_id"] for entry in entries}),
         "support_reference_bank_sha256": next(iter(support_bank_hashes)),
         "execution_modes_by_goal": execution_modes,
+        "feasibility_kinds_by_goal": feasibility_kinds,
         "cross_mode_factor_effects_estimable": all(
             len(modes) == 1 for modes in execution_modes.values()
         ),

@@ -1,0 +1,172 @@
+{
+  "v31_open_hard_pair": {
+    "candidate_ids": [
+      "stagea__drawer-open__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-b",
+      "stagea__drawer-open__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-b"
+    ],
+    "construction_parameters_embedded_in_contract": false,
+    "contract_file_sha256": "95a379b3c3e131b7b17a4e7db169f27fbcff4999ccfbcabfa981f5ab20f8c509",
+    "contract_sha256": "c2cac01038ecb165c085cceccef4f257b28ff1d9ca05ae9c96b225c5a0f37bc0",
+    "expected_root_final_timestep": 540,
+    "manifest_file_sha256": "f8502b8eda525d3e0bd932bc8cb8506410472e368b70ae60c19b59d61cfbd1d9",
+    "run_dir": "local/phase3b_stage_a/phase3b_stage_a_20260729T033540Z",
+    "run_id": "phase3b_stage_a_20260729T033540Z",
+    "run_status": "in_progress",
+    "selection_lock_sha256": "14dcf7b47b30d12da8c5bb21ecc942b3e83b4bfa5064c5ede847289d1b5d46f1",
+    "source_config_sha256": "761f03ffcdb1658c71728a424bd99658d760eba75cd6cca9b04383b317e029aa",
+    "source_implementation_sha256": {
+      "lattice": "355050e5223ede076df04f7161b040dcff475449854a891fb7af78c7ece0c574",
+      "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+      "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+      "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+      "runner": "26fa94f4dc5ce03d4bc02c8eeeec15e758d47c1e5b39970625fc7d991f2ae34d",
+      "runtime": "0aa0b0374732d066fb3f10362dd159edcf17b9e7f991758ddb2319090ed5298c",
+      "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+    }
+  },
+  "v32_closed": {
+    "candidate_ids": [
+      "stagea__drawer-closed__possession-on-table__locus-drawer-side__support-demonstration-near__layout-a",
+      "stagea__drawer-closed__possession-on-table__locus-drawer-side__support-demonstration-near__layout-b",
+      "stagea__drawer-closed__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-a",
+      "stagea__drawer-closed__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-b",
+      "stagea__drawer-closed__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-a",
+      "stagea__drawer-closed__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-b",
+      "stagea__drawer-closed__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-a",
+      "stagea__drawer-closed__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-b",
+      "stagea__drawer-closed__possession-grasped__locus-drawer-side__support-demonstration-near__layout-a",
+      "stagea__drawer-closed__possession-grasped__locus-drawer-side__support-demonstration-near__layout-b",
+      "stagea__drawer-closed__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-a",
+      "stagea__drawer-closed__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-b",
+      "stagea__drawer-closed__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-a",
+      "stagea__drawer-closed__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-b",
+      "stagea__drawer-closed__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-a",
+      "stagea__drawer-closed__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-b"
+    ],
+    "construction_parameters_embedded_in_contract": false,
+    "contract_file_sha256": "ee1d884e94f00b2c2e87c0166990882497033d8a0a942c6b6d83233365ba750f",
+    "contract_sha256": "dc86cbdd051aff0d3dd13c238cdd0fb67d9eedca8b6aecd085700e0427864597",
+    "expected_root_final_timestep": 540,
+    "manifest_file_sha256": "f27597949717781d14c361bda83bf3ac47426db97fd528f7825c61197fef8a87",
+    "run_dir": "local/phase3b_stage_a/phase3b_stage_a_20260729T035043Z",
+    "run_id": "phase3b_stage_a_20260729T035043Z",
+    "run_status": "failed",
+    "selection_lock_sha256": "b5666a80a9b31a23ee8255e87d2287130c0962d93e770a2933663c55b2e66227",
+    "source_config_sha256": "8cb86ae016a40400e3d6def07608fa0f3b340d9c36eb0ffcbf147c07fc05cfbb",
+    "source_implementation_sha256": {
+      "lattice": "355050e5223ede076df04f7161b040dcff475449854a891fb7af78c7ece0c574",
+      "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+      "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+      "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+      "runner": "9b2a84d39e54764bf80e256e468068701edbc75c8fcfbe1da6b751216d3a8f31",
+      "runtime": "0aa0b0374732d066fb3f10362dd159edcf17b9e7f991758ddb2319090ed5298c",
+      "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+    }
+  },
+  "v34_open_completion": {
+    "candidate_ids": [
+      "stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-a"
+    ],
+    "construction_parameters_embedded_in_contract": false,
+    "contract_file_sha256": "3680fed014bd61d7d7111b753f217953805b5ac2c765826e3b736e17f591348e",
+    "contract_sha256": "f64db7b5a8d88fbb5d3aa460acc98ebe4cc58b5b045b0cfbc6ac9dc30326527e",
+    "expected_root_final_timestep": 540,
+    "manifest_file_sha256": "9d15c4548dbb9d8f3b734fee73f58af659bb42e085a763cfd7d47d1d5d37b06c",
+    "run_dir": "local/phase3b_stage_a/phase3b_stage_a_20260731T035449Z",
+    "run_id": "phase3b_stage_a_20260731T035449Z",
+    "run_status": "failed",
+    "selection_lock_sha256": "2285fb095a627986b32654117247b51747b744ff6363f08beba6d0b37787dd7c",
+    "source_config_sha256": "5839d573a0292cc92fbb12f63a4bb80bb36d744ac124f636e98d8bc8a1614c11",
+    "source_implementation_sha256": {
+      "lattice": "22b639202f83d018c948ef993eb0f1db7e3a43103e2f5cef396d4e3feb800dce",
+      "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+      "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+      "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+      "runner": "13eb6fb9d6cfa8b543ee96ee7bd2e6fd20e3a27c34d22e1ef7ea27dcc9e54da9",
+      "runtime": "6f3c9c0acf317029f7ddb8ea0dfd52f9aa0ce63d3569d45fdd6c49aa24007900",
+      "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+    }
+  },
+  "v35_open_completion": {
+    "candidate_ids": [
+      "stagea__drawer-open__possession-on-table__locus-drawer-side__support-demonstration-near__layout-b",
+      "stagea__drawer-open__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-a",
+      "stagea__drawer-open__possession-on-table__locus-drawer-side__support-transverse-low-support__layout-b",
+      "stagea__drawer-open__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-a",
+      "stagea__drawer-open__possession-on-table__locus-cabinet-side__support-demonstration-near__layout-b",
+      "stagea__drawer-open__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-a",
+      "stagea__drawer-open__possession-on-table__locus-cabinet-side__support-transverse-low-support__layout-b"
+    ],
+    "construction_parameters_embedded_in_contract": false,
+    "contract_file_sha256": "a0272d0ad8a3e0404036fefac5e7ce6d47d2f2e52ccefda1ccdec032ac32218c",
+    "contract_sha256": "21fee428a46472b39676b108460179ad5e31f05f281e331c0e5726eeba9b5bba",
+    "expected_root_final_timestep": 540,
+    "manifest_file_sha256": "792df0cc757cdb16d2dd93530ac865cd5e4658b802c505b2c2184ff5ea164e8d",
+    "run_dir": "local/phase3b_stage_a/phase3b_stage_a_completion_20260731T075647Z",
+    "run_id": "phase3b_stage_a_completion_20260731T075647Z",
+    "run_status": "failed",
+    "selection_lock_sha256": "5fa58e9f16148ae41f558e8b56259cce402624fd53c3a040e6b7e92a454b07df",
+    "source_config_sha256": "611e064f5f19d0067e5289800fcc5892d72b1e41a160b6d8725ce8dc4866f3fe",
+    "source_implementation_sha256": {
+      "lattice": "e1998c0b115de091f0fc93c22b35dfc59ba326e57eca1e69e138624db322aa2d",
+      "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+      "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+      "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+      "runner": "25884acb9131c6d47237e5b716b0d8c288b7210289173107bc010c49468b91e3",
+      "runtime": "ae9ebe380cf3312051e84644aa54563a359e09da0ba4a1c4bc5f386c504ab7ac",
+      "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+    }
+  },
+  "v37_open_grasped_completion": {
+    "candidate_ids": [
+      "stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-a",
+      "stagea__drawer-open__possession-grasped__locus-drawer-side__support-demonstration-near__layout-b",
+      "stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-a",
+      "stagea__drawer-open__possession-grasped__locus-drawer-side__support-transverse-low-support__layout-b",
+      "stagea__drawer-open__possession-grasped__locus-cabinet-side__support-demonstration-near__layout-a"
+    ],
+    "construction_parameters_embedded_in_contract": false,
+    "contract_file_sha256": "56b63eec6ceda587ea9f4b44852177651d2e0b81311f6e4e55e94d10c736dde2",
+    "contract_sha256": "cceb25ad6f0bc6cac2dca8a49c5c6ddc4aef36f1e9e62f9955891b7a15c68b4b",
+    "expected_root_final_timestep": 560,
+    "manifest_file_sha256": "7fd7d36a998764d5fe671757a0e86af9e1995dc00ed864680adefecae5d9d604",
+    "run_dir": "local/phase3b_stage_a/phase3b_stage_a_completion_v37_20260803T101257Z",
+    "run_id": "phase3b_stage_a_completion_v37_20260803T101257Z",
+    "run_status": "failed",
+    "selection_lock_sha256": "e518a172857905c759fd79a96cb4cec7df5b202aeffda8b6eead6e2b92cb6be3",
+    "source_config_sha256": "4649febff82c92a0fe7c8f7c2f13d03b413e9d2a159184aa5daf18f17f8c0f3b",
+    "source_implementation_sha256": {
+      "lattice": "e1998c0b115de091f0fc93c22b35dfc59ba326e57eca1e69e138624db322aa2d",
+      "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+      "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+      "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+      "runner": "6525d8c8e43b755259314da20f7820136677167d79b561e222dbd40a91698e80",
+      "runtime": "459e07b8596e32ee2b72df7a24ec9c139e1d87781e5d81e37af3cdc87fcecff8",
+      "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+    }
+  },
+  "v38_factorized_promotion": {
+    "candidate_ids": [
+      "stagea__drawer-open__possession-grasped__locus-cabinet-side__support-transverse-low-support__layout-a"
+    ],
+    "construction_parameters_embedded_in_contract": false,
+    "contract_file_sha256": "56b63eec6ceda587ea9f4b44852177651d2e0b81311f6e4e55e94d10c736dde2",
+    "contract_sha256": "cceb25ad6f0bc6cac2dca8a49c5c6ddc4aef36f1e9e62f9955891b7a15c68b4b",
+    "expected_root_final_timestep": 560,
+    "manifest_file_sha256": "102505f5b85ab1a53408e457329ec89824d5ed5af0d78be8ea4fa52403980042",
+    "run_dir": "local/phase3b_stage_a/phase3b_stage_a_promotion_v38_20260803T045149Z",
+    "run_id": "phase3b_stage_a_promotion_v38_20260803T045149Z",
+    "run_status": "complete",
+    "selection_lock_sha256": "e518a172857905c759fd79a96cb4cec7df5b202aeffda8b6eead6e2b92cb6be3",
+    "source_config_sha256": "4649febff82c92a0fe7c8f7c2f13d03b413e9d2a159184aa5daf18f17f8c0f3b",
+    "source_implementation_sha256": {
+      "lattice": "e1998c0b115de091f0fc93c22b35dfc59ba326e57eca1e69e138624db322aa2d",
+      "libero_state": "e3a8154577c873bc8e8a0d12316a8d2410044b26fd6928d8db3c5e938ac284c6",
+      "phase2_storage": "ecaf5aca6f1765793b90dabe2799c8171a8e59c29ef2647cfca0bb1898910cc6",
+      "phase3_crd": "8f469b7e45334bb78890f510f7f4cacf66dc28812b64bb6c871ac827a8d36d90",
+      "runner": "6525d8c8e43b755259314da20f7820136677167d79b561e222dbd40a91698e80",
+      "runtime": "459e07b8596e32ee2b72df7a24ec9c139e1d87781e5d81e37af3cdc87fcecff8",
+      "runtime_config": "041e0f146065c253c637b784f61499683aeeb4ecd72a6c66d6081cda1f51f868"
+    }
+  }
+}

@@ -23,6 +23,10 @@ from smolvla_analysis.phase3b_consolidation import (
     validate_consolidated_records,
     validate_source_assignment,
 )
+from smolvla_analysis.phase3b_feasibility import (
+    FACTORIZED_FEASIBILITY_KIND,
+    resolve_goal_feasibility_evidence,
+)
 from smolvla_analysis.phase3b_stage_a import (
     GOALS,
     canonical_sha256,
@@ -34,6 +38,18 @@ from smolvla_analysis.phase3b_stage_a import (
 
 PROJECT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = PROJECT / "configs/phase3b_stage_a_consolidation.yaml"
+IMPLEMENTATION_PATHS = {
+    "consolidator": Path(__file__).resolve(),
+    "consolidation": PROJECT / "src/smolvla_analysis/phase3b_consolidation.py",
+    "feasibility": PROJECT / "src/smolvla_analysis/phase3b_feasibility.py",
+    "registered_validation": (
+        PROJECT / "src/smolvla_analysis/phase3b_registered_validation.py"
+    ),
+    "completion": PROJECT / "src/smolvla_analysis/phase3b_completion.py",
+    "stage_a_lattice": PROJECT / "src/smolvla_analysis/phase3b_stage_a.py",
+    "snapshot_storage": PROJECT / "src/smolvla_analysis/phase2_storage.py",
+    "snapshot_schema": PROJECT / "src/smolvla_analysis/libero_state.py",
+}
 
 
 def _parse_args() -> argparse.Namespace:
@@ -53,6 +69,13 @@ def _file_sha256(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def _json_safe_records(frame: pd.DataFrame) -> list[dict[str, Any]]:
+    """Convert tabular missing values to JSON null before canonical hashing."""
+
+    object_frame = frame.astype(object)
+    return object_frame.where(pd.notna(object_frame), None).to_dict("records")
 
 
 def _resolve_project_path(value: str) -> Path:
@@ -185,28 +208,40 @@ def _candidate_row(
     }
     for goal in GOALS:
         oracle = record["oracles"][goal]
+        evidence = resolve_goal_feasibility_evidence(record, goal=goal)
+        selected_index = oracle.get("selected_proposal_index")
+        selected_cost = oracle.get("cost") or {}
         row.update(
             {
                 f"{goal}_execution_mode": oracle["proposal_execution_mode"],
+                f"{goal}_feasibility_kind": evidence["kind"],
                 f"{goal}_success_count": int(oracle["proposal_success_count"]),
                 f"{goal}_proposal_count": int(oracle["proposal_attempt_count"]),
                 f"{goal}_success_fraction": float(
                     oracle["proposal_success_fraction"]
                 ),
-                f"{goal}_selected_proposal_index": int(
-                    oracle["selected_proposal_index"]
+                f"{goal}_selected_proposal_index": (
+                    int(selected_index) if selected_index is not None else None
                 ),
-                f"{goal}_selected_episode_index": int(
-                    oracle["demo_episode_index"]
+                f"{goal}_selected_episode_index": (
+                    int(oracle["demo_episode_index"])
+                    if oracle.get("demo_episode_index") is not None
+                    else None
                 ),
-                f"{goal}_selected_budgeted_steps": int(
-                    oracle["cost"]["budgeted_action_steps"]
+                f"{goal}_selected_budgeted_steps": (
+                    int(selected_cost["budgeted_action_steps"])
+                    if selected_cost
+                    else None
                 ),
-                f"{goal}_selected_executed_steps": int(
-                    oracle["cost"]["executed_action_steps"]
+                f"{goal}_selected_executed_steps": (
+                    int(selected_cost["executed_action_steps"])
+                    if selected_cost
+                    else None
                 ),
-                f"{goal}_selected_eef_path_m": float(
-                    oracle["cost"]["eef_path_length_m"]
+                f"{goal}_selected_eef_path_m": (
+                    float(selected_cost["eef_path_length_m"])
+                    if selected_cost
+                    else None
                 ),
             }
         )
@@ -218,7 +253,7 @@ def _proposal_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
     rows = []
     for goal in GOALS:
         oracle = record["oracles"][goal]
-        selected = int(oracle["selected_proposal_index"])
+        selected = oracle.get("selected_proposal_index")
         for proposal, attempt in zip(
             oracle["proposal_bank"], oracle["proposal_attempts"], strict=True
         ):
@@ -241,6 +276,16 @@ def _proposal_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
                     "unexpected_done_before_goal": bool(
                         attempt["unexpected_done_before_goal"]
                     ),
+                    "first_goal_demo_frame": attempt.get(
+                        "first_goal_demo_frame"
+                    ),
+                    "action_phase_bridge_pass": (
+                        bool(attempt["action_phase_bridge"]["pass"])
+                        if isinstance(
+                            attempt.get("action_phase_bridge"), dict
+                        )
+                        else None
+                    ),
                     "executed_action_steps": int(
                         attempt["cost"]["executed_action_steps"]
                     ),
@@ -249,6 +294,50 @@ def _proposal_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
                     ),
                 }
             )
+    return rows
+
+
+def _goal_feasibility_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
+    record = entry["record"]
+    rows = []
+    for goal in GOALS:
+        evidence = resolve_goal_feasibility_evidence(record, goal=goal)
+        oracle = record["oracles"][goal]
+        source = evidence.get("source_artifact", {})
+        placement = evidence.get("placement", {})
+        rows.append(
+            {
+                "candidate_id": record["candidate_id"],
+                "source_id": entry["source_id"],
+                "goal": goal,
+                "feasibility_kind": evidence["kind"],
+                "pass": bool(evidence["pass"]),
+                "policy_loaded": bool(evidence["policy_loaded"]),
+                "normalized_state_sha256": evidence[
+                    "normalized_state_sha256"
+                ],
+                "normalization_action_sha256": evidence[
+                    "normalization_action_sha256"
+                ],
+                "proposal_execution_mode": oracle[
+                    "proposal_execution_mode"
+                ],
+                "proposal_attempt_count": int(
+                    oracle["proposal_attempt_count"]
+                ),
+                "proposal_success_count": int(
+                    oracle["proposal_success_count"]
+                ),
+                "factorized_placement_action_count": (
+                    int(placement["action_count"])
+                    if evidence["kind"] == FACTORIZED_FEASIBILITY_KIND
+                    else None
+                ),
+                "factorized_result_file_sha256": source.get(
+                    "result_file_sha256"
+                ),
+            }
+        )
     return rows
 
 
@@ -358,7 +447,13 @@ def main() -> None:
         raise FileExistsError(f"Refusing to overwrite consolidation: {output_dir}")
     staging = output_dir.with_name(f".{output_dir.name}__tmp__pid{os.getpid()}")
     if staging.exists():
-        raise FileExistsError(f"Stale consolidation staging directory: {staging}")
+        quarantine_root = PROJECT / "local/phase3b_stage_a/failed_consolidations"
+        quarantine_root.mkdir(parents=True, exist_ok=True)
+        quarantine = quarantine_root / (
+            f"{staging.name}__{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%fZ')}"
+        )
+        os.replace(staging, quarantine)
+        print(f"quarantined stale consolidation staging: {quarantine}")
     staging.mkdir(parents=True)
 
     source_inventory = {}
@@ -397,6 +492,12 @@ def main() -> None:
         [row for entry in entries for row in _proposal_rows(entry)]
     ).sort_values(["candidate_id", "goal", "proposal_index"])
     proposal_frame.to_csv(staging / "proposal_coverage.csv", index=False)
+    feasibility_frame = pd.DataFrame(
+        [row for entry in entries for row in _goal_feasibility_rows(entry)]
+    ).sort_values(["candidate_id", "goal"])
+    feasibility_frame.to_csv(
+        staging / "goal_feasibility_evidence.csv", index=False
+    )
     counterfactual_frame = pd.DataFrame(
         [row for entry in entries for row in _oracle_counterfactual_rows(entry)]
     )
@@ -432,7 +533,7 @@ def main() -> None:
         key: value for key, value in validation.items() if key != "pair_metrics"
     }
     summary = {
-        "schema_version": 1,
+        "schema_version": 2,
         "consolidation_revision": revision,
         "status": "complete",
         "policy_loaded": False,
@@ -441,18 +542,31 @@ def main() -> None:
         "source_count": len(loaded_sources),
         "validation": compact_validation,
         "coverage_summary_stratified_by_execution_mode": coverage_summary,
+        "physical_feasibility_summary_by_kind": [
+            {
+                "goal": goal,
+                "feasibility_kind": kind,
+                "candidate_count": int(group["candidate_id"].nunique()),
+            }
+            for (goal, kind), group in feasibility_frame.groupby(
+                ["goal", "feasibility_kind"], sort=True
+            )
+        ],
         "oracle_execution_counterfactual_count": int(len(counterfactual_frame)),
         "scientific_boundary": config["scientific_boundary"],
         "interpretation": (
-            "The physical candidate lattice and all 16 support-pair geometry gates "
-            "are complete as exact observed state records under matching shared root "
-            "context. Historical contracts did not embed their construction YAML "
-            "block; source config, revision, and implementation hashes remain batch "
-            "provenance. Oracle balance is evaluated separately by goal only where "
-            "proposal and execution contracts match. Legacy full replay, v34 "
-            "world-anchor phases, and v35 bowl-registered phases are not pooled. "
-            "Cross-mode effects and drawer-aperture effects aliased with source "
-            "revision are intentionally not estimated."
+            "The exact observed 32-state lattice passes all 16 physical geometry "
+            "gates and all 64 candidate-goal feasibility gates. Sixty-three goal "
+            "cells are certified by a successful proposal ledger; the final cabinet "
+            "cell instead preserves registered proposal compatibility at 0/46 and "
+            "uses one separate factorized policy-free path certificate. That cell "
+            "establishes a competence-compatibility gap, not a successful replay. "
+            "Proposal outcomes are compared only when bank and execution contracts "
+            "match; selected-path costs additionally require a successful selection "
+            "on both sides. Execution modes are not pooled. Historical construction "
+            "configurations were not fully contract-bound, and aperture remains "
+            "aliased with source revision. The one adaptively developed factorized "
+            "certificate supports an existence claim only, not a population rate."
         ),
     }
     atomic_write_json(staging / "summary.json", summary)
@@ -480,7 +594,13 @@ def main() -> None:
         "open roots are aliased with source revision, so cross-aperture causal claims "
         "remain non-estimable. `oracle_execution_counterfactuals.csv` preserves the "
         "exact-root legacy-negative versus registered-positive bank intervention "
-        "without replacing either ledger. A Stage B runner must revalidate every "
+        "without replacing either ledger. `goal_feasibility_evidence.csv` separately "
+        "records 63 successful-ledger certificates and the final factorized cabinet "
+        "certificate. For that last root, `proposal_coverage.csv` intentionally keeps "
+        "all 46 registered cabinet failures: physical recoverability does not imply "
+        "open-loop proposal compatibility. The factorized route was developed after "
+        "observing this failure and therefore certifies existence for one cell, not a "
+        "pre-registered population effect. A Stage B runner must revalidate every "
         "root under one common hydration/certificate path. No VLA was loaded, and "
         "this report is not evidence of a hidden-state mechanism.\n"
     )
@@ -492,21 +612,27 @@ def main() -> None:
     atomic_write_json(
         staging / "manifest.json",
         {
-            "schema_version": 1,
+            "schema_version": 2,
             "consolidation_revision": revision,
             "status": "complete",
             "created_at": datetime.now(UTC).isoformat(),
             "config_path": config_path.relative_to(PROJECT).as_posix(),
             "config_sha256": _file_sha256(config_path),
-            "consolidator_sha256": _file_sha256(Path(__file__).resolve()),
+            "implementation_sha256": {
+                name: _file_sha256(path)
+                for name, path in IMPLEMENTATION_PATHS.items()
+            },
             "candidate_inventory_sha256": canonical_sha256(
-                candidate_frame.to_dict("records")
+                _json_safe_records(candidate_frame)
             ),
             "proposal_coverage_sha256": canonical_sha256(
-                proposal_frame.to_dict("records")
+                _json_safe_records(proposal_frame)
+            ),
+            "goal_feasibility_evidence_sha256": canonical_sha256(
+                _json_safe_records(feasibility_frame)
             ),
             "oracle_execution_counterfactuals_sha256": canonical_sha256(
-                counterfactual_frame.to_dict("records")
+                _json_safe_records(counterfactual_frame)
             ),
             "artifact_sha256": artifact_sha256,
         },

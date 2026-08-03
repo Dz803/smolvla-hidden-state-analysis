@@ -43,6 +43,7 @@ from smolvla_analysis.phase3b_stage_a import (
     recovery_balanced_goal_axis_point,
     rotate_point_about_axis,
     snapshot_sha256,
+    validate_oracle_proposal_ledger,
     validate_selection_lock,
     validate_stage_a_records,
 )
@@ -372,6 +373,38 @@ def test_selection_lock_is_exact_and_contains_no_policy_outcome() -> None:
 def test_canonical_hash_rejects_nonfinite_scientific_values() -> None:
     with pytest.raises(ValueError, match="JSON compliant"):
         canonical_sha256({"invalid": np.nan})
+
+
+def test_exhaustive_negative_proposal_ledger_is_not_a_feasibility_oracle() -> None:
+    oracle = _record(iter_candidate_specs()[0])["oracles"]["cabinet"]
+    oracle["proposal_attempts"][0]["pass"] = False
+    oracle.update(
+        {
+            "pass": False,
+            "goal_ever_achieved": False,
+            "demo_episode_index": None,
+            "demo_task_index": None,
+            "demo_action_sha256": None,
+            "cost": None,
+            "proposal_success_count": 0,
+            "proposal_success_fraction": 0.0,
+            "successful_proposal_indices": [],
+            "selected_proposal_index": None,
+            "proposal_coverage_status": "exhaustive_failure",
+        }
+    )
+    with pytest.raises(ValueError, match="No successful cabinet proposal"):
+        validate_oracle_proposal_ledger(
+            oracle, candidate_id="candidate", goal="cabinet"
+        )
+    result = validate_oracle_proposal_ledger(
+        oracle,
+        candidate_id="candidate",
+        goal="cabinet",
+        allow_exhaustive_failure=True,
+    )
+    assert result["exhaustive_failure"] is True
+    assert result["selected_index"] is None
 
 
 def test_transverse_rotation_preserves_both_goal_distances() -> None:
@@ -913,6 +946,7 @@ def test_proposal_bank_evaluates_all_and_selects_minimum_cost(monkeypatch) -> No
         normalized_bowl_position_error_m=0.0,
     )
     calls = []
+    raw_results = []
 
     normalization_hash = phase3b_libero._action_sha256(prepared.actions)
 
@@ -940,6 +974,7 @@ def test_proposal_bank_evaluates_all_and_selects_minimum_cost(monkeypatch) -> No
                 "motion_control_effort": float(executed_steps),
             },
         }
+        raw_results.append(payload)
         return payload
 
     monkeypatch.setattr(
@@ -983,6 +1018,9 @@ def test_proposal_bank_evaluates_all_and_selects_minimum_cost(monkeypatch) -> No
     assert oracle["selected_proposal_index"] == 1
     assert oracle["total_attempted_action_steps"] == 3
     assert oracle["counterfactual_full_attempt_action_steps"] == 30
+    assert len(raw_results) == 2
+    assert all("proposal_bank" not in result for result in raw_results)
+    assert all("proposal_attempts" not in result for result in raw_results)
 
 
 def test_phase_proposal_bank_uses_normalization_only_preparation(
@@ -1244,6 +1282,38 @@ def test_policy_free_servo_can_stop_without_budget_padding(monkeypatch) -> None:
     assert padded["pass"] is True
     assert padded["executed_action_steps"] == 5
     assert padded["padded_to_budget"] is True
+    assert "stop_on_goal_or_terminal" not in padded
+
+
+def test_policy_free_servo_stops_at_goal_or_terminal(monkeypatch) -> None:
+    controller = PolicyFreeController(SimpleNamespace())
+    monkeypatch.setattr(controller, "eef_position", lambda: np.zeros(3))
+    monkeypatch.setattr(controller, "eef_orientation", lambda: np.eye(3))
+    monkeypatch.setattr(controller, "bowl_position", lambda: np.zeros(3))
+
+    def step(action):
+        controller.actions.append(np.asarray(action, dtype=np.float32).copy())
+        controller.done_values.append(True)
+        controller.goal_values.append({"drawer": False, "cabinet": True})
+        controller.grasp_values.append(True)
+        controller.grasp_relative_positions.append(np.zeros(3))
+        return {}, 1.0, True, {}
+
+    monkeypatch.setattr(controller, "step", step)
+    result = controller.servo(
+        target_position=np.zeros(3),
+        target_orientation=np.eye(3),
+        gripper=1.0,
+        budget=5,
+        max_translation_action=0.35,
+        position_tolerance_m=0.01,
+        stop_on_goal_or_terminal=True,
+    )
+
+    assert result["executed_action_steps"] == 1
+    assert result["stopped_on_goal"] is True
+    assert result["stopped_on_terminal"] is True
+    assert result["stop_on_goal_or_terminal"] is True
 
 
 def test_v36_registered_grasp_acquisition_config_is_locked(tmp_path) -> None:

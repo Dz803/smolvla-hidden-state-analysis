@@ -1,0 +1,21 @@
+{
+  "analysis_revision": "competence_compatibility_gap_v1",
+  "artifact_sha256": {
+    "README.md": "65674a6de280532a0dd9efec0b87acf8ccdb4b7f4d26e2606f804360eb21c252",
+    "gap_cells.csv": "0cdd7e5681b97fa32a437c7a64c681d5c2a9428bcf36b46cc76efc95de2ab8c6",
+    "goal_cells.csv": "c03eed11c728adeda6af1d8bc7e25d557dbcb33eef4f0bb5cdb008f728e7787f",
+    "matched_gap_pairs.csv": "0d7051c7986f99ead5c93fa18da872193ca85102a84b1299bd5ff1b30ae599c3",
+    "summary.json": "2115d67085644c5662123aedcd463e0dca2dc83b421f626a9e88341ee59c8287"
+  },
+  "created_at": "2026-08-03T06:15:32.033645+00:00",
+  "implementation_sha256": {
+    "analyzer": "0950212edeb1c3dc17c5cbccae87fdb991bd7cc1f3454ec72086d936f8d72d40",
+    "competence_gap_module": "61332f0de14dd3e86f128cf8548c399da805162068a022fe78e3a83434dfa0f1",
+    "consolidation_verifier": "a12f5b2b117afc11d3f69ab43d89e0d7d15f14a51a9b38566689aa38b0d2dd2a",
+    "stage_a_lattice": "1cca6a7adc0c8a780c667fec2fb45ed01a51cf1097f867cb4e23ff2cca3e2f4d"
+  },
+  "schema_version": 1,
+  "source_manifest_sha256": "0a2cbe69268db3728260bfc512147ed5ce7402944e3cb378a6f4859368ab7ab0",
+  "source_report_dir": "reports/phase3b_stage_a/phase3b-stage-a-consolidated-v4",
+  "status": "complete"
+}

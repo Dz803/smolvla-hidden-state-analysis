@@ -17,9 +17,9 @@ tail -120 ".planning/$PLAN_ID/progress.md"
 sed -n '1,260p' docs/experiment_log.md
 ```
 
-Phase 3 is complete. The first incomplete work item is Stage A of the occupancy-balanced Phase 3b gate in the active task plan. Twenty-six unique physical roots are promoted across v31/v32/v34 and the additive v35 shard `local/phase3b_stage_a/phase3b_stage_a_completion_20260731T075647Z`. Do not rerun any completed candidate or checkpoint. v35 contains seven complete roots, including exact imports of the v34 drawer ledger and both held-root episode-474 attempts. A hash-bound compatibility recovery corrected a post-bank registered-mode validator omission without changing construction or proposal execution.
+Phase 3b Stage A is complete. The first incomplete work item is the bounded Stage B SmolVLA policy pilot, which remains a separate simulation-scope decision. Do not launch Stage B/C, pi0.5/GR00T downloads, or Phase 4 patching automatically.
 
-v35 stopped before proposal execution on its first grasped layout-A root because the construction route exceeded the frozen possession-continuity gate (two contact-negative ticks and `20.94 mm` relative-pose shift). The full trace shows a `20.4 mm` within-gripper re-seat followed by stable transport. The repair does not relax that gate: v36 opens the drawer separately, then acquires the bowl with the registered episode-474 pre-grasp continuation. Construction smoke `local/phase3b_stage_a/construction_gates/phase3b_stage_a_construction_gate_20260731T094517Z` passes all six untouched grasped roots and three pair-geometry audits at normalized timestep 560, with fresh certificates and zero proposal or policy execution. The first v36 completion run then stopped before proposal index 0, revealing that nominal layout registration had been incorrectly reused after object set-down normalization. v37 corrects that transform while preserving the construction and physical thresholds. The next action is its two-attempt same-run causal smoke, then—if it passes—the remaining 490 attempts in that exact run and consolidated 32-root validation. Do not resume the six grasped candidates under v35 or the failed v36 run. Stage B/C still require separate scope decisions.
+The final v37 root's drawer `10/36` and cabinet `0/46` ledgers remain immutable evidence. Factorized certificate `factorized_certificate_20260803T042126Z` separately establishes a physical cabinet path with stable acquisition at source frame 45 and `204` early-stop feedback actions. Additive promotion `local/phase3b_stage_a/phase3b_stage_a_promotion_v38_20260803T045149Z` binds those evidence classes without rerunning a completed suffix or factorized branch. Consolidation `reports/phase3b_stage_a/phase3b-stage-a-consolidated-v4/` independently passes for 32 states, 16 pairs, 64 physical state-goal cells, and 2,624 proposal attempts. `reports/phase3b_stage_a/competence_compatibility_gap_v1/` records the narrow result: `F_C=1, P_K=0` for one cell. It is not SmolVLA competence, a hidden-state mechanism, or a population rate.
 
 ## Canonical local paths
 
@@ -101,4 +101,15 @@ PYTHONPATH="$SMOLVLA_ROOT/vendor/lerobot-smolvla/src:$SMOLVLA_ROOT/src" \
   --run-dir "$SMOLVLA_ROOT/local/phase3_crd/phase3_crd_20260728T021125Z"
 ```
 
-The v36 completion attempt `local/phase3b_stage_a/phase3b_stage_a_completion_v36_20260731T104403Z` stopped with zero proposal results after exposing a nominal-layout versus normalized-root registration mismatch; do not resume it. The next execution target is `configs/phase3b_stage_a_v37.yaml`. First run its predeclared two-proposal sparse smoke on a new run directory, then resume that exact directory without smoke flags so those checkpointed attempts are not repeated. Every v37 construction must match the Git-backed v36 construction-gate state/action hash before a proposal executes. Treat source revision, root timestep, and oracle mode as explicit provenance; do not estimate drawer-aperture effects from the mixed-source bank. Stage A does not run a policy. Do not download π0.5/GR00T weights, launch the 128-branch Stage B pilot, or start Phase 4 patching until the 32-state certificates and consolidated balance report have been reviewed.
+The compact Stage A reports can be verified without running a policy or simulator:
+
+```bash
+PYTHONPATH="$SMOLVLA_ROOT/src" "$SMOLVLA_PYTHON" \
+  scripts/verify_phase3b_stage_a_consolidation.py \
+  --report-dir reports/phase3b_stage_a/phase3b-stage-a-consolidated-v4
+
+PYTHONPATH="$SMOLVLA_ROOT/src" "$SMOLVLA_PYTHON" \
+  scripts/verify_phase3b_competence_gap.py
+```
+
+The v36 and v37 completion runs are closed and must not be resumed. The v38 promotion and both compact reports are complete and independently verified; rerunning them is unnecessary. Future work begins with a new Stage B contract only after an explicit scope decision. Preserve source revision, root timestep, proposal execution mode, certificate class, and ecological versus controller-normalised runtime as separate provenance. The cross-model identification design and stop rules are in `docs/competence_compatibility_methodology.md`.
